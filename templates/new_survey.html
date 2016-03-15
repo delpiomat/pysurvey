@@ -1,0 +1,61 @@
+{% extends "base_generic.html" %}
+{% load staticfiles %}
+
+{% block title %}Creazione Questionario{% endblock %}
+
+{% block scripts %}
+    <link href="{%  static 'bfb/assets/css/lib/bootstrap-3.0.0/dist/css/bootstrap.min.css'%}" rel="stylesheet">
+    <link id="{%  static 'bfb/bootstrap-classic-theme" href="" rel="stylesheet'%}">
+    <link href="{%  static 'bfb/assets/css/custom.css?v=2" rel="stylesheet'%}">
+    <!--[if lt IE 9]>
+    <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+
+{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <!-- Building Form. -->
+        <div class="col-md-6">
+          <div class="clearfix">
+            <h2>Your Form</h2>
+            <hr>
+            <div id="build">
+              <form id="target" class="form-horizontal">
+              </form>
+            </div>
+          </div>
+        </div>
+        <!-- / Building Form. -->
+
+        <!-- Components -->
+        <div class="col-md-6">
+
+          <h2>Drag & Drop components</h2>
+          <a href="#" id="toggle_bs_style" class="btn btn-info btn-xs pull-right">Toggle bootstrap theme</a>
+          <div class="clearfix"></div>
+          <hr>
+          <div class="tabbable">
+            <ul class="nav nav-tabs" id="formtabs">
+              <!-- Tab nav -->
+            </ul>
+            <form id="components" class="form-horizontal">
+              <fieldset>
+                <div class="tab-content">
+                  <!-- Tabs of snippets go here -->
+                </div>
+              </fieldset>
+            </form>
+          </div>
+        </div>
+        <!-- / Components -->
+    </div>
+
+        <script data-main="{% static 'bfb/assets/js/main-built.js'%}" src="{% static 'bfb/assets/js/lib/require.js' %}" ></script>
+{% endblock %}
