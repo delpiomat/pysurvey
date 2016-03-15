@@ -4,9 +4,9 @@
 {% block title %}Creazione Questionario{% endblock %}
 
 {% block scripts %}
-    <link href="{%  static 'bfb/assets/css/lib/bootstrap-3.0.0/dist/css/bootstrap.min.css'%}" rel="stylesheet">
-    <link id="{%  static 'bfb/bootstrap-classic-theme" href="" rel="stylesheet'%}">
-    <link href="{%  static 'bfb/assets/css/custom.css?v=2" rel="stylesheet'%}">
+    <link href="static/bfb/assets/css/lib/bootstrap-3.0.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link id="bootstrap-classic-theme" href="" rel="stylesheet">
+    <link href="static/bfb/assets/css/custom.css?v=2" rel="stylesheet">
     <!--[if lt IE 9]>
     <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
@@ -16,15 +16,81 @@
     <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
     <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
 
+     <script src="{% static  'himalaya/bin/himalaya.js' %}" ></script>
+<script type="application/javascript">
+
+    $(document).ready(function() {
+        //problema grafico risolto
+        $("#navbar_base_generic").attr("class", "navbar navbar-default navbar-fixed-top");
+
+        $("<li id='json_tab'><a href='#renderJSON' data-toggle='tab'>Json</a></li>").appendTo("#formtabs");
+        $("<div id='renderJSON' class='tab-pane'><h3>Rendered source of your form:</h3><textarea id='renderedJSON' class='col-md-6 form-control'></textarea></div>").appendTo(".tab-content");
+        $("#json_tab").click(function(){
+
+            var himalaya = require('himalaya');
+            //var html = require('fs').readFileSync('/webpage.html');
+            var json = himalaya.parse($('#render').html());
+            $('#renderedJSON').text(json);
+        });
+
+
+    });
+
+    function save(){
+        var html=$("#render").val();
+        console.log("html "+html);
+        var encoded  = JSON.stringify(html);
+        console.log("Encode "+encoded);
+        var newData = {
+            csrfmiddlewaretoken: $('[name=csrfmiddlewaretoken]').val(),
+            question_title: $("#title_survey").val(),
+            data: encoded
+        };
+        $.ajax({
+          type: "POST",
+          //dataType: "JSON",
+          data: newData,
+          success: function(data, textStatus, xhr) {
+                console.log("success");
+                console.log("xhr status success"+xhr.status);
+                if (data) {
+                    // data.redirect contains the string URL to redirect to
+                    console.log("redirect");
+                    window.location.href = "{% url 'index' %}";
+            }
+            else {
+                    // data.form contains the HTML for the replacement form
+                    console.log("else redirect "+data);
+                }
+            },
+            complete: function(xhr, textStatus) {
+                 console.log("complete"+xhr.status);
+            }
+        });
+    }
+</script>
+
 {% endblock %}
 
-{% block content %}
+{% block topcontent %}
 
-    <div class="row">
+<div class="container">{% csrf_token %}
+      <div class="row">
+            <div class="col-md-12">
+                <label>Descrizione del sondaggio</label>
+            </div>
+            <div class="col-md-10">
+                <input type="text" class="form-control" id="title_survey">
+            </div>
+            <div class="col-md-2">
+                <button type="button" onclick="save();" class="btn btn-default btn-lg">Crea e chiudi</button>
+            </div>
+      </div>
+      <div class="row">
         <!-- Building Form. -->
         <div class="col-md-6">
           <div class="clearfix">
-            <h2>Your Form</h2>
+            <h2>Il Questionario</h2>
             <hr>
             <div id="build">
               <form id="target" class="form-horizontal">
@@ -37,8 +103,7 @@
         <!-- Components -->
         <div class="col-md-6">
 
-          <h2>Drag & Drop components</h2>
-          <a href="#" id="toggle_bs_style" class="btn btn-info btn-xs pull-right">Toggle bootstrap theme</a>
+          <h2>Componeti Drag & Drop</h2>
           <div class="clearfix"></div>
           <hr>
           <div class="tabbable">
@@ -55,7 +120,19 @@
           </div>
         </div>
         <!-- / Components -->
-    </div>
 
-        <script data-main="{% static 'bfb/assets/js/main-built.js'%}" src="{% static 'bfb/assets/js/lib/require.js' %}" ></script>
+      </div>
+
+      <div class="row clearfix">
+        <div class="col-md-12">
+          <hr>
+          By Adam Moore (<a href="http://twitter.com/minikomi" >@minikomi</a>).<br/>
+          Source on (<a href="https://github.com/minikomi/Bootstrap-Form-Builder" >Github</a>).
+        </div>
+      </div>
+
+    </div> <!-- /container -->
+
+    <script data-main="static/bfb/assets/js/main-built.js" src="static/bfb/assets/js/lib/require.js?v=3" ></script>
+
 {% endblock %}

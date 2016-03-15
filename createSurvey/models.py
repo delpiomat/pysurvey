@@ -4,7 +4,7 @@ from django.db import models
 
 #python manage.py makemigrations pysurvey
 
-#change 0001 every time
+#change 0001 every time####
 #python manage.py sqlmigrate pysurvey 0001
 #python manage.py migrate
 #python manage.py runserver 0.0.0.0:8000
@@ -32,6 +32,7 @@ class Column(models.Model):
     name = models.CharField(max_length=256)
     domain = models.ForeignKey(Domain, on_delete=models.CASCADE)
     survey = models.ForeignKey(Survey, on_delete=models.CASCADE)
+    num_order = models.IntegerField()
 
     def __str__(self):
         return self.name
