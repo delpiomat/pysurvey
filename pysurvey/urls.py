@@ -22,6 +22,6 @@ import createSurvey.views
 
 urlpatterns = [
     url(r'^$', createSurvey.views.Index.as_view(), name="index"),
-    url(r'^newsurvey', createSurvey.views.New_survey.as_view(), name="new_survey"),
+    url(r'^new_survey', createSurvey.views.NewSurvey.as_view(), name="new_survey"),
     url(r'^admin/', include(admin.site.urls)),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

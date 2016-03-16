@@ -4,47 +4,41 @@
 {% block title %}Creazione Questionario{% endblock %}
 
 {% block scripts %}
-    <link href="static/bfb/assets/css/lib/bootstrap-3.0.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link id="bootstrap-classic-theme" href="" rel="stylesheet">
-    <link href="static/bfb/assets/css/custom.css?v=2" rel="stylesheet">
-    <!--[if lt IE 9]>
-    <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
 
-    <link rel="shortcut icon" href="images/favicon.ico">
-    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+<link rel="stylesheet" href="{% static 'formbuilder-gh/vendor/css/vendor.css'%}" />
+<link rel="stylesheet" href="{% static 'formbuilder-gh/dist/formbuilder.css'%}" />
 
-     <script src="{% static  'himalaya/bin/himalaya.js' %}" ></script>
+
+<script src="{% static 'formbuilder-gh/vendor/js/vendor.js'%}"></script>
+<script src="{% static 'formbuilder-gh/dist/formbuilder.js'%}"></script>
+
 <script type="application/javascript">
 
+    var builder;
     $(document).ready(function() {
-        //problema grafico risolto
-        $("#navbar_base_generic").attr("class", "navbar navbar-default navbar-fixed-top");
 
-        $("<li id='json_tab'><a href='#renderJSON' data-toggle='tab'>Json</a></li>").appendTo("#formtabs");
-        $("<div id='renderJSON' class='tab-pane'><h3>Rendered source of your form:</h3><textarea id='renderedJSON' class='col-md-6 form-control'></textarea></div>").appendTo(".tab-content");
-        $("#json_tab").click(function(){
-
-            var himalaya = require('himalaya');
-            //var html = require('fs').readFileSync('/webpage.html');
-            var json = himalaya.parse($('#render').html());
-            $('#renderedJSON').text(json);
+        builder = new Formbuilder({
+            selector: '#formbuilder',
+            {% if jsonForm %}
+            bootstrapData: {{ jsonForm|safe }}
+            {% endif %}
         });
 
+        $('#save').on('click', function(e){
+            e.preventDefault();
+            $("#personalizedForm").val(builder.mainView.manualSaveForm());
+            console.log($("#personalizedForm").val());
+            console.log("SALVA!!");
+            save($("#personalizedForm").val());
+        });
 
     });
 
-    function save(){
-        var html=$("#render").val();
-        console.log("html "+html);
-        var encoded  = JSON.stringify(html);
-        console.log("Encode "+encoded);
+    function save(input){
         var newData = {
             csrfmiddlewaretoken: $('[name=csrfmiddlewaretoken]').val(),
             question_title: $("#title_survey").val(),
-            data: encoded
+            data: input
         };
         $.ajax({
           type: "POST",
@@ -55,7 +49,7 @@
                 console.log("xhr status success"+xhr.status);
                 if (data) {
                     // data.redirect contains the string URL to redirect to
-                    console.log("redirect");
+                    console.log("if(data)");
                     window.location.href = "{% url 'index' %}";
             }
             else {
@@ -73,66 +67,30 @@
 {% endblock %}
 
 {% block topcontent %}
-
 <div class="container">{% csrf_token %}
-      <div class="row">
-            <div class="col-md-12">
-                <label>Descrizione del sondaggio</label>
+    <div class="row">
+        <div class="col-md-7">
+            <div class="col-md-1">
+               <label for="inputName" class="control-label">Titolo:</label>
             </div>
-            <div class="col-md-10">
-                <input type="text" class="form-control" id="title_survey">
+            <div class="col-md-11">
+                <input type="text" id='title_survey' placeholder="Titolo Questionario" required class="form-control" id="usr">
             </div>
-            <div class="col-md-2">
-                <button type="button" onclick="save();" class="btn btn-default btn-lg">Crea e chiudi</button>
-            </div>
-      </div>
-      <div class="row">
-        <!-- Building Form. -->
-        <div class="col-md-6">
-          <div class="clearfix">
-            <h2>Il Questionario</h2>
-            <hr>
-            <div id="build">
-              <form id="target" class="form-horizontal">
-              </form>
-            </div>
-          </div>
         </div>
-        <!-- / Building Form. -->
-
-        <!-- Components -->
-        <div class="col-md-6">
-
-          <h2>Componeti Drag & Drop</h2>
-          <div class="clearfix"></div>
-          <hr>
-          <div class="tabbable">
-            <ul class="nav nav-tabs" id="formtabs">
-              <!-- Tab nav -->
-            </ul>
-            <form id="components" class="form-horizontal">
-              <fieldset>
-                <div class="tab-content">
-                  <!-- Tabs of snippets go here -->
-                </div>
-              </fieldset>
-            </form>
-          </div>
+        <div class="col-md-5">
+            <div class="form-group">
+                <a href="#" id="save" class="btn btn-primary fb-button">Salva</a>
+            </div>
         </div>
-        <!-- / Components -->
-
-      </div>
-
-      <div class="row clearfix">
+    </div>
+    <div class="row">
         <div class="col-md-12">
-          <hr>
-          By Adam Moore (<a href="http://twitter.com/minikomi" >@minikomi</a>).<br/>
-          Source on (<a href="https://github.com/minikomi/Bootstrap-Form-Builder" >Github</a>).
+            <div id='formbuilder'></div>
+            <input type="hidden" id="personalizedForm" name="personalizedForm" />
         </div>
-      </div>
+    </div>
 
-    </div> <!-- /container -->
+</div> <!-- /container -->
 
-    <script data-main="static/bfb/assets/js/main-built.js" src="static/bfb/assets/js/lib/require.js?v=3" ></script>
 
 {% endblock %}
