@@ -32,10 +32,11 @@ class NewSurvey(View):
     def post(self, request, *args, **kwargs):
 
         # recupero le informazioni arrivate tramite POST
-        title_survey = request.POST["question_title"]
+        title_survey = request.POST["title_survey"]
+        desc_survey = request.POST["desc_survey"]
         data = json.loads(request.POST["data"])
 
-        new_survey = Survey(name=title_survey, note="Un questionario")
+        new_survey = Survey(name=title_survey, note=desc_survey)
         new_survey.save()
 
         for i, col in enumerate(data):

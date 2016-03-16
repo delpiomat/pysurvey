@@ -25,11 +25,14 @@
         });
 
         $('#save').on('click', function(e){
-            e.preventDefault();
-            $("#personalizedForm").val(builder.mainView.manualSaveForm());
-            console.log($("#personalizedForm").val());
-            console.log("SALVA!!");
-            save($("#personalizedForm").val());
+           e.preventDefault();
+            if($("#title_survey").val()!="" && $("#desc_survey").val()!="") {
+                $("#personalizedForm").val(builder.mainView.manualSaveForm());
+                console.log($("#personalizedForm").val());
+                console.log("SALVA!!");
+                save($("#personalizedForm").val());
+            }
+            else{$('#myForm').validator();}
         });
 
     });
@@ -37,7 +40,8 @@
     function save(input){
         var newData = {
             csrfmiddlewaretoken: $('[name=csrfmiddlewaretoken]').val(),
-            question_title: $("#title_survey").val(),
+            title_survey: $("#title_survey").val(),
+            desc_survey: $("#desc_survey").val(),
             data: input
         };
         $.ajax({
@@ -68,21 +72,32 @@
 
 {% block topcontent %}
 <div class="container">{% csrf_token %}
-    <div class="row">
-        <div class="col-md-7">
-            <div class="col-md-1">
-               <label for="inputName" class="control-label">Titolo:</label>
+    <div class="row form-group">
+        <form id="myForm" data-toggle="validator" role="form">
+            <div class="col-md-4 form-group">
+                <div class="col-md-2 form-group">
+                   <label class="control-label" for="title_survey">Titolo:</label>
+                </div>
+                <div class="col-md-10 form-group">
+                    <input type="text" id='title_survey' placeholder="Titolo Questionario" required class="form-control">
+                </div>
             </div>
-            <div class="col-md-11">
-                <input type="text" id='title_survey' placeholder="Titolo Questionario" required class="form-control" id="usr">
+            <div class="col-md-6 form-group">
+                <div class="col-md-2 form-group">
+                   <label class="control-label" for="desc_survey">Descrizione:</label>
+                </div>
+                <div class="col-md-10 form-group">
+                    <input type="text" id='desc_survey' placeholder="Descrizione Questionario visibile solo agli operatori" required class="form-control">
+                </div>
             </div>
-        </div>
-        <div class="col-md-5">
-            <div class="form-group">
-                <a href="#" id="save" class="btn btn-primary fb-button">Salva</a>
+            <div class="col-md-2 form-group">
+                <div class="form-group">
+                    <button type="submit" id="save" class="btn btn-primary fb-button">Salva</button>
+                </div>
             </div>
-        </div>
+        </form>
     </div>
+
     <div class="row">
         <div class="col-md-12">
             <div id='formbuilder'></div>
