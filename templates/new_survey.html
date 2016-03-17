@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="{% static 'formbuilder-gh/vendor/css/vendor.css'%}" />
 <link rel="stylesheet" href="{% static 'formbuilder-gh/dist/formbuilder.css'%}" />
 
+<script src="{% static 'bootstrap-validator/js/validator.js' %}"></script>
 
 <script src="{% static 'formbuilder-gh/vendor/js/vendor.js'%}"></script>
 <script src="{% static 'formbuilder-gh/dist/formbuilder.js'%}"></script>
@@ -32,7 +33,7 @@
                 console.log("SALVA!!");
                 save($("#personalizedForm").val());
             }
-            else{$('#myForm').validator();}
+
         });
 
     });

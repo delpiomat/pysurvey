@@ -1,13 +1,13 @@
 from django.db import models
 
-#for database setting
+# for database setting
 
-#python manage.py makemigrations
+# python manage.py makemigrations
 
-#change 0001 every time####
-#python manage.py sqlmigrate pysurvey 0001
-#python manage.py migrate
-#python manage.py runserver 0.0.0.0:8000
+# change 0001 every time####
+# python manage.py sqlmigrate pysurvey 0001
+# python manage.py migrate
+# python manage.py runserver 0.0.0.0:8000
 
 
 #id is by default

@@ -21,6 +21,9 @@ from django.conf.urls.static import static
 import createSurvey.views
 
 urlpatterns = [
+    url(r'^log_in/', createSurvey.views.AuthLogin.as_view(), name="log_in"),
+    url(r'^sign_up/', createSurvey.views.SignUp.as_view(), name="sign_up"),
+    url(r'^logout/', createSurvey.views.log_out, name="log_out"),
     url(r'^$', createSurvey.views.Index.as_view(), name="index"),
     url(r'^new_survey', createSurvey.views.NewSurvey.as_view(), name="new_survey"),
     url(r'^admin/', include(admin.site.urls)),

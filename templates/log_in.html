@@ -1,0 +1,38 @@
+{% extends "base_generic.html" %}
+{% load staticfiles %}
+
+{% block title %}Accedi{% endblock %}
+{% block scripts %}
+<script type="application/javascript">
+
+        function sendPostLogin(_username, _password, token) {
+            $.post( "{% url 'log_in' %}", {usr: _username, password: _password, csrfmiddlewaretoken: token}, function( data ) {
+                //$( ".result" ).html( data );
+                if(data["success"] == true) {
+                    $("#msgLogin").html('');
+                    window.location.href = "{% url 'index' %}";
+                    //location.reload();
+                } else {
+                    $("#msgLogin").html('<div class="alert alert-danger" role="alert">username o password errati</div>');
+                    $("#msgLogin").effect( "shake", {times:4}, 500 );
+
+                }
+            });
+        }
+</script>
+{% endblock %}
+{% block topcontent %}
+<form id="formLoginId" class="form col-md-12 center-block" action="{% url 'log_in' %}" method="post">{% csrf_token %}
+    <div class="form-group">
+        <input type="text" class="form-control input-lg" placeholder="username" id="usernamePost" onkeypress="if (event.keyCode == 13) $('#loginbuttonlogin').click();">
+    </div>
+    <div class="form-group">
+        <input type="password" class="form-control input-lg" placeholder="password" id="passwordPost" onkeypress="if (event.keyCode == 13) $('#loginbuttonlogin').click();">
+    </div>
+    <div class="form-group">
+        <a id="loginbuttonlogin" class="btn btn-primary btn-lg btn-block" onclick="sendPostLogin($('#usernamePost').val(), $('#passwordPost').val(), $('[name=csrfmiddlewaretoken]').val());">Accedi</a>
+        <div id="msgLogin"></div>
+    </div>
+
+</form>
+{% endblock %}
