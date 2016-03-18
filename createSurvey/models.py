@@ -22,10 +22,10 @@ class Survey(models.Model):
 
 
 class Column(models.Model):
-    label = models.CharField(max_length=256,default="")
-    type = models.CharField(max_length=256,default="")
+    label = models.CharField(max_length=256, default="")
+    type = models.CharField(max_length=256, default="")
     required = models.BooleanField(default=True)
-    option = models.CharField(max_length=2048,default="")
+    option = models.CharField(max_length=2048, default="")
     description = models.CharField(max_length=2048, default="")
     jsonCode = models.CharField(max_length=4096, default="")
     num_order = models.IntegerField()

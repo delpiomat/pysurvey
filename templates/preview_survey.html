@@ -1,0 +1,26 @@
+{% extends "base_generic.html" %}
+{% load staticfiles %}
+
+{% block title %}Anteprima{% endblock %}
+
+{% block scripts %}
+
+    <link rel="stylesheet" href="{% static 'bootstrap-select/dist/css/bootstrap-select.min.css' %}">
+    <script src="{% static 'bootstrap-select/dist/js/bootstrap-select.min.js' %}"></script>
+
+    <script type="application/javascript">
+    </script>
+
+{% endblock %}
+
+{% block topcontent %}
+<div class="container">
+    <form data-toggle="validator" role="form">
+        {% for key, value in survey.items %}
+            {{value|safe}}
+        {% endfor %}
+    </form>
+
+
+</div>
+{% endblock %}

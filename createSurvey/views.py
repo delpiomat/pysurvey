@@ -20,6 +20,9 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # for Json format
 import json
 
+# for utility
+from createSurvey.utils import *
+
 # import the logging library #per debug scrive nella Console
 import logging
 # Get an instance of a logger
@@ -149,3 +152,19 @@ class NewSurvey(View):
             new_col.save()
 
         return render(request, 'new_survey.html')
+
+
+# Preview Survey
+class PreviewSurvey(View):
+
+    @method_decorator(login_required(login_url='log_in'))
+    def get(self, request, *args, **kwargs):
+        id_survey = None
+        if 'id' in kwargs:
+            id_survey = kwargs['id']
+        survey = Column.objects.filter(survey=id_survey)
+        return render(request, 'preview_survey.html', {"survey": json_form_in_html(survey)})
+
+    @method_decorator(login_required(login_url='log_in'))
+    def post(self, request, *args, **kwargs):
+        return render(request, 'preview_survey.html')
