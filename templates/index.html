@@ -11,9 +11,10 @@
     <table class="table table-bordered">
         <thead>
             <tr>
-                <th>Nome</th>
+                <th>Nome (puoi vedre la preview)</th>
                 <th>Descrizione</th>
                 <th>Data</th>
+                <th>Avvia Sondaggio(log out)</th>
             </tr>
         </thead>
         <tbody>
@@ -22,6 +23,7 @@
                     <td><a href="{%  url 'preview_survey'  survey.id  %}">{{ survey.name|upper }}</a></td>
                     <td>{{ survey.note }}</td>
                     <td>{{ survey.pub_date }}</td>
+                    <td><a class="btn btn-primary" href="{%  url 'make_survey'  survey.id  %}">Inizia</a></td>
                 </tr>
             {% endfor %}
         </tbody>

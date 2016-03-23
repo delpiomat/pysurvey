@@ -41,10 +41,10 @@ def json_form_in_html(survey):
             html += '<input type="'+col.type+'" id="'+str(col.id)+'" name="'+str(col.id)+'" class="form-control" '+min+max+' '+required+' ></input>'+desc
         elif col.type == "checkboxes":
             for box in options["options"]:
-                html +='<div class="checkbox"><label><input type="checkbox" value="'+box["label"]+'" name="'+col.label+'">'+box["label"]+'</label></div>'
+                html +='<div class="checkbox"><label><input type="checkbox" value="'+box["label"]+'" id="'+str(col.id)+'" name="'+str(col.id)+'">'+box["label"]+'</label></div>'
         elif col.type == "radio":
             for box in options["options"]:
-                html +='<div class="radio"><label><input type="radio" value="'+box["label"]+'" name="'+col.label+'">'+box["label"]+'</label></div>'
+                html +='<div class="radio"><label><input type="radio" value="'+box["label"]+'" id="'+str(col.id)+'" name="'+str(col.id)+'">'+box["label"]+'</label></div>'
         elif col.type == "dropdown":
             html = '<p class="" for="'+str(col.id)+'">'+col.label+'</p>'
             html += '<select data-live-search="true" name="'+str(col.id)+'" id="'+str(col.id)+'" class="selectpicker">'

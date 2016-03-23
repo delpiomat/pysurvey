@@ -36,3 +36,19 @@ class Column(models.Model):
         return self.label
 
 
+class Interview(models.Model):
+    name_user = models.CharField(max_length=256, default="anonymous")
+    type_user = models.CharField(max_length=256, default="people")
+
+    def __str__(self):
+        return self.id
+
+
+class Result(models.Model):
+    value = models.CharField(max_length=256, default="")
+    type_value = models.CharField(max_length=256, default="single")  # for array/single/dict value
+    column = models.ForeignKey(Column, on_delete=models.CASCADE)
+    interview = models.ForeignKey(Interview, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.id

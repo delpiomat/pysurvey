@@ -3,7 +3,7 @@ from django.core.context_processors import csrf
 from django.shortcuts import render, redirect, render_to_response, RequestContext
 
 from django.views.generic import View
-from .models import Column, Survey
+from .models import Column, Survey, Interview, Result
 
 # for login
 from django.contrib.auth import authenticate, login, logout
@@ -168,3 +168,37 @@ class PreviewSurvey(View):
     @method_decorator(login_required(login_url='log_in'))
     def post(self, request, *args, **kwargs):
         return render(request, 'preview_survey.html')
+
+
+# Make Survey
+# after survey its important to log out for secure issues
+class MakeSurvey(View):
+
+    def get(self, request, *args, **kwargs):
+        id_survey = None
+        if 'id' in kwargs:
+            id_survey = kwargs['id']
+        survey = Column.objects.filter(survey=id_survey)
+        return render(request, 'make_survey.html', {"survey": json_form_in_html(survey), "id": kwargs['id'], "thank": 0})
+
+    def post(self, request, *args, **kwargs):
+        new_interview = Interview(name_user="anonymous", type_user="people")
+        new_interview.save()
+        for key in request.POST:
+            if key != "csrfmiddlewaretoken":
+                the_col = Column.objects.filter(id=int(key))
+                if len(the_col) == 1:
+                    list_value = request.POST.getlist(key)[0]
+                    if len(request.POST.getlist(key)) > 1:
+                        for i, val in enumerate(request.POST.getlist(key)):
+                            if i != 0:
+                                list_value += ","+val
+                        new_result = Result(value=list_value, interview=new_interview, column=the_col[0])
+                        new_result.type_value = "list"
+                    else:
+                        new_result = Result(value=list_value, interview=new_interview, column=the_col[0])
+                        new_result.type_value = "single"
+                    new_result.save()
+                else:
+                    return render(request, 'make_survey.html', {'errore':"dati inseriti non validi"})
+        return render(request, 'make_survey.html', {"id": kwargs['id'], "thank": 1})

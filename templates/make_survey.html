@@ -1,0 +1,45 @@
+{% extends "base_generic.html" %}
+{% load staticfiles %}
+
+{% block title %}Questionario{% endblock %}
+
+{% block scripts %}
+
+    <link rel="stylesheet" href="{% static 'bootstrap-select/dist/css/bootstrap-select.min.css' %}">
+    <script src="{% static 'bootstrap-select/dist/js/bootstrap-select.min.js' %}"></script>
+
+    <script type="application/javascript">
+
+        function sendSurvey(){
+
+        }
+
+    </script>
+
+{% endblock %}
+
+
+
+{% block topcontent %}
+    <div class="container">
+        {% if thank == 1 %}
+
+            <h1 class="text-center" >Grazie!</h1>
+            <a id="thank" href="{% url 'make_survey' id %}" class="btn btn-primary center-block">Fine</a>
+
+        {%else%}
+
+            <form data-toggle="validator" method="POST" role="form">{% csrf_token %}
+                {% for key, value in survey.items %}
+                    {{value|safe}}
+                {% endfor %}
+
+                <div class="form-group">
+                    <button type="submit" id="confirm_survey" class="btn btn-primary">Invia</button>
+                </div>
+            </form>
+
+        {% endif %}
+    </div>
+{% endblock %}
+
