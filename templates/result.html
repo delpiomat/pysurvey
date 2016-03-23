@@ -1,0 +1,50 @@
+{% extends "base_generic.html" %}
+{% load staticfiles %}
+
+{% block title %}Risultati{% endblock %}
+
+
+{% block topcontent %}
+<div class="container">
+    <h2>Sondaggio numero</h2>
+    <p>risultati:</p>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Nome (puoi vedre la preview)</th>
+                <th>Descrizione</th>
+                <th>Data</th>
+                <th>Avvia Sondaggio(log out)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for res in results %}
+                <tr>
+                    <td><a href="{%  url 'preview_survey'  res.id  %}">{{ res.name|upper }}</a></td>
+                    <td>{{ res.note }}</td>
+                    <td>{{ res.pub_date }}</td>
+                    <td><a class="btn btn-primary" href="{%  url 'make_survey'  res.id  %}">Inizia</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="pagination">
+        <span class="step-links">
+            {% if results.has_previous %}
+                <a href="?page={{ results.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ results.number }} of {{ results.paginator.num_pages }}.
+            </span>
+
+            {% if surveys.has_next %}
+                <a href="?page={{ results.next_page_number }}">next</a>
+            {% endif %}
+        </span>
+    </div>
+
+
+</div>
+{% endblock %}

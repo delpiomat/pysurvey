@@ -202,3 +202,32 @@ class MakeSurvey(View):
                 else:
                     return render(request, 'make_survey.html', {'errore':"dati inseriti non validi"})
         return render(request, 'make_survey.html', {"id": kwargs['id'], "thank": 1})
+
+
+# Result of Survey
+class Result(View):
+    @method_decorator(login_required(login_url='log_in'))
+    def get(self, request, *args, **kwargs):
+        id_survey = None
+        if 'id' in kwargs:
+            id_survey = kwargs['id']
+        col_list = Column.objects.filter(survey_id=id_survey)
+        result_list = {}
+        for i, col in enumerate(col_list):
+            col_id_test = col.id
+            result_list[i] = Result.objects.filter(column=col)
+        paginator = Paginator(result_list, 15)
+        page = request.GET.get('page')
+        try:
+             results = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+             results = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+             results = paginator.page(paginator.num_pages)
+        return render(request, 'result.html', {"columns": col_list, "results":  results})
+
+    @method_decorator(login_required(login_url='log_in'))
+    def post(self, request, *args, **kwargs):
+        return render(request, 'result.html')

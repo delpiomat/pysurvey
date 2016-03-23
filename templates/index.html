@@ -23,7 +23,7 @@
                     <td><a href="{%  url 'preview_survey'  survey.id  %}">{{ survey.name|upper }}</a></td>
                     <td>{{ survey.note }}</td>
                     <td>{{ survey.pub_date }}</td>
-                    <td><a class="btn btn-primary" href="{%  url 'make_survey'  survey.id  %}">Inizia</a></td>
+                    <td><a class="btn btn-primary" href="{%  url 'make_survey'  survey.id  %}">Inizia</a><a class="btn btn-primary" href="{%  url 'result'  survey.id  %}">Risultati</a></td>
                 </tr>
             {% endfor %}
         </tbody>

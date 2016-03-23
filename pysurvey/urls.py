@@ -28,5 +28,6 @@ urlpatterns = [
     url(r'^new_survey', createSurvey.views.NewSurvey.as_view(), name="new_survey"),
     url(r'^preview_survey/(?P<id>[0-9]+)/$', createSurvey.views.PreviewSurvey.as_view(), name="preview_survey"),
     url(r'^make_survey/(?P<id>[0-9]+)/$', createSurvey.views.MakeSurvey.as_view(), name="make_survey"),
+    url(r'^result/(?P<id>[0-9]+)/$', createSurvey.views.Result.as_view(), name="result"),
     url(r'^admin/', include(admin.site.urls)),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
