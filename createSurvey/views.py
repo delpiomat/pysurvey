@@ -78,7 +78,7 @@ class SignUp(View):
         password = post["password"]
         user_count = User.objects.filter(username=username).count()
         if user_count != 0:
-            return redirect('sign_up', error='email già esistente')
+            return redirect('sign_up', error='email esistente')
         if post["password"].strip() == "" or post["password"] != post["password2"]:
             return redirect('sign_up', error='password non adatta')
         user = User(is_active=True, first_name=name, username=post['username'])
@@ -205,29 +205,45 @@ class MakeSurvey(View):
 
 
 # Result of Survey
-class Result(View):
+class ResultSurvey(View):
     @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
         id_survey = None
         if 'id' in kwargs:
             id_survey = kwargs['id']
         col_list = Column.objects.filter(survey_id=id_survey)
-        result_list = {}
-        for i, col in enumerate(col_list):
-            col_id_test = col.id
-            result_list[i] = Result.objects.filter(column=col)
-        paginator = Paginator(result_list, 15)
-        page = request.GET.get('page')
-        try:
-             results = paginator.page(page)
-        except PageNotAnInteger:
-            # If page is not an integer, deliver first page.
-             results = paginator.page(1)
-        except EmptyPage:
-            # If page is out of range (e.g. 9999), deliver last page of results.
-             results = paginator.page(paginator.num_pages)
-        return render(request, 'result.html', {"columns": col_list, "results":  results})
+        result_list = []
+        final_list = []
+        for col in col_list:
+            result_list.append(Result.objects.filter(column=col))
+        for i in range(0, len(result_list[0])):
+            final_list.append([])
+        for val in result_list:
+            for i in range(0, len(result_list[0])):
+                final_list[i].append(val[i])
+        return render(request, 'result.html', {"columns": col_list, "results":  final_list})
 
     @method_decorator(login_required(login_url='log_in'))
     def post(self, request, *args, **kwargs):
         return render(request, 'result.html')
+
+
+def result_download(request, type, survey_id):
+    try:
+        survey = Survey.objects.get(id=survey_id)
+        col_list = Column.objects.filter(survey_id=survey_id)
+        result_list = []
+        final_list = []
+        for col in col_list:
+            result_list.append(Result.objects.filter(column=col))
+        for i in range(0, len(result_list[0])):
+            final_list.append([])
+        for val in result_list:
+            for i in range(0, len(result_list[0])):
+                final_list[i].append(val[i])
+    except:
+        return redirect('index')
+
+    filename = survey.name
+    filename = filename.replace(" ", "_")
+    return export_csv(survey, col_list, final_list, filename + ".csv")

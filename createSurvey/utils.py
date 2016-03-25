@@ -3,6 +3,12 @@ from .models import Column, Survey
 # for Json format
 import json
 
+# For export .SCV
+import csv
+from django.http import HttpResponse
+from django.utils.encoding import smart_str
+
+
 # import the logging library #per debug scrive nella Console
 import logging
 # Get an instance of a logger
@@ -56,3 +62,20 @@ def json_form_in_html(survey):
         form[col.num_order] = '<div class="form-group">' + html + '</div>'
     return form
 
+
+# Export data
+def export_csv(survey, col_list, final_list, filename):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename=' + filename
+    writer = csv.writer(response, csv.excel)
+    response.write(u'\ufeff'.encode('utf8')) # BOM (optional...Excel needs it to open UTF-8 file properly)
+    labels = [smart_str(c.label) for c in col_list]
+    numfields = len(col_list)
+
+    writer.writerow(labels)
+    row = []
+    for col in final_list:
+        for val in col:
+            row.append(smart_str(u""+val.value))
+            writer.writerow(row)
+    return response
