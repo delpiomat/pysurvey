@@ -69,13 +69,14 @@ def export_csv(survey, col_list, final_list, filename):
     response['Content-Disposition'] = 'attachment; filename=' + filename
     writer = csv.writer(response, csv.excel)
     response.write(u'\ufeff'.encode('utf8')) # BOM (optional...Excel needs it to open UTF-8 file properly)
-    labels = [smart_str(c.label) for c in col_list]
+    labels = [c.label for c in col_list]
     numfields = len(col_list)
 
     writer.writerow(labels)
     row = []
     for col in final_list:
         for val in col:
-            row.append(smart_str(u""+val.value))
-            writer.writerow(row)
+            row.append(val.value)
+        writer.writerow(row)
+        row = []
     return response
