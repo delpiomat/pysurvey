@@ -1,0 +1,276 @@
+{% extends "base_generic.html" %}
+{% load staticfiles %}
+
+{% block title %}Questionario Lavoro{% endblock %}
+
+
+{% block scripts %}
+
+
+    <link rel="stylesheet" href="{% static 'bootstrap-3.3.6/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap-3.3.6/css/bootstrap-theme.min.css' %}">
+
+        <link rel="stylesheet" href="{% static 'textext/src/css/textext.core.css'%}" type="text/css" />
+		<link rel="stylesheet" href="{% static 'textext/src/css/textext.plugin.tags.css'%}" type="text/css" />
+		<link rel="stylesheet" href="{% static 'textext/src/css/textext.plugin.autocomplete.css'%}" type="text/css" />
+		<link rel="stylesheet" href="{% static 'textext/src/css/textext.plugin.focus.css'%}" type="text/css" />
+		<link rel="stylesheet" href="{% static 'textext/src/css/textext.plugin.prompt.css'%}" type="text/css" />
+		<link rel="stylesheet" href="{% static 'textext/src/css/textext.plugin.arrow.css'%}" type="text/css" />
+
+
+        <script src="{% static 'bootstrap-3.3.6/js/bootstrap.min.js'%}"></script>
+		<script src="{% static 'textext/src/js/textext.core.js'%}" type="text/javascript" charset="utf-8"></script>
+		<script src="{% static 'textext/src/js/textext.plugin.tags.js'%}" type="text/javascript" charset="utf-8"></script>
+		<script src="{% static 'textext/src/js/textext.plugin.autocomplete.js'%}" type="text/javascript" charset="utf-8"></script>
+		<script src="{% static 'textext/src/js/textext.plugin.suggestions.js'%}" type="text/javascript" charset="utf-8"></script>
+		<script src="{% static 'textext/src/js/textext.plugin.filter.js'%}" type="text/javascript" charset="utf-8"></script>
+		<script src="{% static 'textext/src/js/textext.plugin.focus.js'%}" type="text/javascript" charset="utf-8"></script>
+		<script src="{% static 'textext/src/js/textext.plugin.prompt.js'%}" type="text/javascript" charset="utf-8"></script>
+		<script src="{% static 'textext/src/js/textext.plugin.ajax.js'%}" type="text/javascript" charset="utf-8"></script>
+		<script src="{% static 'textext/src/js/textext.plugin.arrow.js'%}" type="text/javascript" charset="utf-8"></script>
+
+{% endblock %}
+
+
+{% block topcontent %}
+<div class="container">{% csrf_token %}
+
+
+<form id="forminvio" data-toggle="validator" method="POST" role="form">{% csrf_token %}
+
+
+    <h2>Proposta Lavoro</h2>
+
+    <div class="form-group">
+        <label for="codice_azienda">Codice Azienda:</label>
+        <input type="text" name="codice_azienda" id="codice_azienda" required class="form-control">
+		<span class="help-block">Codice Aziendale obbligatorio rilasciato all'inizio</span>
+    </div>
+
+    <div class="form-group">
+        <label for="email_lavoro">Email:</label>
+        <input type="text" name="email_lavoro" id="email_lavoro" class="form-control">
+		<span class="help-block">email per riferimento (puo essere diverso da quello dell'azienda)</span>
+    </div>
+
+    <div class="form-group">
+        <label for="citta_sede_lavoro">Città:</label>
+        <textarea name="citta_sede_lavoro" id="citta_sede_lavoro" class="example" rows="1"></textarea>
+		<span class="help-block">Le citta dove si trova la sede di lavoro</span>
+    </div>
+
+    <div class="form-group">
+        <label for="cerca_lingua">Lingua:</label>
+        <textarea name="cerca_lingua" id="cerca_lingua" class="example" rows="1"></textarea>
+		<span class="help-block">Lingue richieste</span>
+    </div>
+
+    <div class="form-group">
+        <label for="cerca_campo_studi">Campo di Studi:</label>
+        <textarea name="cerca_campo_studi" id="cerca_campo_studi" class="example" rows="1"></textarea>
+		<span class="help-block"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="ceca_esame">Esami:</label>
+            <textarea name="ceca_esame" id="ceca_esame" class="example" rows="1"></textarea>
+		<span class="help-block"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="cerca_area_operativa">Area Operativa:</label>
+        <textarea name="cerca_area_operativa" id="cerca_area_operativa" class="example" rows="1"></textarea>
+		<span class="help-block"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="cerca_livello_cariera">Livello Cariera:</label>
+        <textarea name="cerca_livello_cariera" id="cerca_livello_cariera" class="example" rows="1"></textarea>
+		<span class="help-block"></span>
+    </div>
+
+
+    <div class="form-group">
+        <label for="cerca_tipo_contratto">Tipo di Contratto:</label>
+        <textarea name="cerca_tipo_contratto" id="cerca_tipo_contratto" class="example" rows="1"></textarea>
+		<span class="help-block"></span>
+    </div>
+
+
+    <div class="form-group">
+        <label for="cerca_distanza">Distanza:</label>
+        <input name="cerca_distanza" id="cerca_distanza" class="form-control">
+		<span class="help-block">Distanza massima del candidato</span>
+    </div>
+
+    <div class="form-group">
+        <label for="note_lavoro">Note:</label>
+        <input type="text" name="note_lavoro" id="note_lavoro" class="form-control">
+		<span class="help-block">descrizione dell'azienda</span>
+    </div>
+
+    <div class="form-group">
+        <button type="submit" id="conf" class="btn btn-primary">Invia</button>
+    </div>
+
+</form>
+</div>
+
+<script type="text/javascript">
+    $('#citta_sede_lavoro')
+        .textext({
+            plugins : 'tags autocomplete'
+        })
+        .bind('getSuggestions', function(e, data)
+        {
+            var list = [
+            {% for z in citta %}
+                '{{z.valore}}',
+            {% endfor %}
+            ],
+            textext = $(e.target).textext()[0],
+            query = (data ? data.query : '') || ''
+                ;
+
+            $(this).trigger(
+                'setSuggestions',
+                { result : textext.itemManager().filter(list, query) }
+            );
+        }
+    );
+
+        $('#cerca_lingua')
+        .textext({
+            plugins : 'tags autocomplete'
+        })
+        .bind('getSuggestions', function(e, data)
+        {
+            var list = [
+            {% for z in lingua %}
+                '{{z.valore}}',
+            {% endfor %}
+            ],
+            textext = $(e.target).textext()[0],
+            query = (data ? data.query : '') || ''
+                ;
+
+            $(this).trigger(
+                'setSuggestions',
+                { result : textext.itemManager().filter(list, query) }
+            );
+        }
+    );
+
+    $('#cerca_livello_cariera')
+        .textext({
+            plugins : 'tags autocomplete'
+        })
+        .bind('getSuggestions', function(e, data)
+        {
+            var list = [
+            {% for z in livello_cariera %}
+                '{{z.valore}}',
+            {% endfor %}
+            ],
+            textext = $(e.target).textext()[0],
+            query = (data ? data.query : '') || ''
+                ;
+
+            $(this).trigger(
+                'setSuggestions',
+                { result : textext.itemManager().filter(list, query) }
+            );
+        }
+    );
+
+
+    $('#cerca_campo_studi')
+        .textext({
+            plugins : 'tags autocomplete'
+        })
+        .bind('getSuggestions', function(e, data)
+        {
+            var list = [
+            {% for z in campo_studi %}
+                '{{z.valore}}',
+            {% endfor %}
+            ],
+            textext = $(e.target).textext()[0],
+            query = (data ? data.query : '') || ''
+                ;
+
+            $(this).trigger(
+                'setSuggestions',
+                { result : textext.itemManager().filter(list, query) }
+            );
+        }
+    );
+
+        $('#cerca_tipo_contratto')
+        .textext({
+            plugins : 'tags autocomplete'
+        })
+        .bind('getSuggestions', function(e, data)
+        {
+            var list = [
+            {% for z in tipo_contratto %}
+                '{{z.valore}}',
+            {% endfor %}
+            ],
+            textext = $(e.target).textext()[0],
+            query = (data ? data.query : '') || ''
+                ;
+
+            $(this).trigger(
+                'setSuggestions',
+                { result : textext.itemManager().filter(list, query) }
+            );
+        }
+    );
+    $('#cerca_area_operativa')
+        .textext({
+            plugins : 'tags autocomplete'
+        })
+        .bind('getSuggestions', function(e, data)
+        {
+            var list = [
+            {% for z in area_operativa %}
+                '{{z.valore}}',
+            {% endfor %}
+            ],
+            textext = $(e.target).textext()[0],
+            query = (data ? data.query : '') || ''
+                ;
+
+            $(this).trigger(
+                'setSuggestions',
+                { result : textext.itemManager().filter(list, query) }
+            );
+        }
+    );
+
+        $('#ceca_esame')
+        .textext({
+            plugins : 'tags autocomplete'
+        })
+        .bind('getSuggestions', function(e, data)
+        {
+            var list = [
+            {% for z in esame %}
+                '{{z.valore}}',
+            {% endfor %}
+            ],
+            textext = $(e.target).textext()[0],
+            query = (data ? data.query : '') || ''
+                ;
+
+            $(this).trigger(
+                'setSuggestions',
+                { result : textext.itemManager().filter(list, query) }
+            );
+        }
+    );
+
+
+</script>
+{% endblock %}

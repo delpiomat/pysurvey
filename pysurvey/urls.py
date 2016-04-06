@@ -34,6 +34,7 @@ urlpatterns = [
     url(r'^studenti/valore/$', jobSurvey.views.StudentiValore.as_view(), name='studenti_valore'),
     url(r'^studenti/$', jobSurvey.views.Studenti.as_view(), name='studenti'),
     url(r'^aziende/$', jobSurvey.views.Aziende.as_view(), name='aziende'),
+    url(r'^lavori/$', jobSurvey.views.Lavori.as_view(), name='lavori'),
     url(r'^grazie/$', jobSurvey.views.Grazie.as_view(), name='grazie'),
     url(r'^admin/', include(admin.site.urls)),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

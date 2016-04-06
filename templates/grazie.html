@@ -21,6 +21,11 @@
             {% elif azienda == '1' %}
                 <h2>il tuo codice Azienda: {{ id }}</h2>
                 <a id="thank" href="{% url 'aziende' %}" class="btn btn-primary center-block">Fine</a>
+            {% elif azienda == '2' %}
+                <a id="thank" href="{% url 'lavori' %}" class="btn btn-primary center-block">Fine</a>
+            {% elif azienda == '3' %}
+                <span>Errore: {{ errore }}</span>
+                <a id="thank" href="{% url 'lavori' %}" class="btn btn-primary center-block">Fine</a>
             {% endif %}
     </div>
 {% endblock %}

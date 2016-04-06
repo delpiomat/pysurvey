@@ -277,17 +277,13 @@ class Lavoro(models.Model):
     note_lavoro = models.CharField(max_length=512, null=True)
     durata_lavoro = models.IntegerField(null=True)
     azienda = models.ForeignKey(Azienda, on_delete=models.CASCADE)
+    distanza_massima = models.CharField(max_length=64, null=True)
 
-class DistanzaRange:
-    valore = models.CharField(max_length=64, null=True)
 
 class CercaLingua:
     lavoro = models.ForeignKey(Lavoro, on_delete=models.CASCADE)
     lingua= models.ForeignKey(Lingua, on_delete=models.CASCADE, null=True)
 
-class CercaDistanzaRange:
-    lavoro = models.ForeignKey(Lavoro, on_delete=models.CASCADE)
-    distanza_range = models.ForeignKey(DistanzaRange, on_delete=models.CASCADE, null=True)
 
 class CercaLivelloCariera:
     lavoro = models.ForeignKey(Lavoro, on_delete=models.CASCADE)
@@ -303,7 +299,7 @@ class CercaTipoContratto:
 
 class CercaEsami:
     lavoro = models.ForeignKey(Lavoro, on_delete=models.CASCADE)
-    esami = models.ForeignKey(Esame, on_delete=models.CASCADE, null=True)
+    esame = models.ForeignKey(Esame, on_delete=models.CASCADE, null=True)
 
 class CercaAreaOperativa:
     lavoro = models.ForeignKey(Lavoro, on_delete=models.CASCADE)

@@ -683,6 +683,204 @@ class Aziende(View):
 
         return render(request, 'grazie.html', {"azienda": '1', "id": nuova_azienda.id})
 
+
+class Lavori(View):
+
+    def get(self, request, *args, **kwargs):
+        result = {}
+        result['lingua'] = Lingua.objects.all()
+        result['campo_studi'] = CampoStudi.objects.all()
+        result['esame'] = Esame.objects.all()
+        result['livello_cariera'] = LivelloCariera.objects.all()
+        result['area_operativa'] = AreaOperativa.objects.all()
+        result['tipo_contratto'] = TipoContratto.objects.all()
+        result['citta'] = Citta.objects.all()
+        return render(request, "lavoro.html", result)
+
+    def post(self, request, *args, **kwargs):
+        if "codice_azienda" in request.POST:
+            nuovo_lavoro= Lavoro(azienda_id=request.POST["codice_azienda"])
+            if request.POST['email_lavoro']== "":
+                nuovo_lavoro.email_referente = None
+            else:
+                nuovo_lavoro.email_referente = request.POST['email_lavoro']
+
+            if request.POST['cerca_distanza']== "":
+                nuovo_lavoro.distanza_massima = None
+            else:
+                nuovo_lavoro.distanza_massima = request.POST['cerca_distanza']
+
+            if request.POST['note_lavoro']== "":
+                nuovo_lavoro.note_lavoro = None
+            else:
+                nuovo_lavoro.note_lavoro = request.POST['note_lavoro']
+
+            nuovo_lavoro.save()
+            # Ora parliamo dei multi valore-------------------------------------------
+            valore_list = json.loads(request.POST["citta_sede_lavoro"])
+            if len(valore_list) <= 0:
+                nuovo_valore_nullo = CercaCitta(lavoro=nuovo_lavoro)
+                nuovo_valore_nullo.citta = None
+                nuovo_valore_nullo.save()
+            else:
+                for v in valore_list:
+                    if len(Citta.objects.filter(valore=v.capitalize())) > 0:
+                        nuovo_valore_gia_esistente = CercaCitta(lavoro=nuovo_lavoro)
+                        nuovo_valore_gia_esistente.citta = Citta.objects.filter(valore=v.capitalize())[0]
+                        nuovo_valore_gia_esistente.save()
+                    else:
+                        nuova_valore_nuovo = Citta(valore=v)
+                        nuova_valore_nuovo.save()
+                        # ora essite nel db quel valore
+                        nuovo_valore_gia_esistente = CercaCitta(lavoro=nuovo_lavoro)
+                        nuovo_valore_gia_esistente.citta = nuova_valore_nuovo
+                        nuovo_valore_gia_esistente.save()
+
+            valore_list = json.loads(request.POST["cerca_lingua"])
+            if len(valore_list) <= 0:
+                nuovo_valore_nullo = CercaLingua(lavoro=nuovo_lavoro)
+                nuovo_valore_nullo.lingua = None
+                nuovo_valore_nullo.save()
+            else:
+                for v in valore_list:
+                    if len(Lingua.objects.filter(valore=v.capitalize())) > 0:
+                        nuovo_valore_gia_esistente = CercaLingua(lavoro=nuovo_lavoro)
+                        nuovo_valore_gia_esistente.lingua = Lingua.objects.filter(valore=v.capitalize())[0]
+                        nuovo_valore_gia_esistente.save()
+                    else:
+                        nuova_valore_nuovo = Lingua(valore=v)
+                        nuova_valore_nuovo.save()
+                        # ora essite nel db quel valore
+                        nuovo_valore_gia_esistente = CercaLingua(lavoro=nuovo_lavoro)
+                        nuovo_valore_gia_esistente.lingua = nuova_valore_nuovo
+                        nuovo_valore_gia_esistente.save()
+
+            valore_list = json.loads(request.POST["cerca_campo_studi"])
+            if len(valore_list) <= 0:
+                nuovo_valore_nullo = CercaCampoStudio(lavoro=nuovo_lavoro)
+                nuovo_valore_nullo.lingua = None
+                nuovo_valore_nullo.save()
+            else:
+                for v in valore_list:
+                    if len(CampoStudi.objects.filter(valore=v.capitalize())) > 0:
+                        nuovo_valore_gia_esistente = CercaCampoStudio(lavoro=nuovo_lavoro)
+                        nuovo_valore_gia_esistente.campo_studio = CampoStudi.objects.filter(valore=v.capitalize())[0]
+                        nuovo_valore_gia_esistente.save()
+                    else:
+                        nuova_valore_nuovo = CampoStudi(valore=v)
+                        nuova_valore_nuovo.save()
+                        # ora essite nel db quel valore
+                        nuovo_valore_gia_esistente = CercaCampoStudio(lavoro=nuovo_lavoro)
+                        nuovo_valore_gia_esistente.campo_studio = nuova_valore_nuovo
+                        nuovo_valore_gia_esistente.save()
+
+            valore_list = json.loads(request.POST["cerca_esame"])
+            if len(valore_list) <= 0:
+                nuovo_valore_nullo = CercaEsami(lavoro=nuovo_lavoro)
+                nuovo_valore_nullo.esame = None
+                nuovo_valore_nullo.save()
+            else:
+                for v in valore_list:
+                    if len(Esame.objects.filter(valore=v.capitalize())) > 0:
+                        nuovo_valore_gia_esistente = CercaEsami(lavoro=nuovo_lavoro)
+                        nuovo_valore_gia_esistente.esame = Esame.objects.filter(valore=v.capitalize())[0]
+                        nuovo_valore_gia_esistente.save()
+                    else:
+                        nuova_valore_nuovo = Esame(valore=v)
+                        nuova_valore_nuovo.save()
+                        # ora essite nel db quel valore
+                        nuovo_valore_gia_esistente = CercaEsami(lavoro=nuovo_lavoro)
+                        nuovo_valore_gia_esistente.esame = nuova_valore_nuovo
+                        nuovo_valore_gia_esistente.save()
+
+            valore_list = json.loads(request.POST["cerca_area_operativa"])
+            if len(valore_list) <= 0:
+                nuovo_valore_nullo = CercaAreaOperativa(lavoro=nuovo_lavoro)
+                nuovo_valore_nullo.area_operativa = None
+                nuovo_valore_nullo.save()
+            else:
+                for v in valore_list:
+                    if len(AreaOperativa.objects.filter(valore=v.capitalize())) > 0:
+                        nuovo_valore_gia_esistente = CercaAreaOperativa(lavoro=nuovo_lavoro)
+                        nuovo_valore_gia_esistente.area_operativa = AreaOperativa.objects.filter(valore=v.capitalize())[0]
+                        nuovo_valore_gia_esistente.save()
+                    else:
+                        nuova_valore_nuovo = AreaOperativa(valore=v)
+                        nuova_valore_nuovo.save()
+                        # ora essite nel db quel valore
+                        nuovo_valore_gia_esistente = CercaAreaOperativa(lavoro=nuovo_lavoro)
+                        nuovo_valore_gia_esistente.area_operativa = nuova_valore_nuovo
+                        nuovo_valore_gia_esistente.save()
+
+            valore_list = json.loads(request.POST["cerca_livello_cariera"])
+            if len(valore_list) <= 0:
+                nuovo_valore_nullo = CercaLivelloCariera(lavoro=nuovo_lavoro)
+                nuovo_valore_nullo.livello_cariera = None
+                nuovo_valore_nullo.save()
+            else:
+                for v in valore_list:
+                    if len(LivelloCariera.objects.filter(valore=v.capitalize())) > 0:
+                        nuovo_valore_gia_esistente = CercaLivelloCariera(lavoro=nuovo_lavoro)
+                        nuovo_valore_gia_esistente.livello_cariera = LivelloCariera.objects.filter(valore=v.capitalize())[0]
+                        nuovo_valore_gia_esistente.save()
+                    else:
+                        nuova_valore_nuovo = LivelloCariera(valore=v)
+                        nuova_valore_nuovo.save()
+                        # ora essite nel db quel valore
+                        nuovo_valore_gia_esistente = CercaLivelloCariera(lavoro=nuovo_lavoro)
+                        nuovo_valore_gia_esistente.livello_cariera = nuova_valore_nuovo
+                        nuovo_valore_gia_esistente.save()
+
+            valore_list = json.loads(request.POST["cerca_livello_cariera"])
+            if len(valore_list) <= 0:
+                nuovo_valore_nullo = CercaLivelloCariera(lavoro=nuovo_lavoro)
+                nuovo_valore_nullo.livello_cariera = None
+                nuovo_valore_nullo.save()
+            else:
+                for v in valore_list:
+                    if len(LivelloCariera.objects.filter(valore=v.capitalize())) > 0:
+                        nuovo_valore_gia_esistente = CercaLivelloCariera(lavoro=nuovo_lavoro)
+                        nuovo_valore_gia_esistente.livello_cariera = LivelloCariera.objects.filter(valore=v.capitalize())[0]
+                        nuovo_valore_gia_esistente.save()
+                    else:
+                        nuova_valore_nuovo = LivelloCariera(valore=v)
+                        nuova_valore_nuovo.save()
+                        # ora essite nel db quel valore
+                        nuovo_valore_gia_esistente = CercaLivelloCariera(lavoro=nuovo_lavoro)
+                        nuovo_valore_gia_esistente.livello_cariera = nuova_valore_nuovo
+                        nuovo_valore_gia_esistente.save()
+
+            valore_list = json.loads(request.POST["cerca_tipo_contratto"])
+            if len(valore_list) <= 0:
+                nuovo_valore_nullo = CercaTipoContratto(lavoro=nuovo_lavoro)
+                nuovo_valore_nullo.tipo_contratto = None
+                nuovo_valore_nullo.save()
+            else:
+                for v in valore_list:
+                    if len(TipoContratto.objects.filter(valore=v.capitalize())) > 0:
+                        nuovo_valore_gia_esistente = CercaTipoContratto(lavoro=nuovo_lavoro)
+                        nuovo_valore_gia_esistente.tipo_contratto = TipoContratto.objects.filter(valore=v.capitalize())[0]
+                        nuovo_valore_gia_esistente.save()
+                    else:
+                        nuova_valore_nuovo = TipoContratto(valore=v)
+                        nuova_valore_nuovo.save()
+                        # ora essite nel db quel valore
+                        nuovo_valore_gia_esistente = CercaTipoContratto(lavoro=nuovo_lavoro)
+                        nuovo_valore_gia_esistente.tipo_contratto = nuova_valore_nuovo
+                        nuovo_valore_gia_esistente.save()
+        else:
+            return render(request, 'grazie.html', {"azienda": '3', "errore": "no codice Azienda"})
+
+        return render(request, 'grazie.html', {"azienda": '2'})
+
+
+
+
+
+
+
+
+
 class Grazie(View):
 
     def get(self, request, *args, **kwargs):
