@@ -52,3 +52,183 @@ class Result(models.Model):
 
     def __str__(self):
         return self.id
+# ------------------------------------------------------------------------------------------------------------------
+
+
+# valori sigoli ----------------------------------------------------------------------------------------------------
+class Zona(models.Model):
+    valore = models.CharField(max_length=64)
+
+
+class LivelloPC(models.Model):
+    valore = models.CharField(max_length=64)
+
+
+class GradoStudi(models.Model):
+    valore = models.CharField(max_length=64)
+
+
+# valori multipli------------------------------------------------------------------------------------------------------
+class Stato(models.Model):
+    valore = models.CharField(max_length=64)
+
+
+class Lingua(models.Model):
+    valore = models.CharField(max_length=64)
+
+
+class ConoscenzaSpecifica(models.Model):
+    valore = models.CharField(max_length=64)
+
+
+class Mansione(models.Model):
+    valore = models.CharField(max_length=64)
+
+
+class LivelloCariera(models.Model):
+    valore = models.CharField(max_length=64)
+
+
+class Ruolo(models.Model):
+    valore = models.CharField(max_length=64)
+
+
+class AreaOperativa(models.Model):
+    valore = models.CharField(max_length=64)
+
+
+class TipoContratto(models.Model):
+    valore = models.CharField(max_length=64)
+
+
+class Benefit(models.Model):
+    valore = models.CharField(max_length=64)
+
+
+class Interesse(models.Model):
+    valore = models.CharField(max_length=64)
+
+
+class Persona(models.Model):
+    #anagrafica
+    email = models.CharField(max_length=64, null=True)
+    cap = models.CharField(max_length=64, null=True)
+    citta = models.CharField(max_length=64, null=True)
+    anno_nascita = models.IntegerField(null=True)
+    note = models.CharField(max_length=512, null=True)
+    voto_finale = models.IntegerField(null=True)
+
+    #esperienze pregresse
+    esperienze_pregresse = models.BooleanField()  # si/no
+    desc_esperienze_pregresse = models.CharField(max_length=512)
+    numero_attivita_svolte = models.IntegerField()
+    numero_mesi_attivita_svolte = models.IntegerField()
+
+    #futuro
+    possibilita_trasferirsi = models.BooleanField()  # si/no/non so????
+    stipendio_futuro = models.IntegerField()
+
+    #esterne
+    zona = models.ForeignKey(Zona, on_delete=models.CASCADE, null=True)
+    grado_studi = models.ForeignKey(GradoStudi, on_delete=models.CASCADE, null=True)
+    livello_uso_computer = models.ForeignKey(LivelloPC, on_delete=models.CASCADE, null=True)
+
+
+class StatoAttuale(models.Model):
+    stato = models.ForeignKey(Stato, on_delete=models.CASCADE, null=True)
+    persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
+
+
+class LinguaAttuale(models.Model):
+    lingua = models.ForeignKey(Lingua, on_delete=models.CASCADE, null=True)
+    persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
+
+
+class ConoscenzaSpecificaAttuale(models.Model):
+    conoscenza_specifica = models.ForeignKey(ConoscenzaSpecifica, on_delete=models.CASCADE, null=True)
+    persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
+
+
+class MansioneAttuale(models.Model):
+    mansione = models.ForeignKey(Mansione, on_delete=models.CASCADE, null=True)
+    persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
+
+
+class MansionePregresso(models.Model):
+    mansione = models.ForeignKey(Mansione, on_delete=models.CASCADE, null=True)
+    persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
+
+
+class MansioneFuturo(models.Model):
+    mansione = models.ForeignKey(Mansione, on_delete=models.CASCADE, null=True)
+    persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
+
+
+class LivelloCarieraAttuale(models.Model):
+    persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
+    livello_cariera = models.ForeignKey(LivelloCariera, on_delete=models.CASCADE, null=True )
+
+
+class LivelloCarieraPregresso(models.Model):
+    persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
+    livello_cariera = models.ForeignKey(LivelloCariera, on_delete=models.CASCADE, null=True)
+
+
+class LivelloCarieraFuturo(models.Model):
+    persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
+    livello_cariera = models.ForeignKey(LivelloCariera, on_delete=models.CASCADE, null=True)
+
+
+class RuoloAttuale(models.Model):
+    livello_cariera = models.ForeignKey(LivelloCariera, on_delete=models.CASCADE, null=True)
+    Persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
+
+
+class RuoloPregresso(models.Model):
+    livello_cariera = models.ForeignKey(LivelloCariera, on_delete=models.CASCADE, null=True)
+    livello_cariera = models.ForeignKey(Persona, on_delete=models.CASCADE)
+
+
+class RuoloFuturo(models.Model):
+    livello_cariera = models.ForeignKey(LivelloCariera, on_delete=models.CASCADE, null=True)
+    livello_cariera = models.ForeignKey(Persona, on_delete=models.CASCADE)
+
+
+class AreaOperativaAttuale(models.Model):
+    area_operativa = models.ForeignKey(AreaOperativa, on_delete=models.CASCADE, null=True)
+    persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
+
+
+class AreaOperativaPregresso(models.Model):
+    area_operativa = models.ForeignKey(AreaOperativa, on_delete=models.CASCADE, null=True)
+    persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
+
+
+class AreaOperativaFuturo(models.Model):
+    area_operativa = models.ForeignKey(AreaOperativa, on_delete=models.CASCADE, null=True)
+    persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
+
+
+class TipoContrattoAttuale(models.Model):
+    tipo_contratto = models.ForeignKey(TipoContratto, on_delete=models.CASCADE, null=True)
+    persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
+
+
+class TipoContrattoPregesso(models.Model):
+    tipo_contratto = models.ForeignKey(TipoContratto, on_delete=models.CASCADE, null=True)
+    persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
+
+
+class TipoContrattoFuturo(models.Model):
+    tipo_contratto = models.ForeignKey(TipoContratto, on_delete=models.CASCADE, null=True)
+    persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
+
+
+class BenefitFuturo(models.Model):
+    benefit = models.ForeignKey(Benefit, on_delete=models.CASCADE, null=True)
+    persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
+
+
+class InteresseFuturo(models.Model):
+    interesse = models.ForeignKey(Interesse, on_delete=models.CASCADE, null=True)
+    persona = models.ForeignKey(Persona, on_delete=models.CASCADE)

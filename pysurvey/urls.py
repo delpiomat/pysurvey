@@ -19,6 +19,7 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 import createSurvey.views
+import jobSurvey.views
 
 urlpatterns = [
     url(r'^log_in/', createSurvey.views.AuthLogin.as_view(), name="log_in"),
@@ -30,5 +31,6 @@ urlpatterns = [
     url(r'^make_survey/(?P<id>[0-9]+)/$', createSurvey.views.MakeSurvey.as_view(), name="make_survey"),
     url(r'^result/(?P<id>[0-9]+)/$', createSurvey.views.ResultSurvey.as_view(), name="result"),
     url(r'^download/(?P<type>.*)/(?P<survey_id>[0-9]+)/$', createSurvey.views.result_download, name='result_download'),
+    url(r'^studenti/valore/$', jobSurvey.views.StudentiValore.as_view(), name='result_download'),
     url(r'^admin/', include(admin.site.urls)),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
