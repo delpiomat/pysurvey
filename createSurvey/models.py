@@ -111,6 +111,9 @@ class Interesse(models.Model):
 class Esame(models.Model):
     valore = models.CharField(max_length=64)
 
+class CampoStudi(models.Model):
+    valore = models.CharField(max_length=64)
+
 
 class Persona(models.Model):
     #anagrafica
@@ -241,6 +244,10 @@ class EsameAttuale(models.Model):
     esame = models.ForeignKey(Esame, on_delete=models.CASCADE, null=True)
     persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
 
+class CampoStudiAttuale(models.Model):
+    campo_studi = models.ForeignKey(CampoStudi, on_delete=models.CASCADE, null=True)
+    persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
+
 
 # -----------------------------------------------------------------------------------------------------------------
 # Aziende
@@ -261,3 +268,49 @@ class AltraSede(models.Model):
 
 
 # fine anagrafica azienda
+
+# -----------------------------------------------------------------------------------------------------------------
+# Offerta di Lavoro
+
+class Lavoro(models.Model):
+    email_referente = models.CharField(max_length=64, null=True)
+    note_lavoro = models.CharField(max_length=512, null=True)
+    durata_lavoro = models.IntegerField(null=True)
+    azienda = models.ForeignKey(Azienda, on_delete=models.CASCADE)
+
+class DistanzaRange:
+    valore = models.CharField(max_length=64, null=True)
+
+class CercaLingua:
+    lavoro = models.ForeignKey(Lavoro, on_delete=models.CASCADE)
+    lingua= models.ForeignKey(Lingua, on_delete=models.CASCADE, null=True)
+
+class CercaDistanzaRange:
+    lavoro = models.ForeignKey(Lavoro, on_delete=models.CASCADE)
+    distanza_range = models.ForeignKey(DistanzaRange, on_delete=models.CASCADE, null=True)
+
+class CercaLivelloCariera:
+    lavoro = models.ForeignKey(Lavoro, on_delete=models.CASCADE)
+    livello_cariera = models.ForeignKey(LivelloCariera, on_delete=models.CASCADE, null=True)
+
+class CercaCitta:
+    lavoro = models.ForeignKey(Lavoro, on_delete=models.CASCADE)
+    citta = models.ForeignKey(Citta, on_delete=models.CASCADE, null=True)
+
+class CercaTipoContratto:
+    lavoro = models.ForeignKey(Lavoro, on_delete=models.CASCADE)
+    tipo_contratto = models.ForeignKey(TipoContratto, on_delete=models.CASCADE, null=True)
+
+class CercaEsami:
+    lavoro = models.ForeignKey(Lavoro, on_delete=models.CASCADE)
+    esami = models.ForeignKey(Esame, on_delete=models.CASCADE, null=True)
+
+class CercaAreaOperativa:
+    lavoro = models.ForeignKey(Lavoro, on_delete=models.CASCADE)
+    area_operativa = models.ForeignKey(AreaOperativa, on_delete=models.CASCADE, null=True)
+
+class CercaCampoStudio:
+    lavoro = models.ForeignKey(Lavoro, on_delete=models.CASCADE)
+    campo_studio = models.ForeignKey(CampoStudi, on_delete=models.CASCADE, null=True)
+
+# fine Lavoro

@@ -87,6 +87,11 @@
         <textarea name="esame_attuale" id="esame_attuale" class="example" rows="1"></textarea>
     </div>
 
+    <div class="form-group">
+        <label for="campo_studi">Campo di Studi:</label>
+        <textarea name="campo_studi" id="campo_studi" class="example" rows="1"></textarea>
+        <span class="help-block">Informatica, Matematica, Lettere</span>
+    </div>
 
     <div class="form-group">
         <label for="livello_pc">Livello conoscenza PC:</label>
@@ -345,6 +350,28 @@
         {
             var list = [
             {% for z in grado_studi %}
+                '{{z.valore}}',
+            {% endfor %}
+            ],
+            textext = $(e.target).textext()[0],
+            query = (data ? data.query : '') || ''
+                ;
+
+            $(this).trigger(
+                'setSuggestions',
+                { result : textext.itemManager().filter(list, query) }
+            );
+        }
+    );
+
+    $('#campo_studi')
+        .textext({
+            plugins : 'tags autocomplete'
+        })
+        .bind('getSuggestions', function(e, data)
+        {
+            var list = [
+            {% for z in campo_studi %}
                 '{{z.valore}}',
             {% endfor %}
             ],

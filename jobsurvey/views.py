@@ -82,6 +82,7 @@ class Studenti(View):
         result['grado_studi'] = GradoStudi.objects.all()
         result['stato'] = Stato.objects.all()
         result['lingua'] = Lingua.objects.all()
+        result['campo_studi'] = CampoStudi.objects.all()
         result['esame'] = Esame.objects.all()
         result['conoscenza_specifica'] = ConoscenzaSpecifica.objects.all()
         result['mansione'] = Mansione.objects.all()
@@ -597,6 +598,25 @@ class Studenti(View):
                     # ora essite nel db quel valore
                     nuovo_valore_gia_esistente = EsameAttuale(persona=nuova_persona)
                     nuovo_valore_gia_esistente.esame = nuova_valore_nuovo
+                    nuovo_valore_gia_esistente.save()
+
+        valore_list = json.loads(request.POST["campo_studi"])
+        if len(valore_list) <= 0:
+            nuovo_valore_nullo = CampoStudiAttuale(persona=nuova_persona)
+            nuovo_valore_nullo.campo_studi = None
+            nuovo_valore_nullo.save()
+        else:
+            for v in valore_list:
+                if len(CampoStudi.objects.filter(valore=v.capitalize())) > 0:
+                    nuovo_valore_gia_esistente = CampoStudiAttuale(persona=nuova_persona)
+                    nuovo_valore_gia_esistente.campo_studi = CampoStudi.objects.filter(valore=v.capitalize())[0]
+                    nuovo_valore_gia_esistente.save()
+                else:
+                    nuova_valore_nuovo = CampoStudi(valore=v)
+                    nuova_valore_nuovo.save()
+                    # ora essite nel db quel valore
+                    nuovo_valore_gia_esistente = CampoStudiAttuale(persona=nuova_persona)
+                    nuovo_valore_gia_esistente.campo_studi = nuova_valore_nuovo
                     nuovo_valore_gia_esistente.save()
 
 
