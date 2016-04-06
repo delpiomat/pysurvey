@@ -190,7 +190,7 @@ class Studenti(View):
         elif len(GradoStudi.objects.filter(valore=grado_studi_post[0].capitalize())) > 0:
             nuova_persona.grado_studi = GradoStudi.objects.filter(valore=grado_studi_post[0].capitalize())[0]
         else:
-            grado_studi = LivelloPC(valore=grado_studi_post[0].capitalize())
+            grado_studi = GradoStudi(valore=grado_studi_post[0].capitalize())
             grado_studi.save()
             nuova_persona.grado_studi = grado_studi
 
