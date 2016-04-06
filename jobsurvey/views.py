@@ -589,7 +589,7 @@ class Studenti(View):
             for v in valore_list:
                 if len(Esame.objects.filter(valore=v.capitalize())) > 0:
                     nuovo_valore_gia_esistente = EsameAttuale(persona=nuova_persona)
-                    nuovo_valore_gia_esistente.esame = EsameAttuale.objects.filter(valore=v.capitalize())[0]
+                    nuovo_valore_gia_esistente.esame = Esame.objects.filter(valore=v.capitalize())[0]
                     nuovo_valore_gia_esistente.save()
                 else:
                     nuova_valore_nuovo = Esame(valore=v)

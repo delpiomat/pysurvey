@@ -38,57 +38,48 @@
 
 <form id="forminvio" data-toggle="validator" method="POST" role="form">{% csrf_token %}
 
+
     <h2>Anagrafica</h2>
     <div class="form-group">
         <label for="cap">Cap:</label>
         <input type="text" name="cap" id="cap" class="form-control">
+		<span class="help-block">CAP della città di residenza (5 cifre)</span>
     </div>
 
     <div class="form-group">
         <label for="email">Email:</label>
         <input type="text" name="email" id="email" class="form-control">
+		<span class="help-block">email per riferimento dello studente</span>
     </div>
 
     <div class="form-group">
         <label for="anno">Anno:</label>
         <input type="text" name="anno" id="anno" class="form-control">
+		<span class="help-block">anno di nascita dello studente</span>
     </div>
 
     <div class="form-group">
         <label for="citta">Citta':</label>
         <input type="text" name="citta" id="citta" class="form-control">
+		<span class="help-block">Nome città in cui si vive</span>
     </div>
 
     <div class="form-group">
         <label for="zona">Zona:</label>
         <textarea name="zona" id="zona" class="example" rows="1"></textarea>
-        <span class="help-block">se di padova</span>
+        <span class="help-block">Riempire solo se si vive a Padova (es. portello, stanga, nord-est)</span>
     </div>
 
     <div class="form-group">
         <label>Grado Studi</label>
         <textarea name="grado_studi" id="grado_studi" class="example" rows="1"></textarea>
+		<span class="help-block">Indicare livello di studi acquisito o che si sta per acquisire (es. laurea triennale)</span>
     </div>
 
     <div class="form-group">
         <label for="voto">Voto:</label>
         <input type="text" name="voto" id="voto" class="form-control">
-        <span class="help-block">Riferito al grado istruzione diploma, laurea o specialistica</span>
-    </div>
-
-    <div class="form-group">
-        <label for="livello_pc">Livello conoscenza PC:</label>
-        <textarea  name="livello_pc" id="livello_pc" class="example" rows="1"></textarea>
-    </div>
-
-    <div class="form-group">
-        <label for="lingua">Lingua</label>
-        <textarea name="lingua" id="lingua" class="example" rows="1"></textarea>
-    </div>
-
-    <div class="form-group">
-        <label for="conoscenza_specifica">Conoscenza specifica</label>
-        <textarea name="conoscenza_specifica" id="conoscenza_specifica" class="example" rows="1"></textarea>
+        <span class="help-block">Riferito al grado di studi acquisito o una stima di quello che si sta per acquisire</span>
     </div>
 
     <div class="form-group">
@@ -96,9 +87,33 @@
         <textarea name="esame_attuale" id="esame_attuale" class="example" rows="1"></textarea>
     </div>
 
+
+    <div class="form-group">
+        <label for="livello_pc">Livello conoscenza PC:</label>
+        <textarea  name="livello_pc" id="livello_pc" class="example" rows="1"></textarea>
+		<span class="help-block">Inserire alto, basso, medio</span>
+    </div>
+
+	<!-- è sparito Campo di studi -->
+
+    <div class="form-group">
+        <label for="lingua">Lingua</label>
+        <textarea name="lingua" id="lingua" class="example" rows="1"></textarea>
+		<span class="help-block">Indicare quale lingue si conoscono (es. Italiano, Inglese)</span>
+    </div>
+
+	<!-- Qui servirebbe associare un livello del quadro europeo, se possibile -->
+
+    <div class="form-group">
+        <label for="conoscenza_specifica">Conoscenza specifica</label>
+        <textarea name="conoscenza_specifica" id="conoscenza_specifica" class="example" rows="1"></textarea>
+		<span class="help-block">Indicare ciò che si conosce nello specifico</span>
+    </div>
+
     <div class="form-group">
         <label for="stato">Stato</label>
         <textarea name="stato" id="stato" class="example" rows="1"></textarea>
+		<span class="help-block">Indicare stato lavorativo</span>
     </div>
 
     <div class="form-group">
@@ -111,26 +126,31 @@
     <div class="form-group">
         <label for="mansione_attuale">Mansione Attuale</label>
         <textarea name="mansione_attuale" id="mansione_attuale" class="example" rows="1"></textarea>
+		<span class="help-block">Quale lavoro si sta svolgendo? (es. programmatore, sistemista, tecnico)</span>
     </div>
 
     <div class="form-group">
         <label for="livello_cariera_attuale">Livello Cariera Attuale</label>
         <textarea name="livello_cariera_attuale" id="livello_cariera_attuale" class="example" rows="1"></textarea>
+		<span class="help-block">Indicare il livello raggiunto (es. principiante, professionista, manager)</span>
     </div>
 
     <div class="form-group">
         <label for="ruolo_attuale">Ruolo Attuale</label>
         <textarea  name="ruolo_attuale" id="ruolo_attuale" class="example" rows="1"></textarea>
+		<span class="help-block">Indicare il ruolo che si copre nella propria mansione (es. consultion, human resource)</span>
     </div>
 
     <div class="form-group">
-        <label for="area_operativa_attuale" >Area Operativa Attuale</label>
+        <label for="area_operativa_attuale">Area Operativa Attuale</label>
         <textarea name="area_operativa_attuale" id="area_operativa_attuale" class="example" rows="1"></textarea>
+		<span class="help-block">Indicare l'area operativa coperta dal proprio lavoro (es. sviluppo web, ia, database)</span>
     </div>
 
     <div class="form-group">
         <label for="tipo_contratto_attuale">Tipo Contratto Attuale</label>
         <textarea name="tipo_contratto_attuale" id="tipo_contratto_attuale" class="example" rows="1"></textarea>
+		<span class="help-block">Indicare con quale tipo di contratto si lavora (es. part-time, tempo indeterminato)</span>
     </div>
 
 
@@ -149,45 +169,55 @@
             </label>
         </div>
     </div>
+	<br />
+	<hr />
 
     <div class="form-group">
         <label for="numero_attivita_svolte">Numero Attivita Svolte:</label>
         <input type="text" name="numero_attivita_svolte" id="numero_attivita_svolte" class="form-control">
+		<span class="help-block">Inserire il numero complessivo di attività svolte nel passato</span>
     </div>
 
     <div class="form-group">
         <label for="numero_mesi_attivita_svolte">Mesi Attivita Svolte:</label>
         <input type="text" name="numero_mesi_attivita_svolte" id="numero_mesi_attivita_svolte" class="form-control">
+		<span class="help-block">Inserire il numero complessivo di mesi lavorativi di tutte le attività svolte nel passato</span>
     </div>
 
     <div class="form-group">
         <label for="desc_esperienze_pregresse">descrizione Esperienze Pregresse:</label>
         <input type="text" name="desc_esperienze_pregresso" id="desc_esperienze_pregresso" class="form-control">
+		<span class="help-block">Inserire alcune parole per descrivere le attività svolte in passato</span>
     </div>
 
     <div class="form-group">
         <label for="mansione_attuale">Mansione Pregressa</label>
         <textarea name="mansione_pregresso" id="mansione_pregresso" class="example" rows="1"></textarea>
+		<span class="help-block">Inserire le mansioni effettuate nelle attività passate (es. programmatore, sistemista, tecnico)</span>
     </div>
 
     <div class="form-group">
         <label for="livello_cariera_attuale">Livello Cariera Pregressa</label>
         <textarea name="livello_cariera_pregresso" id="livello_cariera_pregresso" class="example" rows="1"></textarea>
+		<span class="help-block">Inserire i livelli di carriera di tutte le attività passate (es. principiante, professionista, manager)</span>
     </div>
 
     <div class="form-group">
         <label for="ruolo_attuale">Ruolo Pregressa</label>
         <textarea  name="ruolo_pregresso" id="ruolo_pregresso" class="example" rows="1"></textarea>
+		<span class="help-block">Inserire i ruoli ricoperti nelle attività passate (es. consultion, human resource)</span>
     </div>
 
     <div class="form-group">
         <label for="area_operativa_attuale" >Area Operativa Pregressa</label>
         <textarea name="area_operativa_pregresso" id="area_operativa_pregresso" class="example" rows="1"></textarea>
+		<span class="help-block">Inserire le aree operative delle attività passate (es. sviluppo web, ia, database)</span>
     </div>
 
     <div class="form-group">
         <label for="tipo_contratto_attuale">Tipo Contratto Pregressa</label>
         <textarea name="tipo_contratto_pregresso" id="tipo_contratto_pregresso" class="example" rows="1"></textarea>
+		<span class="help-block">Inserire le tipologie di contratto delle attività passate (es. part-time, tempo indeterminato)</span>
     </div>
 
 
@@ -197,43 +227,50 @@
     <div class="form-group">
         <label for="mansione_attuale">Mansione Futura</label>
         <textarea name="mansione_futuro" id="mansione_futuro" class="example" rows="1"></textarea>
+		<span class="help-block">Inserire la mansione che si vorrebbe ricoprire in futuri lavori (es. programmatore, sistemista, tecnico)</span>
     </div>
 
     <div class="form-group">
         <label for="livello_cariera_attuale">Livello Cariera Futura</label>
         <textarea name="livello_cariera_futuro" id="livello_cariera_futuro" class="example" rows="1"></textarea>
+		<span class="help-block">Inserire il livello di carriera che si vorrebbe avere in futuri lavori (es. principiante, professionista, manager)</span>
     </div>
 
     <div class="form-group">
         <label for="ruolo_attuale">Ruolo Futuro</label>
         <textarea  name="ruolo_futuro" id="ruolo_futuro" class="example" rows="1"></textarea>
+		<span class="help-block">Inserire il ruolo che si vorrebbe ricoprire in futuri lavori (es. consultion, human resource)</span>
     </div>
 
     <div class="form-group">
         <label for="area_operativa_attuale" >Area Operativa Futuro</label>
         <textarea name="area_operativa_futuro" id="area_operativa_futuro" class="example" rows="1"></textarea>
+		<span class="help-block">Inserire le aree operative in cui si vorrebbe operare in futuri lavori (es. sviluppo web, ia, database)</span>
     </div>
 
     <div class="form-group">
         <label for="tipo_contratto_attuale">Tipo Contratto Futuro</label>
         <textarea name="tipo_contratto_futuro" id="tipo_contratto_futuro" class="example" rows="1"></textarea>
+		<span class="help-block">Inserire la tipologia di contratto che si vorrebbe avere in futuri lavori (es. part-time, tempo indeterminato)</span>
     </div>
 
     <div class="form-group">
         <label for="benefit">Benefit Futuro</label>
         <textarea  name="benefit_futuro" id="benefit_futuro" class="example" rows="1"></textarea>
+		<span class="help-block">Inserire elementi in aggiunta allo stipendio ricevuto (es."rimborso spese", "mensa")</span>
     </div>
 
 
     <div class="form-group">
         <label for="interesse_futuro">Interesse Futuro</label>
         <textarea name="interesse_futuro" id="interesse_futuro" class="example" rows="1"></textarea>
+		<span class="help-block"></span>
     </div>
 
     <div class="form-group">
         <label for="stipendio_futuro">Stipendio Futuro:</label>
         <input type="text" name="stipendio_futuro" id="stipendio_futuro" class="form-control">
-        <span class="help-block">Una stima sulllo stipendio netto al mese</span>
+        <span class="help-block">Una stima sullo stipendio netto al mese</span>
     </div>
 
     <div class="form-group">
@@ -249,7 +286,6 @@
             </label>
         </div>
     </div>
-
     <div class="form-group">
         <button type="submit" id="conf" class="btn btn-primary">Invia</button>
     </div>
