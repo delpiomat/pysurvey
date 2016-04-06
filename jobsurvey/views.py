@@ -53,6 +53,20 @@ class StudentiValore(View):
         logger.error("la post! ")
         logger.error(request)
         for a in request:
-            logger.error(a)
-        return render(request, 'studenti_value.html')
+            logger.error(str(a)+"adasdasdasd")
+        result = {}
+        result['zona'] = Zona.objects.all()
+        result['livello_pc'] = LivelloPC.objects.all()
+        result['grado_studi'] = GradoStudi.objects.all()
+        result['stato'] = Stato.objects.all()
+        result['lingua'] = Lingua.objects.all()
+        result['conoscenza_specifica'] = ConoscenzaSpecifica.objects.all()
+        result['mansione'] = Mansione.objects.all()
+        result['livello_cariera'] = LivelloCariera.objects.all()
+        result['area_operativa'] = AreaOperativa.objects.all()
+        result['tipo_contratto'] = TipoContratto.objects.all()
+        result['benefit'] = Benefit.objects.all()
+        result['ruolo'] = Ruolo.objects.all()
+        result['interesse'] = Interesse.objects.all()
+        return render(request, 'studenti_value.html',result)
 

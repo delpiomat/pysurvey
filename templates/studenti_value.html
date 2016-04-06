@@ -9,57 +9,25 @@
 
     <link rel="stylesheet" href="{% static 'bootstrap-3.3.6/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'bootstrap-3.3.6/css/bootstrap-theme.min.css' %}">
-    <link rel="stylesheet" href="{% static 'bootstrap-tagsinput/dist/bootstrap-tagsinput.css' %}">
+
+        <link rel="stylesheet" href="{% static 'textext/src/css/textext.core.css'%}" type="text/css" />
+		<link rel="stylesheet" href="{% static 'textext/src/css/textext.plugin.tags.css'%}" type="text/css" />
+		<link rel="stylesheet" href="{% static 'textext/src/css/textext.plugin.autocomplete.css'%}" type="text/css" />
+		<link rel="stylesheet" href="{% static 'textext/src/css/textext.plugin.focus.css'%}" type="text/css" />
+		<link rel="stylesheet" href="{% static 'textext/src/css/textext.plugin.prompt.css'%}" type="text/css" />
+		<link rel="stylesheet" href="{% static 'textext/src/css/textext.plugin.arrow.css'%}" type="text/css" />
 
 
-    <link rel="stylesheet" href="{% static 'bootstrap-tagsinput/vendor/css/vendor.css'%}" />
-
-    <script src="{% static 'jquery/jquery.min.js'%}"></script>
-    <script src="{% static 'bootstrap-3.3.6/js/bootstrap.min.js'%}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"></script>
-    <script src="{% static 'bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js'%}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/rainbow/1.2.0/js/rainbow.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/rainbow/1.2.0/js/language/generic.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/rainbow/1.2.0/js/language/html.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/rainbow/1.2.0/js/language/javascript.js"></script>
-
-    <script src="{% static 'jquery-textext/src/js/textext.core.js'%}"></script>
-
-
-
-<script src="{% static 'bootstrap-tagsinput/vendor/js/vendor.js'%}"></script>
-
-
-
-
-
-    <script type="application/javascript">
-
-        function read(){
-            var read=$("input").val();
-            console.log(read);
-
-            $('input, select').each(
-                 function(index){
-                    var input = $(this);
-                    console.log('Type: ' + input.attr('type') + 'Name: ' + input.attr('name') + 'Value: ' + input.val());
-                 }
-            );
-
-
-            $('input').tagsinput({
-                tagClass: 'prova'
-            });
-            console.log("Classssssse.......................")
-            $('.prova').each(
-                 function(index){
-                    var input = $(this);
-                    console.log('Type: ' + input.attr('type') + 'Name: ' + input.attr('name') + 'Value: ' + input.val());
-                 }
-            );
-        }
-
-    </script>
+        <script src="{% static 'bootstrap-3.3.6/js/bootstrap.min.js'%}"></script>
+		<script src="{% static 'textext/src/js/textext.core.js'%}" type="text/javascript" charset="utf-8"></script>
+		<script src="{% static 'textext/src/js/textext.plugin.tags.js'%}" type="text/javascript" charset="utf-8"></script>
+		<script src="{% static 'textext/src/js/textext.plugin.autocomplete.js'%}" type="text/javascript" charset="utf-8"></script>
+		<script src="{% static 'textext/src/js/textext.plugin.suggestions.js'%}" type="text/javascript" charset="utf-8"></script>
+		<script src="{% static 'textext/src/js/textext.plugin.filter.js'%}" type="text/javascript" charset="utf-8"></script>
+		<script src="{% static 'textext/src/js/textext.plugin.focus.js'%}" type="text/javascript" charset="utf-8"></script>
+		<script src="{% static 'textext/src/js/textext.plugin.prompt.js'%}" type="text/javascript" charset="utf-8"></script>
+		<script src="{% static 'textext/src/js/textext.plugin.ajax.js'%}" type="text/javascript" charset="utf-8"></script>
+		<script src="{% static 'textext/src/js/textext.plugin.arrow.js'%}" type="text/javascript" charset="utf-8"></script>
 
 {% endblock %}
 
@@ -71,116 +39,69 @@
 <textarea id="textarea" class="example" rows="1"></textarea>
 
 
-<p>Esempio</p>
-<select multiple data-role="tagsinput">
-  <option value="Amsterdam">Amsterdam</option>
-  <option value="Washington">Washington</option>
-  <option value="Sydney">Sydney</option>
-  <option value="Beijing">Beijing</option>
-  <option value="Cairo">Cairo</option>
-</select>
-
 <form id="forminvio" data-toggle="validator" method="POST" role="form">{% csrf_token %}
 
-    <p>Zona</p>
-    <select form="forminvio" multiple data-role="tagsinput">
-        {% for z in zona %}
-            <option value="{{ z.valore }}">{{ z.id }}</option>
-        {% endfor %}
-    </select>
-
-    <p>Livello PC</p>
-    <select id="livello_pc" multiple data-role="tagsinput">
-        {% for z in livello_pc %}
-            <option value="{{ z.valore }}">{{ z.id }}</option>
-        {% endfor %}
-    </select>
-
-    <p>Grado Studi</p>
-    <select multiple data-role="tagsinput">
-        {% for z in grado_studi %}
-            <option value="{{ z.valore }}">{{ z.id }}</option>
-        {% endfor %}
-    </select>
-
-    <p>Stato</p>
-    <select multiple data-role="tagsinput">
-        {% for z in stato %}
-            <option value="{{ z.valore }}">{{ z.id }}</option>
-        {% endfor %}
-    </select>
-
-    <p>Lingua</p>
-    <select multiple data-role="tagsinput">
-        {% for z in lingua %}
-            <option value="{{ z.valore }}">{{ z.id }}</option>
-        {% endfor %}
-    </select>
-
-    <p>Conoscenza specifica</p>
-    <select multiple data-role="tagsinput">
-        {% for z in conoscenza_specifica %}
-            <option value="{{ z.valore }}">{{ z.id }}</option>
-        {% endfor %}
-    </select>
-
-    <p>Mansione</p>
-    <select multiple data-role="tagsinput">
-        {% for z in mansione %}
-            <option value="{{ z.valore }}">{{ z.id }}</option>
-        {% endfor %}
-    </select>
-
-    <p>Livello Cariera</p>
-    <select multiple data-role="tagsinput">
-        {% for z in livello_cariera %}
-            <option value="{{ z.valore }}">{{ z.id }}</option>
-        {% endfor %}
-    </select>
-
-    <p>Ruolo</p>
-    <select multiple data-role="tagsinput">
-        {% for z in ruolo %}
-            <option value="{{ z.valore }}">{{ z.id }}</option>
-        {% endfor %}
-    </select>
-
-    <p>Area Operativa</p>
-    <select multiple data-role="tagsinput">
-        {% for z in area_operativa %}
-            <option value="{{ z.valore }}">{{ z.id }}</option>
-        {% endfor %}
-    </select>
-
-    <p>Tipo Contratto</p>
-    <select multiple data-role="tagsinput">
-        {% for z in tipo_contratto %}
-            <option value="{{ z.valore }}">{{ z.id }}</option>
-        {% endfor %}
-    </select>
-
-    <p>Benefit</p>
-    <select multiple data-role="tagsinput">
-        {% for z in benefit %}
-            <option value="{{ z.valore }}">{{ z.id }}</option>
-        {% endfor %}
-    </select>
-
-    <p>Interesse</p>
-    <select multiple data-role="tagsinput">
-        {% for z in interesse %}
-            <option value="{{ z.valore }}">{{ z.id }}</option>
-        {% endfor %}
-    </select>
+    <div class="form-group">
+        <label for="zona">Zona:</label>
+        <textarea with="400px" name="zona" id="zona" class="example" rows="1"></textarea>
+    </div>
 
     <div class="form-group">
-        <button type="submit" onclick="read();" id="confirma_aggiornamento" class="btn btn-primary">Invia</button>
+        <label for="livello_pc">Livello PC:</label>
+        <textarea  name="livello_pc" id="livello_pc" class="example" rows="1"></textarea>
+    </div>
+
+    <p>Grado Studi</p>
+    <textarea name="grado_studi" id="grado_studi" class="example" rows="1"></textarea>
+
+
+    <p>Stato</p>
+    <textarea name="stao" id="stato" class="example" rows="1"></textarea>
+
+
+    <p>Lingua</p>
+    <textarea name="lingua" id="lingua" class="example" rows="1"></textarea>
+
+
+    <p>Conoscenza specifica</p>
+    <textarea name="conoscenza_specifica" id="conoscenza_specifica" class="example" rows="1"></textarea>
+
+
+    <p>Mansione</p>
+    <textarea name="mansione" id="mansione" class="example" rows="1"></textarea>
+
+
+    <p>Livello Cariera</p>
+    <textarea name="livello_cariera" id="livello_cariera" class="example" rows="1"></textarea>
+
+
+    <p>Ruolo</p>
+    <textarea  name="ruolo" id="ruolo" class="example" rows="1"></textarea>
+
+
+    <p>Area Operativa</p>
+    <textarea name="area_operativa" id="area_operativa" class="example" rows="1"></textarea>
+
+
+    <p>Tipo Contratto</p>
+    <textarea name="tipo_contratto" id="tipo_contratto" class="example" rows="1"></textarea>
+
+
+    <p>Benefit</p>
+    <textarea  name="benefit" id="benefit" class="example" rows="1"></textarea>
+
+
+    <p>Interesse</p>
+    <textarea name="interesse" id="interesse" class="example" rows="1"></textarea>
+
+
+    <div class="form-group">
+        <button type="submit" id="conf" class="btn btn-primary">Invia</button>
     </div>
 </form>
 </div>
 
-
-    <script type="text/javascript">
+<script type="text/javascript">
     $('#textarea')
         .textext({
             plugins : 'tags autocomplete'
@@ -216,5 +137,291 @@
             );
         })
         ;
+
+
+
+    $('#zona')
+        .textext({
+            plugins : 'tags autocomplete'
+        })
+        .bind('getSuggestions', function(e, data)
+        {
+            var list = [
+            {% for z in zona %}
+                '{{z.valore}}',
+            {% endfor %}
+            ],
+            textext = $(e.target).textext()[0],
+            query = (data ? data.query : '') || ''
+                ;
+
+            $(this).trigger(
+                'setSuggestions',
+                { result : textext.itemManager().filter(list, query) }
+            );
+        }
+    );
+
+        $('#livello_pc')
+        .textext({
+            plugins : 'tags autocomplete'
+        })
+        .bind('getSuggestions', function(e, data)
+        {
+            var list = [
+            {% for z in livello_pc %}
+                '{{z.valore}}',
+            {% endfor %}
+            ],
+            textext = $(e.target).textext()[0],
+            query = (data ? data.query : '') || ''
+                ;
+
+            $(this).trigger(
+                'setSuggestions',
+                { result : textext.itemManager().filter(list, query) }
+            );
+        }
+    );
+
+    $('#grado_studi')
+        .textext({
+            plugins : 'tags autocomplete'
+        })
+        .bind('getSuggestions', function(e, data)
+        {
+            var list = [
+            {% for z in grado_studi %}
+                '{{z.valore}}',
+            {% endfor %}
+            ],
+            textext = $(e.target).textext()[0],
+            query = (data ? data.query : '') || ''
+                ;
+
+            $(this).trigger(
+                'setSuggestions',
+                { result : textext.itemManager().filter(list, query) }
+            );
+        }
+    );
+
+    $('#stato')
+        .textext({
+            plugins : 'tags autocomplete'
+        })
+        .bind('getSuggestions', function(e, data)
+        {
+            var list = [
+            {% for z in stato %}
+                '{{z.valore}}',
+            {% endfor %}
+            ],
+            textext = $(e.target).textext()[0],
+            query = (data ? data.query : '') || ''
+                ;
+
+            $(this).trigger(
+                'setSuggestions',
+                { result : textext.itemManager().filter(list, query) }
+            );
+        }
+    );
+
+    $('#lingua')
+        .textext({
+            plugins : 'tags autocomplete'
+        })
+        .bind('getSuggestions', function(e, data)
+        {
+            var list = [
+            {% for z in lingua %}
+                '{{z.valore}}',
+            {% endfor %}
+            ],
+            textext = $(e.target).textext()[0],
+            query = (data ? data.query : '') || ''
+                ;
+
+            $(this).trigger(
+                'setSuggestions',
+                { result : textext.itemManager().filter(list, query) }
+            );
+        }
+    );
+
+    $('#conoscenza_specifica')
+        .textext({
+            plugins : 'tags autocomplete'
+        })
+        .bind('getSuggestions', function(e, data)
+        {
+            var list = [
+            {% for z in conoscenza_specifica %}
+                '{{z.valore}}',
+            {% endfor %}
+            ],
+            textext = $(e.target).textext()[0],
+            query = (data ? data.query : '') || ''
+                ;
+
+            $(this).trigger(
+                'setSuggestions',
+                { result : textext.itemManager().filter(list, query) }
+            );
+        }
+    );
+        $('#mansione')
+        .textext({
+            plugins : 'tags autocomplete'
+        })
+        .bind('getSuggestions', function(e, data)
+        {
+            var list = [
+            {% for z in mansione %}
+                '{{z.valore}}',
+            {% endfor %}
+            ],
+            textext = $(e.target).textext()[0],
+            query = (data ? data.query : '') || ''
+                ;
+
+            $(this).trigger(
+                'setSuggestions',
+                { result : textext.itemManager().filter(list, query) }
+            );
+        }
+    );
+        $('#livello_cariera')
+        .textext({
+            plugins : 'tags autocomplete'
+        })
+        .bind('getSuggestions', function(e, data)
+        {
+            var list = [
+            {% for z in livello_cariera %}
+                '{{z.valore}}',
+            {% endfor %}
+            ],
+            textext = $(e.target).textext()[0],
+            query = (data ? data.query : '') || ''
+                ;
+
+            $(this).trigger(
+                'setSuggestions',
+                { result : textext.itemManager().filter(list, query) }
+            );
+        }
+    );
+    $('#ruolo')
+        .textext({
+            plugins : 'tags autocomplete'
+        })
+        .bind('getSuggestions', function(e, data)
+        {
+            var list = [
+            {% for z in ruolo %}
+                '{{z.valore}}',
+            {% endfor %}
+            ],
+            textext = $(e.target).textext()[0],
+            query = (data ? data.query : '') || ''
+                ;
+
+            $(this).trigger(
+                'setSuggestions',
+                { result : textext.itemManager().filter(list, query) }
+            );
+        }
+    );
+
+    $('#area_operativa')
+        .textext({
+            plugins : 'tags autocomplete'
+        })
+        .bind('getSuggestions', function(e, data)
+        {
+            var list = [
+            {% for z in area_operativa %}
+                '{{z.valore}}',
+            {% endfor %}
+            ],
+            textext = $(e.target).textext()[0],
+            query = (data ? data.query : '') || ''
+                ;
+
+            $(this).trigger(
+                'setSuggestions',
+                { result : textext.itemManager().filter(list, query) }
+            );
+        }
+    );
+
+    $('#tipo_contratto')
+        .textext({
+            plugins : 'tags autocomplete'
+        })
+        .bind('getSuggestions', function(e, data)
+        {
+            var list = [
+            {% for z in tipo_contratto %}
+                '{{z.valore}}',
+            {% endfor %}
+            ],
+            textext = $(e.target).textext()[0],
+            query = (data ? data.query : '') || ''
+                ;
+
+            $(this).trigger(
+                'setSuggestions',
+                { result : textext.itemManager().filter(list, query) }
+            );
+        }
+    );
+
+    $('#benefit')
+        .textext({
+            plugins : 'tags autocomplete'
+        })
+        .bind('getSuggestions', function(e, data)
+        {
+            var list = [
+            {% for z in benefit %}
+                '{{z.valore}}',
+            {% endfor %}
+            ],
+            textext = $(e.target).textext()[0],
+            query = (data ? data.query : '') || ''
+                ;
+
+            $(this).trigger(
+                'setSuggestions',
+                { result : textext.itemManager().filter(list, query) }
+            );
+        }
+    );
+
+    $('#interesse')
+        .textext({
+            plugins : 'tags autocomplete'
+        })
+        .bind('getSuggestions', function(e, data)
+        {
+            var list = [
+            {% for z in interesse %}
+                '{{z.valore}}',
+            {% endfor %}
+            ],
+            textext = $(e.target).textext()[0],
+            query = (data ? data.query : '') || ''
+                ;
+
+            $(this).trigger(
+                'setSuggestions',
+                { result : textext.itemManager().filter(list, query) }
+            );
+        }
+    );
+
 </script>
 {% endblock %}
