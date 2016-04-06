@@ -180,7 +180,7 @@ class Studenti(View):
         elif len(Zona.objects.filter(valore=zona_post[0].capitalize())) > 0:
             nuova_persona.zona = Zona.objects.filter(valore=zona_post[0].capitalize())[0]
         else:
-            zona = Zona(valore=livello_pc_post[0].capitalize())
+            zona = Zona(valore=zona_post[0].capitalize())
             zona.save()
             nuova_persona.zona = zona
 
