@@ -108,6 +108,9 @@ class Benefit(models.Model):
 class Interesse(models.Model):
     valore = models.CharField(max_length=64)
 
+class Esame(models.Model):
+    valore = models.CharField(max_length=64)
+
 
 class Persona(models.Model):
     #anagrafica
@@ -180,18 +183,18 @@ class LivelloCarieraFuturo(models.Model):
 
 
 class RuoloAttuale(models.Model):
-    livello_cariera = models.ForeignKey(LivelloCariera, on_delete=models.CASCADE, null=True)
-    Persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
+    ruolo = models.ForeignKey(Ruolo, on_delete=models.CASCADE, null=True)
+    persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
 
 
 class RuoloPregresso(models.Model):
-    livello_cariera = models.ForeignKey(LivelloCariera, on_delete=models.CASCADE, null=True)
-    livello_cariera = models.ForeignKey(Persona, on_delete=models.CASCADE)
+    ruolo = models.ForeignKey(Ruolo, on_delete=models.CASCADE, null=True)
+    persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
 
 
 class RuoloFuturo(models.Model):
-    livello_cariera = models.ForeignKey(LivelloCariera, on_delete=models.CASCADE, null=True)
-    livello_cariera = models.ForeignKey(Persona, on_delete=models.CASCADE)
+    ruolo = models.ForeignKey(Ruolo, on_delete=models.CASCADE, null=True)
+    persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
 
 
 class AreaOperativaAttuale(models.Model):
@@ -231,4 +234,8 @@ class BenefitFuturo(models.Model):
 
 class InteresseFuturo(models.Model):
     interesse = models.ForeignKey(Interesse, on_delete=models.CASCADE, null=True)
+    persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
+
+class EsameAttuale(models.Model):
+    esame = models.ForeignKey(Esame, on_delete=models.CASCADE, null=True)
     persona = models.ForeignKey(Persona, on_delete=models.CASCADE)

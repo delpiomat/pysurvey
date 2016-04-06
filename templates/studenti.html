@@ -92,6 +92,11 @@
     </div>
 
     <div class="form-group">
+        <label for="esame_attuale">Esami passati considerati importanti</label>
+        <textarea name="esame_attuale" id="esame_attuale" class="example" rows="1"></textarea>
+    </div>
+
+    <div class="form-group">
         <label for="stato">Stato</label>
         <textarea name="stato" id="stato" class="example" rows="1"></textarea>
     </div>
@@ -383,6 +388,30 @@
             );
         }
     );
+
+    $('#esame_attuale')
+        .textext({
+            plugins : 'tags autocomplete'
+        })
+        .bind('getSuggestions', function(e, data)
+        {
+            var list = [
+            {% for z in esame %}
+                '{{z.valore}}',
+            {% endfor %}
+            ],
+            textext = $(e.target).textext()[0],
+            query = (data ? data.query : '') || ''
+                ;
+
+            $(this).trigger(
+                'setSuggestions',
+                { result : textext.itemManager().filter(list, query) }
+            );
+        }
+    );
+
+
         $('#mansione_attuale')
         .textext({
             plugins : 'tags autocomplete'

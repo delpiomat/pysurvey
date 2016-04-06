@@ -60,6 +60,7 @@ class StudentiValore(View):
         result['grado_studi'] = GradoStudi.objects.all()
         result['stato'] = Stato.objects.all()
         result['lingua'] = Lingua.objects.all()
+        result['esame'] = Esame.objects.all()
         result['conoscenza_specifica'] = ConoscenzaSpecifica.objects.all()
         result['mansione'] = Mansione.objects.all()
         result['livello_cariera'] = LivelloCariera.objects.all()
@@ -81,6 +82,7 @@ class Studenti(View):
         result['grado_studi'] = GradoStudi.objects.all()
         result['stato'] = Stato.objects.all()
         result['lingua'] = Lingua.objects.all()
+        result['esame'] = Esame.objects.all()
         result['conoscenza_specifica'] = ConoscenzaSpecifica.objects.all()
         result['mansione'] = Mansione.objects.all()
         result['livello_cariera'] = LivelloCariera.objects.all()
@@ -162,7 +164,7 @@ class Studenti(View):
             nuova_persona.possibilita_trasferirsi = False
 
 
-        # Ora parliamo delle chiavi esterne con solo un valore Possibile
+        # Ora parliamo delle chiavi esterne con solo un valore Possibile--------------------------------------------
         livello_pc_post = json.loads(request.POST["livello_pc"])
         if len(livello_pc_post) <= 0:
             nuova_persona.livello_uso_computer = None
@@ -194,9 +196,409 @@ class Studenti(View):
             grado_studi.save()
             nuova_persona.grado_studi = grado_studi
 
-
-
+        # bisogna salverlo qua
         nuova_persona.save()
+        # Ora la parte tosta i multivalore! buona fortuna-----------------------------------------------------------
+        lingua_list = json.loads(request.POST["lingua"])
+        if len(lingua_list) <= 0:
+            nuova_lingua_attuale = LinguaAttuale(persona=nuova_persona)
+            nuova_lingua_attuale.lingua = None
+            nuova_lingua_attuale.save()
+        else:
+            for v in lingua_list:
+                # esiste quella lingua nel db
+                if len(Lingua.objects.filter(valore=v.capitalize())) > 0:
+                    nuova_lingua_attuale = LinguaAttuale(persona=nuova_persona)
+                    nuova_lingua_attuale.lingua = Lingua.objects.filter(valore=v.capitalize())[0]
+                    nuova_lingua_attuale.save()
+                else:
+                    nuova_lingua = Lingua(valore=v)
+                    nuova_lingua.save()
+                    nuova_lingua_attuale = LinguaAttuale(persona=nuova_persona)
+                    nuova_lingua_attuale.lingua = nuova_lingua
+                    nuova_lingua_attuale.save()
+
+        # provo ad usare variabili con stesso nome risparmio codice
+        valore_list = json.loads(request.POST["conoscenza_specifica"])
+        if len(valore_list) <= 0:
+            nuovo_valore_nullo = ConoscenzaSpecificaAttuale(persona=nuova_persona)
+            nuovo_valore_nullo.conoscenza_specifica = None
+            nuovo_valore_nullo.save()
+        else:
+            for v in valore_list:
+                if len(ConoscenzaSpecifica.objects.filter(valore=v.capitalize())) > 0:
+                    nuovo_valore_gia_esistente = ConoscenzaSpecificaAttuale(persona=nuova_persona)
+                    nuovo_valore_gia_esistente.conoscenza_specifica = ConoscenzaSpecifica.objects.filter(valore=v.capitalize())[0]
+                    nuovo_valore_gia_esistente.save()
+                else:
+                    nuova_valore_nuovo = ConoscenzaSpecifica(valore=v)
+                    nuova_valore_nuovo.save()
+                    # ora essite nel db quel valore
+                    nuovo_valore_gia_esistente = ConoscenzaSpecificaAttuale(persona=nuova_persona)
+                    nuovo_valore_gia_esistente.conoscenza_specifica = nuova_valore_nuovo
+                    nuovo_valore_gia_esistente.save()
+
+        valore_list = json.loads(request.POST["stato"])
+        if len(valore_list) <= 0:
+            nuovo_valore_nullo = StatoAttuale(persona=nuova_persona)
+            nuovo_valore_nullo.stato = None
+            nuovo_valore_nullo.save()
+        else:
+            for v in valore_list:
+                if len(Stato.objects.filter(valore=v.capitalize())) > 0:
+                    nuovo_valore_gia_esistente = StatoAttuale(persona=nuova_persona)
+                    nuovo_valore_gia_esistente.stato = Stato.objects.filter(valore=v.capitalize())[0]
+                    nuovo_valore_gia_esistente.save()
+                else:
+                    nuova_valore_nuovo = Stato(valore=v)
+                    nuova_valore_nuovo.save()
+                    # ora essite nel db quel valore
+                    nuovo_valore_gia_esistente = StatoAttuale(persona=nuova_persona)
+                    nuovo_valore_gia_esistente.stato = nuova_valore_nuovo
+                    nuovo_valore_gia_esistente.save()
+
+        valore_list = json.loads(request.POST["mansione_attuale"])
+        if len(valore_list) <= 0:
+            nuovo_valore_nullo = MansioneAttuale(persona=nuova_persona)
+            nuovo_valore_nullo.mansione = None
+            nuovo_valore_nullo.save()
+        else:
+            for v in valore_list:
+                if len(Mansione.objects.filter(valore=v.capitalize())) > 0:
+                    nuovo_valore_gia_esistente = MansioneAttuale(persona=nuova_persona)
+                    nuovo_valore_gia_esistente.mansione = Mansione.objects.filter(valore=v.capitalize())[0]
+                    nuovo_valore_gia_esistente.save()
+                else:
+                    nuova_valore_nuovo = Mansione(valore=v)
+                    nuova_valore_nuovo.save()
+                    # ora essite nel db quel valore
+                    nuovo_valore_gia_esistente = MansioneAttuale(persona=nuova_persona)
+                    nuovo_valore_gia_esistente.mansione = nuova_valore_nuovo
+                    nuovo_valore_gia_esistente.save()
+
+        valore_list = json.loads(request.POST["mansione_pregresso"])
+        if len(valore_list) <= 0:
+            nuovo_valore_nullo = MansionePregresso(persona=nuova_persona)
+            nuovo_valore_nullo.mansione = None
+            nuovo_valore_nullo.save()
+        else:
+            for v in valore_list:
+                if len(Mansione.objects.filter(valore=v.capitalize())) > 0:
+                    nuovo_valore_gia_esistente = MansionePregresso(persona=nuova_persona)
+                    nuovo_valore_gia_esistente.mansione = Mansione.objects.filter(valore=v.capitalize())[0]
+                    nuovo_valore_gia_esistente.save()
+                else:
+                    nuova_valore_nuovo = Mansione(valore=v)
+                    nuova_valore_nuovo.save()
+                    # ora essite nel db quel valore
+                    nuovo_valore_gia_esistente = MansionePregresso(persona=nuova_persona)
+                    nuovo_valore_gia_esistente.mansione = nuova_valore_nuovo
+                    nuovo_valore_gia_esistente.save()
+
+        valore_list = json.loads(request.POST["mansione_futuro"])
+        if len(valore_list) <= 0:
+            nuovo_valore_nullo = MansioneFuturo(persona=nuova_persona)
+            nuovo_valore_nullo.mansione = None
+            nuovo_valore_nullo.save()
+        else:
+            for v in valore_list:
+                if len(Mansione.objects.filter(valore=v.capitalize())) > 0:
+                    nuovo_valore_gia_esistente = MansioneFuturo(persona=nuova_persona)
+                    nuovo_valore_gia_esistente.mansione = Mansione.objects.filter(valore=v.capitalize())[0]
+                    nuovo_valore_gia_esistente.save()
+                else:
+                    nuova_valore_nuovo = Mansione(valore=v)
+                    nuova_valore_nuovo.save()
+                    # ora essite nel db quel valore
+                    nuovo_valore_gia_esistente = MansioneFuturo(persona=nuova_persona)
+                    nuovo_valore_gia_esistente.mansione = nuova_valore_nuovo
+                    nuovo_valore_gia_esistente.save()
+
+        valore_list = json.loads(request.POST["livello_cariera_attuale"])
+        if len(valore_list) <= 0:
+            nuovo_valore_nullo = LivelloCarieraAttuale(persona=nuova_persona)
+            nuovo_valore_nullo.livello_cariera = None
+            nuovo_valore_nullo.save()
+        else:
+            for v in valore_list:
+                if len(LivelloCariera.objects.filter(valore=v.capitalize())) > 0:
+                    nuovo_valore_gia_esistente = LivelloCarieraAttuale(persona=nuova_persona)
+                    nuovo_valore_gia_esistente.livello_cariera = LivelloCariera.objects.filter(valore=v.capitalize())[0]
+                    nuovo_valore_gia_esistente.save()
+                else:
+                    nuova_valore_nuovo = LivelloCariera(valore=v)
+                    nuova_valore_nuovo.save()
+                    # ora essite nel db quel valore
+                    nuovo_valore_gia_esistente = LivelloCarieraAttuale(persona=nuova_persona)
+                    nuovo_valore_gia_esistente.livello_cariera = nuova_valore_nuovo
+                    nuovo_valore_gia_esistente.save()
+
+        valore_list = json.loads(request.POST["livello_cariera_pregresso"])
+        if len(valore_list) <= 0:
+            nuovo_valore_nullo = LivelloCarieraPregresso(persona=nuova_persona)
+            nuovo_valore_nullo.livello_cariera = None
+            nuovo_valore_nullo.save()
+        else:
+            for v in valore_list:
+                if len(LivelloCariera.objects.filter(valore=v.capitalize())) > 0:
+                    nuovo_valore_gia_esistente = LivelloCarieraPregresso(persona=nuova_persona)
+                    nuovo_valore_gia_esistente.livello_cariera = LivelloCariera.objects.filter(valore=v.capitalize())[0]
+                    nuovo_valore_gia_esistente.save()
+                else:
+                    nuova_valore_nuovo = LivelloCariera(valore=v)
+                    nuova_valore_nuovo.save()
+                    # ora essite nel db quel valore
+                    nuovo_valore_gia_esistente = LivelloCarieraPregresso(persona=nuova_persona)
+                    nuovo_valore_gia_esistente.livello_cariera = nuova_valore_nuovo
+                    nuovo_valore_gia_esistente.save()
+
+        valore_list = json.loads(request.POST["livello_cariera_futuro"])
+        if len(valore_list) <= 0:
+            nuovo_valore_nullo = LivelloCarieraFuturo(persona=nuova_persona)
+            nuovo_valore_nullo.livello_cariera = None
+            nuovo_valore_nullo.save()
+        else:
+            for v in valore_list:
+                if len(LivelloCariera.objects.filter(valore=v.capitalize())) > 0:
+                    nuovo_valore_gia_esistente = LivelloCarieraFuturo(persona=nuova_persona)
+                    nuovo_valore_gia_esistente.livello_cariera = LivelloCariera.objects.filter(valore=v.capitalize())[0]
+                    nuovo_valore_gia_esistente.save()
+                else:
+                    nuova_valore_nuovo = LivelloCariera(valore=v)
+                    nuova_valore_nuovo.save()
+                    # ora essite nel db quel valore
+                    nuovo_valore_gia_esistente = LivelloCarieraFuturo(persona=nuova_persona)
+                    nuovo_valore_gia_esistente.livello_cariera = nuova_valore_nuovo
+                    nuovo_valore_gia_esistente.save()
+
+        valore_list = json.loads(request.POST["ruolo_attuale"])
+        if len(valore_list) <= 0:
+            nuovo_valore_nullo = RuoloAttuale(persona=nuova_persona)
+            nuovo_valore_nullo.ruolo = None
+            nuovo_valore_nullo.save()
+        else:
+            for v in valore_list:
+                if len(Ruolo.objects.filter(valore=v.capitalize())) > 0:
+                    nuovo_valore_gia_esistente = RuoloAttuale(persona=nuova_persona)
+                    nuovo_valore_gia_esistente.ruolo = Ruolo.objects.filter(valore=v.capitalize())[0]
+                    nuovo_valore_gia_esistente.save()
+                else:
+                    nuova_valore_nuovo = Ruolo(valore=v)
+                    nuova_valore_nuovo.save()
+                    # ora essite nel db quel valore
+                    nuovo_valore_gia_esistente = RuoloAttuale(persona=nuova_persona)
+                    nuovo_valore_gia_esistente.ruolo = nuova_valore_nuovo
+                    nuovo_valore_gia_esistente.save()
+
+        valore_list = json.loads(request.POST["ruolo_pregresso"])
+        if len(valore_list) <= 0:
+            nuovo_valore_nullo = RuoloPregresso(persona=nuova_persona)
+            nuovo_valore_nullo.ruolo = None
+            nuovo_valore_nullo.save()
+        else:
+            for v in valore_list:
+                if len(Ruolo.objects.filter(valore=v.capitalize())) > 0:
+                    nuovo_valore_gia_esistente = RuoloPregresso(persona=nuova_persona)
+                    nuovo_valore_gia_esistente.ruolo = Ruolo.objects.filter(valore=v.capitalize())[0]
+                    nuovo_valore_gia_esistente.save()
+                else:
+                    nuova_valore_nuovo = Ruolo(valore=v)
+                    nuova_valore_nuovo.save()
+                    # ora essite nel db quel valore
+                    nuovo_valore_gia_esistente = RuoloPregresso(persona=nuova_persona)
+                    nuovo_valore_gia_esistente.ruolo = nuova_valore_nuovo
+                    nuovo_valore_gia_esistente.save()
+
+        valore_list = json.loads(request.POST["ruolo_futuro"])
+        if len(valore_list) <= 0:
+            nuovo_valore_nullo = RuoloFuturo(persona=nuova_persona)
+            nuovo_valore_nullo.ruolo = None
+            nuovo_valore_nullo.save()
+        else:
+            for v in valore_list:
+                if len(Ruolo.objects.filter(valore=v.capitalize())) > 0:
+                    nuovo_valore_gia_esistente = RuoloFuturo(persona=nuova_persona)
+                    nuovo_valore_gia_esistente.ruolo = Ruolo.objects.filter(valore=v.capitalize())[0]
+                    nuovo_valore_gia_esistente.save()
+                else:
+                    nuova_valore_nuovo = Ruolo(valore=v)
+                    nuova_valore_nuovo.save()
+                    # ora essite nel db quel valore
+                    nuovo_valore_gia_esistente = RuoloFuturo(persona=nuova_persona)
+                    nuovo_valore_gia_esistente.ruolo = nuova_valore_nuovo
+                    nuovo_valore_gia_esistente.save()
+
+        valore_list = json.loads(request.POST["area_operativa_attuale"])
+        if len(valore_list) <= 0:
+            nuovo_valore_nullo = AreaOperativaAttuale(persona=nuova_persona)
+            nuovo_valore_nullo.area_operativa = None
+            nuovo_valore_nullo.save()
+        else:
+            for v in valore_list:
+                if len(AreaOperativa.objects.filter(valore=v.capitalize())) > 0:
+                    nuovo_valore_gia_esistente = AreaOperativaAttuale(persona=nuova_persona)
+                    nuovo_valore_gia_esistente.area_operativa = AreaOperativa.objects.filter(valore=v.capitalize())[0]
+                    nuovo_valore_gia_esistente.save()
+                else:
+                    nuova_valore_nuovo = AreaOperativa(valore=v)
+                    nuova_valore_nuovo.save()
+                    # ora essite nel db quel valore
+                    nuovo_valore_gia_esistente = AreaOperativaAttuale(persona=nuova_persona)
+                    nuovo_valore_gia_esistente.area_operativa = nuova_valore_nuovo
+                    nuovo_valore_gia_esistente.save()
+
+        valore_list = json.loads(request.POST["area_operativa_pregresso"])
+        if len(valore_list) <= 0:
+            nuovo_valore_nullo = AreaOperativaPregresso(persona=nuova_persona)
+            nuovo_valore_nullo.area_operativa = None
+            nuovo_valore_nullo.save()
+        else:
+            for v in valore_list:
+                if len(AreaOperativa.objects.filter(valore=v.capitalize())) > 0:
+                    nuovo_valore_gia_esistente = AreaOperativaPregresso(persona=nuova_persona)
+                    nuovo_valore_gia_esistente.area_operativa = AreaOperativa.objects.filter(valore=v.capitalize())[0]
+                    nuovo_valore_gia_esistente.save()
+                else:
+                    nuova_valore_nuovo = AreaOperativa(valore=v)
+                    nuova_valore_nuovo.save()
+                    # ora essite nel db quel valore
+                    nuovo_valore_gia_esistente = AreaOperativaPregresso(persona=nuova_persona)
+                    nuovo_valore_gia_esistente.area_operativa = nuova_valore_nuovo
+                    nuovo_valore_gia_esistente.save()
+
+        valore_list = json.loads(request.POST["area_operativa_futuro"])
+        if len(valore_list) <= 0:
+            nuovo_valore_nullo = AreaOperativaFuturo(persona=nuova_persona)
+            nuovo_valore_nullo.area_operativa = None
+            nuovo_valore_nullo.save()
+        else:
+            for v in valore_list:
+                if len(AreaOperativa.objects.filter(valore=v.capitalize())) > 0:
+                    nuovo_valore_gia_esistente = AreaOperativaFuturo(persona=nuova_persona)
+                    nuovo_valore_gia_esistente.area_operativa = AreaOperativa.objects.filter(valore=v.capitalize())[0]
+                    nuovo_valore_gia_esistente.save()
+                else:
+                    nuova_valore_nuovo = AreaOperativa(valore=v)
+                    nuova_valore_nuovo.save()
+                    # ora essite nel db quel valore
+                    nuovo_valore_gia_esistente = AreaOperativaFuturo(persona=nuova_persona)
+                    nuovo_valore_gia_esistente.area_operativa = nuova_valore_nuovo
+                    nuovo_valore_gia_esistente.save()
+
+        valore_list = json.loads(request.POST["tipo_contratto_attuale"])
+        if len(valore_list) <= 0:
+            nuovo_valore_nullo = TipoContrattoAttuale(persona=nuova_persona)
+            nuovo_valore_nullo.tipo_contratto = None
+            nuovo_valore_nullo.save()
+        else:
+            for v in valore_list:
+                if len(TipoContratto.objects.filter(valore=v.capitalize())) > 0:
+                    nuovo_valore_gia_esistente = TipoContrattoAttuale(persona=nuova_persona)
+                    nuovo_valore_gia_esistente.tipo_contratto = TipoContratto.objects.filter(valore=v.capitalize())[0]
+                    nuovo_valore_gia_esistente.save()
+                else:
+                    nuova_valore_nuovo = TipoContratto(valore=v)
+                    nuova_valore_nuovo.save()
+                    # ora essite nel db quel valore
+                    nuovo_valore_gia_esistente = TipoContrattoAttuale(persona=nuova_persona)
+                    nuovo_valore_gia_esistente.tipo_contratto = nuova_valore_nuovo
+                    nuovo_valore_gia_esistente.save()
+
+        valore_list = json.loads(request.POST["tipo_contratto_pregresso"])
+        if len(valore_list) <= 0:
+            nuovo_valore_nullo = TipoContrattoPregesso(persona=nuova_persona)
+            nuovo_valore_nullo.tipo_contratto = None
+            nuovo_valore_nullo.save()
+        else:
+            for v in valore_list:
+                if len(TipoContratto.objects.filter(valore=v.capitalize())) > 0:
+                    nuovo_valore_gia_esistente = TipoContrattoPregesso(persona=nuova_persona)
+                    nuovo_valore_gia_esistente.tipo_contratto = TipoContratto.objects.filter(valore=v.capitalize())[0]
+                    nuovo_valore_gia_esistente.save()
+                else:
+                    nuova_valore_nuovo = TipoContratto(valore=v)
+                    nuova_valore_nuovo.save()
+                    # ora essite nel db quel valore
+                    nuovo_valore_gia_esistente = TipoContrattoPregesso(persona=nuova_persona)
+                    nuovo_valore_gia_esistente.tipo_contratto = nuova_valore_nuovo
+                    nuovo_valore_gia_esistente.save()
+
+        valore_list = json.loads(request.POST["tipo_contratto_futuro"])
+        if len(valore_list) <= 0:
+            nuovo_valore_nullo = TipoContrattoFuturo(persona=nuova_persona)
+            nuovo_valore_nullo.tipo_contratto = None
+            nuovo_valore_nullo.save()
+        else:
+            for v in valore_list:
+                if len(TipoContratto.objects.filter(valore=v.capitalize())) > 0:
+                    nuovo_valore_gia_esistente = TipoContrattoFuturo(persona=nuova_persona)
+                    nuovo_valore_gia_esistente.tipo_contratto = TipoContratto.objects.filter(valore=v.capitalize())[0]
+                    nuovo_valore_gia_esistente.save()
+                else:
+                    nuova_valore_nuovo = TipoContratto(valore=v)
+                    nuova_valore_nuovo.save()
+                    # ora essite nel db quel valore
+                    nuovo_valore_gia_esistente = TipoContrattoFuturo(persona=nuova_persona)
+                    nuovo_valore_gia_esistente.tipo_contratto = nuova_valore_nuovo
+                    nuovo_valore_gia_esistente.save()
+
+        valore_list = json.loads(request.POST["benefit_futuro"])
+        if len(valore_list) <= 0:
+            nuovo_valore_nullo = BenefitFuturo(persona=nuova_persona)
+            nuovo_valore_nullo.benefit = None
+            nuovo_valore_nullo.save()
+        else:
+            for v in valore_list:
+                if len(Benefit.objects.filter(valore=v.capitalize())) > 0:
+                    nuovo_valore_gia_esistente = BenefitFuturo(persona=nuova_persona)
+                    nuovo_valore_gia_esistente.benefit = Benefit.objects.filter(valore=v.capitalize())[0]
+                    nuovo_valore_gia_esistente.save()
+                else:
+                    nuova_valore_nuovo = Benefit(valore=v)
+                    nuova_valore_nuovo.save()
+                    # ora essite nel db quel valore
+                    nuovo_valore_gia_esistente = BenefitFuturo(persona=nuova_persona)
+                    nuovo_valore_gia_esistente.benefit = nuova_valore_nuovo
+                    nuovo_valore_gia_esistente.save()
+
+        valore_list = json.loads(request.POST["interesse_futuro"])
+        if len(valore_list) <= 0:
+            nuovo_valore_nullo = InteresseFuturo(persona=nuova_persona)
+            nuovo_valore_nullo.interesse = None
+            nuovo_valore_nullo.save()
+        else:
+            for v in valore_list:
+                if len(Interesse.objects.filter(valore=v.capitalize())) > 0:
+                    nuovo_valore_gia_esistente = InteresseFuturo(persona=nuova_persona)
+                    nuovo_valore_gia_esistente.interesse = Interesse.objects.filter(valore=v.capitalize())[0]
+                    nuovo_valore_gia_esistente.save()
+                else:
+                    nuova_valore_nuovo = Interesse(valore=v)
+                    nuova_valore_nuovo.save()
+                    # ora essite nel db quel valore
+                    nuovo_valore_gia_esistente = InteresseFuturo(persona=nuova_persona)
+                    nuovo_valore_gia_esistente.interesse = nuova_valore_nuovo
+                    nuovo_valore_gia_esistente.save()
+
+        valore_list = json.loads(request.POST["esame_attuale"])
+        if len(valore_list) <= 0:
+            nuovo_valore_nullo = EsameAttuale(persona=nuova_persona)
+            nuovo_valore_nullo.esame = None
+            nuovo_valore_nullo.save()
+        else:
+            for v in valore_list:
+                if len(Esame.objects.filter(valore=v.capitalize())) > 0:
+                    nuovo_valore_gia_esistente = EsameAttuale(persona=nuova_persona)
+                    nuovo_valore_gia_esistente.esame = EsameAttuale.objects.filter(valore=v.capitalize())[0]
+                    nuovo_valore_gia_esistente.save()
+                else:
+                    nuova_valore_nuovo = Esame(valore=v)
+                    nuova_valore_nuovo.save()
+                    # ora essite nel db quel valore
+                    nuovo_valore_gia_esistente = EsameAttuale(persona=nuova_persona)
+                    nuovo_valore_gia_esistente.esame = nuova_valore_nuovo
+                    nuovo_valore_gia_esistente.save()
+
 
         return render(request, 'grazie.html')
 
