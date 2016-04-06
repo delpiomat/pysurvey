@@ -119,14 +119,14 @@ class Persona(models.Model):
     voto_finale = models.IntegerField(null=True)
 
     #esperienze pregresse
-    esperienze_pregresse = models.BooleanField()  # si/no
-    desc_esperienze_pregresse = models.CharField(max_length=512)
-    numero_attivita_svolte = models.IntegerField()
-    numero_mesi_attivita_svolte = models.IntegerField()
+    esperienze_pregresse = models.BooleanField(default=False)  # si/no
+    desc_esperienze_pregresse = models.CharField(max_length=512, null=True)
+    numero_attivita_svolte = models.IntegerField(default=0, null=True)
+    numero_mesi_attivita_svolte = models.IntegerField(default=0, null=True)
 
     #futuro
-    possibilita_trasferirsi = models.BooleanField()  # si/no/non so????
-    stipendio_futuro = models.IntegerField()
+    possibilita_trasferirsi = models.BooleanField(default=False)  # si/no/non so????
+    stipendio_futuro = models.IntegerField(default=0, null=True)
 
     #esterne
     zona = models.ForeignKey(Zona, on_delete=models.CASCADE, null=True)

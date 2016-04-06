@@ -4,8 +4,753 @@
 {% block title %}Questionario Studenti{% endblock %}
 
 
-{% block topcontent %}
-<div class="container">
+{% block scripts %}
 
+
+    <link rel="stylesheet" href="{% static 'bootstrap-3.3.6/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap-3.3.6/css/bootstrap-theme.min.css' %}">
+
+        <link rel="stylesheet" href="{% static 'textext/src/css/textext.core.css'%}" type="text/css" />
+		<link rel="stylesheet" href="{% static 'textext/src/css/textext.plugin.tags.css'%}" type="text/css" />
+		<link rel="stylesheet" href="{% static 'textext/src/css/textext.plugin.autocomplete.css'%}" type="text/css" />
+		<link rel="stylesheet" href="{% static 'textext/src/css/textext.plugin.focus.css'%}" type="text/css" />
+		<link rel="stylesheet" href="{% static 'textext/src/css/textext.plugin.prompt.css'%}" type="text/css" />
+		<link rel="stylesheet" href="{% static 'textext/src/css/textext.plugin.arrow.css'%}" type="text/css" />
+
+
+        <script src="{% static 'bootstrap-3.3.6/js/bootstrap.min.js'%}"></script>
+		<script src="{% static 'textext/src/js/textext.core.js'%}" type="text/javascript" charset="utf-8"></script>
+		<script src="{% static 'textext/src/js/textext.plugin.tags.js'%}" type="text/javascript" charset="utf-8"></script>
+		<script src="{% static 'textext/src/js/textext.plugin.autocomplete.js'%}" type="text/javascript" charset="utf-8"></script>
+		<script src="{% static 'textext/src/js/textext.plugin.suggestions.js'%}" type="text/javascript" charset="utf-8"></script>
+		<script src="{% static 'textext/src/js/textext.plugin.filter.js'%}" type="text/javascript" charset="utf-8"></script>
+		<script src="{% static 'textext/src/js/textext.plugin.focus.js'%}" type="text/javascript" charset="utf-8"></script>
+		<script src="{% static 'textext/src/js/textext.plugin.prompt.js'%}" type="text/javascript" charset="utf-8"></script>
+		<script src="{% static 'textext/src/js/textext.plugin.ajax.js'%}" type="text/javascript" charset="utf-8"></script>
+		<script src="{% static 'textext/src/js/textext.plugin.arrow.js'%}" type="text/javascript" charset="utf-8"></script>
+
+{% endblock %}
+
+
+{% block topcontent %}
+<div class="container">{% csrf_token %}
+
+
+<form id="forminvio" data-toggle="validator" method="POST" role="form">{% csrf_token %}
+
+    <h2>Anagrafica</h2>
+    <div class="form-group">
+        <label for="cap">Cap:</label>
+        <input type="text" name="cap" id="cap" class="form-control">
+    </div>
+
+    <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="text" name="email" id="email" class="form-control">
+    </div>
+
+    <div class="form-group">
+        <label for="anno">Anno:</label>
+        <input type="text" name="anno" id="anno" class="form-control">
+    </div>
+
+    <div class="form-group">
+        <label for="citta">Citta':</label>
+        <input type="text" name="citta" id="citta" class="form-control">
+    </div>
+
+    <div class="form-group">
+        <label for="zona">Zona:</label>
+        <textarea name="zona" id="zona" class="example" rows="1"></textarea>
+        <span class="help-block">se di padova</span>
+    </div>
+
+    <div class="form-group">
+        <label>Grado Studi</label>
+        <textarea name="grado_studi" id="grado_studi" class="example" rows="1"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="voto">Voto:</label>
+        <input type="text" name="voto" id="voto" class="form-control">
+        <span class="help-block">Riferito al grado istruzione diploma, laurea o specialistica</span>
+    </div>
+
+    <div class="form-group">
+        <label for="livello_pc">Livello conoscenza PC:</label>
+        <textarea  name="livello_pc" id="livello_pc" class="example" rows="1"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="lingua">Lingua</label>
+        <textarea name="lingua" id="lingua" class="example" rows="1"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="conoscenza_specifica">Conoscenza specifica</label>
+        <textarea name="conoscenza_specifica" id="conoscenza_specifica" class="example" rows="1"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="stato">Stato</label>
+        <textarea name="stato" id="stato" class="example" rows="1"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="note">Note</label>
+        <input type="text" name="note" id="note" class="form-control">
+    </div>
+
+    <hr>
+    <h2>Lavoro Attuale</h2>
+    <div class="form-group">
+        <label for="mansione_attuale">Mansione Attuale</label>
+        <textarea name="mansione_attuale" id="mansione_attuale" class="example" rows="1"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="livello_cariera_attuale">Livello Cariera Attuale</label>
+        <textarea name="livello_cariera_attuale" id="livello_cariera_attuale" class="example" rows="1"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="ruolo_attuale">Ruolo Attuale</label>
+        <textarea  name="ruolo_attuale" id="ruolo_attuale" class="example" rows="1"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="area_operativa_attuale" >Area Operativa Attuale</label>
+        <textarea name="area_operativa_attuale" id="area_operativa_attuale" class="example" rows="1"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="tipo_contratto_attuale">Tipo Contratto Attuale</label>
+        <textarea name="tipo_contratto_attuale" id="tipo_contratto_attuale" class="example" rows="1"></textarea>
+    </div>
+
+
+    <hr>
+    <h2>Lavoro Passato</h2>
+    <div class="form-group">
+        <label for="tipo_contratto_attuale">Esperienza pregressa</label>
+        <div class="radio">
+            <label>
+                <input type="radio" name="optionsRadios" id="esperienza_pregressa_true" value="true" checked>Si
+            </label>
+        </div>
+        <div class="radio">
+            <label>
+                <input type="radio" name="optionsRadios" id="esperienza_pregressa_false" value="false"> No
+            </label>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="numero_attivita_svolte">Numero Attivita Svolte:</label>
+        <input type="text" name="numero_attivita_svolte" id="numero_attivita_svolte" class="form-control">
+    </div>
+
+    <div class="form-group">
+        <label for="numero_mesi_attivita_svolte">Mesi Attivita Svolte:</label>
+        <input type="text" name="numero_mesi_attivita_svolte" id="numero_mesi_attivita_svolte" class="form-control">
+    </div>
+
+    <div class="form-group">
+        <label for="desc_esperienze_pregresse">descrizione Esperienze Pregresse:</label>
+        <input type="text" name="desc_esperienze_pregresso" id="desc_esperienze_pregresso" class="form-control">
+    </div>
+
+    <div class="form-group">
+        <label for="mansione_attuale">Mansione Pregressa</label>
+        <textarea name="mansione_pregresso" id="mansione_pregresso" class="example" rows="1"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="livello_cariera_attuale">Livello Cariera Pregressa</label>
+        <textarea name="livello_cariera_pregresso" id="livello_cariera_pregresso" class="example" rows="1"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="ruolo_attuale">Ruolo Pregressa</label>
+        <textarea  name="ruolo_pregresso" id="ruolo_pregresso" class="example" rows="1"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="area_operativa_attuale" >Area Operativa Pregressa</label>
+        <textarea name="area_operativa_pregresso" id="area_operativa_pregresso" class="example" rows="1"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="tipo_contratto_attuale">Tipo Contratto Pregressa</label>
+        <textarea name="tipo_contratto_pregresso" id="tipo_contratto_pregresso" class="example" rows="1"></textarea>
+    </div>
+
+
+    <hr>
+    <h2>Lavoro Futuro</h2>
+
+    <div class="form-group">
+        <label for="mansione_attuale">Mansione Futura</label>
+        <textarea name="mansione_futuro" id="mansione_futuro" class="example" rows="1"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="livello_cariera_attuale">Livello Cariera Futura</label>
+        <textarea name="livello_cariera_futuro" id="livello_cariera_futuro" class="example" rows="1"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="ruolo_attuale">Ruolo Futuro</label>
+        <textarea  name="ruolo_futuro" id="ruolo_futuro" class="example" rows="1"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="area_operativa_attuale" >Area Operativa Futuro</label>
+        <textarea name="area_operativa_futuro" id="area_operativa_futuro" class="example" rows="1"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="tipo_contratto_attuale">Tipo Contratto Futuro</label>
+        <textarea name="tipo_contratto_futuro" id="tipo_contratto_futuro" class="example" rows="1"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="benefit">Benefit Futuro</label>
+        <textarea  name="benefit_futuro" id="benefit_futuro" class="example" rows="1"></textarea>
+    </div>
+
+
+    <div class="form-group">
+        <label for="interesse_futuro">Interesse Futuro</label>
+        <textarea name="interesse_futuro" id="interesse_futuro" class="example" rows="1"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="stipendio_futuro">Stipendio Futuro:</label>
+        <input type="text" name="stipendio_futuro" id="stipendio_futuro" class="form-control">
+        <span class="help-block">Una stima sulllo stipendio netto al mese</span>
+    </div>
+
+    <div class="form-group">
+        <label for="possibilita_trasferirsi">Possibilita' trasfersi</label>
+        <div class="radio">
+            <label>
+                <input type="radio" name="possibilita_trasferirsi_option" id="possibilita_trasferirsi" value="true" checked>Si
+            </label>
+        </div>
+        <div class="radio">
+            <label>
+                <input type="radio" name="possibilita_trasferirsi_option" id="possibilita_trasferirsi" value="false"> No
+            </label>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <button type="submit" id="conf" class="btn btn-primary">Invia</button>
+    </div>
+</form>
 </div>
+
+<script type="text/javascript">
+    $('#zona')
+        .textext({
+            plugins : 'tags autocomplete'
+        })
+        .bind('getSuggestions', function(e, data)
+        {
+            var list = [
+            {% for z in zona %}
+                '{{z.valore}}',
+            {% endfor %}
+            ],
+            textext = $(e.target).textext()[0],
+            query = (data ? data.query : '') || ''
+                ;
+
+            $(this).trigger(
+                'setSuggestions',
+                { result : textext.itemManager().filter(list, query) }
+            );
+        }
+    );
+
+        $('#livello_pc')
+        .textext({
+            plugins : 'tags autocomplete'
+        })
+        .bind('getSuggestions', function(e, data)
+        {
+            var list = [
+            {% for z in livello_pc %}
+                '{{z.valore}}',
+            {% endfor %}
+            ],
+            textext = $(e.target).textext()[0],
+            query = (data ? data.query : '') || ''
+                ;
+
+            $(this).trigger(
+                'setSuggestions',
+                { result : textext.itemManager().filter(list, query) }
+            );
+        }
+    );
+
+    $('#grado_studi')
+        .textext({
+            plugins : 'tags autocomplete'
+        })
+        .bind('getSuggestions', function(e, data)
+        {
+            var list = [
+            {% for z in grado_studi %}
+                '{{z.valore}}',
+            {% endfor %}
+            ],
+            textext = $(e.target).textext()[0],
+            query = (data ? data.query : '') || ''
+                ;
+
+            $(this).trigger(
+                'setSuggestions',
+                { result : textext.itemManager().filter(list, query) }
+            );
+        }
+    );
+
+    $('#stato')
+        .textext({
+            plugins : 'tags autocomplete'
+        })
+        .bind('getSuggestions', function(e, data)
+        {
+            var list = [
+            {% for z in stato %}
+                '{{z.valore}}',
+            {% endfor %}
+            ],
+            textext = $(e.target).textext()[0],
+            query = (data ? data.query : '') || ''
+                ;
+
+            $(this).trigger(
+                'setSuggestions',
+                { result : textext.itemManager().filter(list, query) }
+            );
+        }
+    );
+
+    $('#lingua')
+        .textext({
+            plugins : 'tags autocomplete'
+        })
+        .bind('getSuggestions', function(e, data)
+        {
+            var list = [
+            {% for z in lingua %}
+                '{{z.valore}}',
+            {% endfor %}
+            ],
+            textext = $(e.target).textext()[0],
+            query = (data ? data.query : '') || ''
+                ;
+
+            $(this).trigger(
+                'setSuggestions',
+                { result : textext.itemManager().filter(list, query) }
+            );
+        }
+    );
+
+    $('#conoscenza_specifica')
+        .textext({
+            plugins : 'tags autocomplete'
+        })
+        .bind('getSuggestions', function(e, data)
+        {
+            var list = [
+            {% for z in conoscenza_specifica %}
+                '{{z.valore}}',
+            {% endfor %}
+            ],
+            textext = $(e.target).textext()[0],
+            query = (data ? data.query : '') || ''
+                ;
+
+            $(this).trigger(
+                'setSuggestions',
+                { result : textext.itemManager().filter(list, query) }
+            );
+        }
+    );
+        $('#mansione_attuale')
+        .textext({
+            plugins : 'tags autocomplete'
+        })
+        .bind('getSuggestions', function(e, data)
+        {
+            var list = [
+            {% for z in mansione %}
+                '{{z.valore}}',
+            {% endfor %}
+            ],
+            textext = $(e.target).textext()[0],
+            query = (data ? data.query : '') || ''
+                ;
+
+            $(this).trigger(
+                'setSuggestions',
+                { result : textext.itemManager().filter(list, query) }
+            );
+        }
+    );
+        $('#livello_cariera_attuale')
+        .textext({
+            plugins : 'tags autocomplete'
+        })
+        .bind('getSuggestions', function(e, data)
+        {
+            var list = [
+            {% for z in livello_cariera %}
+                '{{z.valore}}',
+            {% endfor %}
+            ],
+            textext = $(e.target).textext()[0],
+            query = (data ? data.query : '') || ''
+                ;
+
+            $(this).trigger(
+                'setSuggestions',
+                { result : textext.itemManager().filter(list, query) }
+            );
+        }
+    );
+    $('#ruolo_attuale')
+        .textext({
+            plugins : 'tags autocomplete'
+        })
+        .bind('getSuggestions', function(e, data)
+        {
+            var list = [
+            {% for z in ruolo %}
+                '{{z.valore}}',
+            {% endfor %}
+            ],
+            textext = $(e.target).textext()[0],
+            query = (data ? data.query : '') || ''
+                ;
+
+            $(this).trigger(
+                'setSuggestions',
+                { result : textext.itemManager().filter(list, query) }
+            );
+        }
+    );
+
+    $('#area_operativa_attuale')
+        .textext({
+            plugins : 'tags autocomplete'
+        })
+        .bind('getSuggestions', function(e, data)
+        {
+            var list = [
+            {% for z in area_operativa %}
+                '{{z.valore}}',
+            {% endfor %}
+            ],
+            textext = $(e.target).textext()[0],
+            query = (data ? data.query : '') || ''
+                ;
+
+            $(this).trigger(
+                'setSuggestions',
+                { result : textext.itemManager().filter(list, query) }
+            );
+        }
+    );
+
+    $('#tipo_contratto_attuale')
+        .textext({
+            plugins : 'tags autocomplete'
+        })
+        .bind('getSuggestions', function(e, data)
+        {
+            var list = [
+            {% for z in tipo_contratto %}
+                '{{z.valore}}',
+            {% endfor %}
+            ],
+            textext = $(e.target).textext()[0],
+            query = (data ? data.query : '') || ''
+                ;
+
+            $(this).trigger(
+                'setSuggestions',
+                { result : textext.itemManager().filter(list, query) }
+            );
+        }
+    );
+//passato----------------------------------------------------------------------------------------------
+     $('#mansione_pregresso')
+        .textext({
+            plugins : 'tags autocomplete'
+        })
+        .bind('getSuggestions', function(e, data)
+        {
+            var list = [
+            {% for z in mansione %}
+                '{{z.valore}}',
+            {% endfor %}
+            ],
+            textext = $(e.target).textext()[0],
+            query = (data ? data.query : '') || ''
+                ;
+
+            $(this).trigger(
+                'setSuggestions',
+                { result : textext.itemManager().filter(list, query) }
+            );
+        }
+    );
+        $('#livello_cariera_pregresso')
+        .textext({
+            plugins : 'tags autocomplete'
+        })
+        .bind('getSuggestions', function(e, data)
+        {
+            var list = [
+            {% for z in livello_cariera %}
+                '{{z.valore}}',
+            {% endfor %}
+            ],
+            textext = $(e.target).textext()[0],
+            query = (data ? data.query : '') || ''
+                ;
+
+            $(this).trigger(
+                'setSuggestions',
+                { result : textext.itemManager().filter(list, query) }
+            );
+        }
+    );
+    $('#ruolo_pregresso')
+        .textext({
+            plugins : 'tags autocomplete'
+        })
+        .bind('getSuggestions', function(e, data)
+        {
+            var list = [
+            {% for z in ruolo %}
+                '{{z.valore}}',
+            {% endfor %}
+            ],
+            textext = $(e.target).textext()[0],
+            query = (data ? data.query : '') || ''
+                ;
+
+            $(this).trigger(
+                'setSuggestions',
+                { result : textext.itemManager().filter(list, query) }
+            );
+        }
+    );
+
+    $('#area_operativa_pregresso')
+        .textext({
+            plugins : 'tags autocomplete'
+        })
+        .bind('getSuggestions', function(e, data)
+        {
+            var list = [
+            {% for z in area_operativa %}
+                '{{z.valore}}',
+            {% endfor %}
+            ],
+            textext = $(e.target).textext()[0],
+            query = (data ? data.query : '') || ''
+                ;
+
+            $(this).trigger(
+                'setSuggestions',
+                { result : textext.itemManager().filter(list, query) }
+            );
+        }
+    );
+
+    $('#tipo_contratto_pregresso')
+        .textext({
+            plugins : 'tags autocomplete'
+        })
+        .bind('getSuggestions', function(e, data)
+        {
+            var list = [
+            {% for z in tipo_contratto %}
+                '{{z.valore}}',
+            {% endfor %}
+            ],
+            textext = $(e.target).textext()[0],
+            query = (data ? data.query : '') || ''
+                ;
+
+            $(this).trigger(
+                'setSuggestions',
+                { result : textext.itemManager().filter(list, query) }
+            );
+        }
+    );
+
+//futuoro----------------------------------------------------------------------------------------------------------
+         $('#mansione_futuro')
+        .textext({
+            plugins : 'tags autocomplete'
+        })
+        .bind('getSuggestions', function(e, data)
+        {
+            var list = [
+            {% for z in mansione %}
+                '{{z.valore}}',
+            {% endfor %}
+            ],
+            textext = $(e.target).textext()[0],
+            query = (data ? data.query : '') || ''
+                ;
+
+            $(this).trigger(
+                'setSuggestions',
+                { result : textext.itemManager().filter(list, query) }
+            );
+        }
+    );
+        $('#livello_cariera_futuro')
+        .textext({
+            plugins : 'tags autocomplete'
+        })
+        .bind('getSuggestions', function(e, data)
+        {
+            var list = [
+            {% for z in livello_cariera %}
+                '{{z.valore}}',
+            {% endfor %}
+            ],
+            textext = $(e.target).textext()[0],
+            query = (data ? data.query : '') || ''
+                ;
+
+            $(this).trigger(
+                'setSuggestions',
+                { result : textext.itemManager().filter(list, query) }
+            );
+        }
+    );
+    $('#ruolo_futuro')
+        .textext({
+            plugins : 'tags autocomplete'
+        })
+        .bind('getSuggestions', function(e, data)
+        {
+            var list = [
+            {% for z in ruolo %}
+                '{{z.valore}}',
+            {% endfor %}
+            ],
+            textext = $(e.target).textext()[0],
+            query = (data ? data.query : '') || ''
+                ;
+
+            $(this).trigger(
+                'setSuggestions',
+                { result : textext.itemManager().filter(list, query) }
+            );
+        }
+    );
+
+    $('#area_operativa_futuro')
+        .textext({
+            plugins : 'tags autocomplete'
+        })
+        .bind('getSuggestions', function(e, data)
+        {
+            var list = [
+            {% for z in area_operativa %}
+                '{{z.valore}}',
+            {% endfor %}
+            ],
+            textext = $(e.target).textext()[0],
+            query = (data ? data.query : '') || ''
+                ;
+
+            $(this).trigger(
+                'setSuggestions',
+                { result : textext.itemManager().filter(list, query) }
+            );
+        }
+    );
+
+    $('#tipo_contratto_futuro')
+        .textext({
+            plugins : 'tags autocomplete'
+        })
+        .bind('getSuggestions', function(e, data)
+        {
+            var list = [
+            {% for z in tipo_contratto %}
+                '{{z.valore}}',
+            {% endfor %}
+            ],
+            textext = $(e.target).textext()[0],
+            query = (data ? data.query : '') || ''
+                ;
+
+            $(this).trigger(
+                'setSuggestions',
+                { result : textext.itemManager().filter(list, query) }
+            );
+        }
+    );
+
+    $('#benefit_futuro')
+        .textext({
+            plugins : 'tags autocomplete'
+        })
+        .bind('getSuggestions', function(e, data)
+        {
+            var list = [
+            {% for z in benefit %}
+                '{{z.valore}}',
+            {% endfor %}
+            ],
+            textext = $(e.target).textext()[0],
+            query = (data ? data.query : '') || ''
+                ;
+
+            $(this).trigger(
+                'setSuggestions',
+                { result : textext.itemManager().filter(list, query) }
+            );
+        }
+    );
+
+    $('#interesse_futuro')
+        .textext({
+            plugins : 'tags autocomplete'
+        })
+        .bind('getSuggestions', function(e, data)
+        {
+            var list = [
+            {% for z in interesse %}
+                '{{z.valore}}',
+            {% endfor %}
+            ],
+            textext = $(e.target).textext()[0],
+            query = (data ? data.query : '') || ''
+                ;
+
+            $(this).trigger(
+                'setSuggestions',
+                { result : textext.itemManager().filter(list, query) }
+            );
+        }
+    );
+
+</script>
 {% endblock %}
