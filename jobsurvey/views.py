@@ -876,11 +876,6 @@ class Lavori(View):
 
 
 
-
-
-
-
-
 class Grazie(View):
 
     def get(self, request, *args, **kwargs):

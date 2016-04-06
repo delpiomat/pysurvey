@@ -9,7 +9,6 @@ from django.db import models
 # python manage.py migrate
 # python manage.py runserver 0.0.0.0:8000
 
-
 #id is by default
 class Survey(models.Model):
     name = models.CharField(max_length=256)
@@ -249,11 +248,13 @@ class CampoStudiAttuale(models.Model):
     persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
 
 
+
 # -----------------------------------------------------------------------------------------------------------------
 # Aziende
 
 class Citta(models.Model):
     valore = models.CharField(max_length=64)
+
 
 class Azienda(models.Model):
     #anagrafica
@@ -262,15 +263,11 @@ class Azienda(models.Model):
     note = models.CharField(max_length=512, null=True)
     citta_sede = models.ForeignKey(Citta, on_delete=models.CASCADE, null=True)
 
+
 class AltraSede(models.Model):
     citta = models.ForeignKey(Citta, on_delete=models.CASCADE, null=True)
     azienda = models.ForeignKey(Azienda, on_delete=models.CASCADE)
 
-
-# fine anagrafica azienda
-
-# -----------------------------------------------------------------------------------------------------------------
-# Offerta di Lavoro
 
 class Lavoro(models.Model):
     email_referente = models.CharField(max_length=64, null=True)
@@ -280,33 +277,39 @@ class Lavoro(models.Model):
     distanza_massima = models.CharField(max_length=64, null=True)
 
 
-class CercaLingua:
+class CercaLingua(models.Model):
     lavoro = models.ForeignKey(Lavoro, on_delete=models.CASCADE)
     lingua= models.ForeignKey(Lingua, on_delete=models.CASCADE, null=True)
 
 
-class CercaLivelloCariera:
+class CercaLivelloCariera(models.Model):
     lavoro = models.ForeignKey(Lavoro, on_delete=models.CASCADE)
     livello_cariera = models.ForeignKey(LivelloCariera, on_delete=models.CASCADE, null=True)
 
-class CercaCitta:
+
+class CercaCitta(models.Model):
     lavoro = models.ForeignKey(Lavoro, on_delete=models.CASCADE)
     citta = models.ForeignKey(Citta, on_delete=models.CASCADE, null=True)
 
-class CercaTipoContratto:
+
+class CercaTipoContratto(models.Model):
     lavoro = models.ForeignKey(Lavoro, on_delete=models.CASCADE)
     tipo_contratto = models.ForeignKey(TipoContratto, on_delete=models.CASCADE, null=True)
 
-class CercaEsami:
+
+class CercaEsami(models.Model):
     lavoro = models.ForeignKey(Lavoro, on_delete=models.CASCADE)
     esame = models.ForeignKey(Esame, on_delete=models.CASCADE, null=True)
 
-class CercaAreaOperativa:
+class CercaAreaOperativa(models.Model):
     lavoro = models.ForeignKey(Lavoro, on_delete=models.CASCADE)
     area_operativa = models.ForeignKey(AreaOperativa, on_delete=models.CASCADE, null=True)
 
-class CercaCampoStudio:
+class CercaCampoStudio(models.Model):
     lavoro = models.ForeignKey(Lavoro, on_delete=models.CASCADE)
     campo_studio = models.ForeignKey(CampoStudi, on_delete=models.CASCADE, null=True)
+
+
+
 
 # fine Lavoro
