@@ -33,6 +33,7 @@ urlpatterns = [
     url(r'^download/(?P<type>.*)/(?P<survey_id>[0-9]+)/$', createSurvey.views.result_download, name='result_download'),
     url(r'^studenti/valore/$', jobSurvey.views.StudentiValore.as_view(), name='studenti_valore'),
     url(r'^studenti/$', jobSurvey.views.Studenti.as_view(), name='studenti'),
+    url(r'^aziende/$', jobSurvey.views.Aziende.as_view(), name='aziende'),
     url(r'^grazie/$', jobSurvey.views.Grazie.as_view(), name='grazie'),
     url(r'^admin/', include(admin.site.urls)),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -600,9 +600,68 @@ class Studenti(View):
                     nuovo_valore_gia_esistente.save()
 
 
-        return render(request, 'grazie.html')
+        return render(request, 'grazie.html',{"azienda":'0'})
 
 
+
+class Aziende(View):
+
+    def get(self, request, *args, **kwargs):
+        result = {}
+        result['citta'] = Citta.objects.all()
+        return render(request, "aziende.html", result)
+
+    def post(self, request, *args, **kwargs):
+        nuova_azienda = Azienda()
+
+        if request.POST['email'] == "":
+            nuova_azienda.email = None
+        else:
+            nuova_azienda.email = request.POST['email']
+
+        if request.POST['nome_referente'] == "":
+            nuova_azienda.nome_referente = None
+        else:
+            nuova_azienda.nome_referente = request.POST['nome_referente']
+
+        if request.POST['note'] == "":
+            nuova_azienda.note = None
+        else:
+            nuova_azienda.note = request.POST['note']
+
+        # Ora parliamo delle chiavi esterne-------------------------------------------
+        citta_sede_post = json.loads(request.POST["citta_sede"])
+        if len(citta_sede_post) <= 0:
+            nuova_azienda.citta_sede = None
+        elif len(Citta.objects.filter(valore=citta_sede_post[0].capitalize())) > 0:
+            nuova_azienda.citta_sede = Citta.objects.filter(valore=citta_sede_post[0].capitalize())[0]
+        else:
+            citta = Citta(valore=citta_sede_post[0].capitalize())
+            citta.save()
+            nuova_azienda.citta_sede = citta
+
+        nuova_azienda.save()
+        # Ora parliamo dei multi valore-------------------------------------------
+        valore_list = json.loads(request.POST["altra_sede"])
+        if len(valore_list) <= 0:
+            nuovo_valore_nullo = AltraSede(azienda=nuova_azienda)
+            nuovo_valore_nullo.citta = None
+            nuovo_valore_nullo.save()
+        else:
+            for v in valore_list:
+                if len(Citta.objects.filter(valore=v.capitalize())) > 0:
+                    nuovo_valore_gia_esistente = AltraSede(azienda=nuova_azienda)
+                    nuovo_valore_gia_esistente.citta = Citta.objects.filter(valore=v.capitalize())[0]
+                    nuovo_valore_gia_esistente.save()
+                else:
+                    nuova_valore_nuovo = Citta(valore=v)
+                    nuova_valore_nuovo.save()
+                    # ora essite nel db quel valore
+                    nuovo_valore_gia_esistente = AltraSede(azienda=nuova_azienda)
+                    nuovo_valore_gia_esistente.citta = nuova_valore_nuovo
+                    nuovo_valore_gia_esistente.save()
+
+        return render(request, 'grazie.html', {"azienda": '1', "id": nuova_azienda.id})
 
 class Grazie(View):
 

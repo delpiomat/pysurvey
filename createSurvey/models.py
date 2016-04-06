@@ -236,6 +236,28 @@ class InteresseFuturo(models.Model):
     interesse = models.ForeignKey(Interesse, on_delete=models.CASCADE, null=True)
     persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
 
+
 class EsameAttuale(models.Model):
     esame = models.ForeignKey(Esame, on_delete=models.CASCADE, null=True)
     persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
+
+
+# -----------------------------------------------------------------------------------------------------------------
+# Aziende
+
+class Citta(models.Model):
+    valore = models.CharField(max_length=64)
+
+class Azienda(models.Model):
+    #anagrafica
+    email = models.CharField(max_length=64, null=True)
+    nome_referente = models.CharField(max_length=512, null=True)
+    note = models.CharField(max_length=512, null=True)
+    citta_sede = models.ForeignKey(Citta, on_delete=models.CASCADE, null=True)
+
+class AltraSede(models.Model):
+    citta = models.ForeignKey(Citta, on_delete=models.CASCADE, null=True)
+    azienda = models.ForeignKey(Azienda, on_delete=models.CASCADE)
+
+
+# fine anagrafica azienda
