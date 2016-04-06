@@ -46,14 +46,13 @@ class StudentiValore(View):
         result['benefit'] = Benefit.objects.all()
         result['ruolo'] = Ruolo.objects.all()
         result['interesse'] = Interesse.objects.all()
-
         return render(request, "studenti_value.html", result)
 
     def post(self, request, *args, **kwargs):
         logger.error("la post! ")
         logger.error(request)
-        for a in request:
-            logger.error(str(a)+"adasdasdasd")
+        #for a in request:
+            #logger.error(str(a)+"adasdasdasd")
         result = {}
         result['zona'] = Zona.objects.all()
         result['livello_pc'] = LivelloPC.objects.all()
