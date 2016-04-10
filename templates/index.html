@@ -18,6 +18,33 @@
             </tr>
         </thead>
         <tbody>
+        <tr>
+            <td><a href="{%  url 'studenti'  %}">Studente</a></td>
+            <td>Stage it</td>
+            <td> 7 aprile </td>
+            <td>
+                <a class="btn btn-primary" href="{%  url 'studenti'  %}">Inizia</a>
+                <a class="btn btn-primary" href="{%  url 'risultati_aziende'  %}">Risultati</a>
+            </td>
+        </tr>
+        <tr>
+            <td><a href="{%  url 'aziende'  %}">Aziende</a></td>
+            <td>Stage it</td>
+            <td> 7 aprile </td>
+            <td>
+                <a class="btn btn-primary" href="{%  url 'aziende'  %}">Inizia</a>
+                <a class="btn btn-primary" href="{%  url 'risultati_aziende'  %}">Risultati</a>
+            </td>
+        </tr>
+        <tr>
+            <td><a href="{%  url 'lavori'  %}">Offerte di Lavoro</a></td>
+            <td>Stage it</td>
+            <td> 7 aprile </td>
+            <td>
+                <a class="btn btn-primary" href="{%  url 'lavori'  %}">Inizia</a>
+                <a class="btn btn-primary" href="{%  url 'risultati_lavori'  %}">Risultati</a>
+            </td>
+        </tr>
             {% for survey in surveys %}
                 <tr>
                     <td><a href="{%  url 'preview_survey'  survey.id  %}">{{ survey.name|upper }}</a></td>

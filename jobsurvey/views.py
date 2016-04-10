@@ -74,6 +74,7 @@ class StudentiValore(View):
 # per sondaggio
 class Studenti(View):
 
+    @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
         result = {}
         result['zona'] = Zona.objects.all()
@@ -94,6 +95,7 @@ class Studenti(View):
 
         return render(request, "studenti.html", result)
 
+    @method_decorator(login_required(login_url='log_in'))
     def post(self, request, *args, **kwargs):
         logger.error("la post! ")
 
@@ -625,11 +627,13 @@ class Studenti(View):
 
 class Aziende(View):
 
+    @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
         result = {}
         result['citta'] = Citta.objects.all()
         return render(request, "aziende.html", result)
 
+    @method_decorator(login_required(login_url='log_in'))
     def post(self, request, *args, **kwargs):
         nuova_azienda = Azienda()
 
@@ -685,6 +689,7 @@ class Aziende(View):
 
 class Lavori(View):
 
+    @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
         result = {}
         result['lingua'] = Lingua.objects.all()
@@ -696,6 +701,7 @@ class Lavori(View):
         result['citta'] = Citta.objects.all()
         return render(request, "lavoro.html", result)
 
+    @method_decorator(login_required(login_url='log_in'))
     def post(self, request, *args, **kwargs):
         if "codice_azienda" in request.POST:
             nuovo_lavoro= Lavoro(azienda_id=request.POST["codice_azienda"])
@@ -859,14 +865,18 @@ class Lavori(View):
 
 class Grazie(View):
 
+    @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
         return render(request, "grazie.html")
 
+    @method_decorator(login_required(login_url='log_in'))
     def post(self, request, *args, **kwargs):
         return render(request, "grazie.html")
 
 
 class RisultatiAziende(View):
+
+    @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
 
         result={}
@@ -894,10 +904,12 @@ class RisultatiAziende(View):
 
         return render(request, "risultati.html", {"result": result, "type": 1})
 
+    @method_decorator(login_required(login_url='log_in'))
     def post(self, request, *args, **kwargs):
         return render(request, "risultati.html")
 
 class RisultatiOffertaLavoro(View):
+    @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
 
         result={}
@@ -991,5 +1003,6 @@ class RisultatiOffertaLavoro(View):
 
         return render(request, "risultati.html", {"result": result, "type": 2})
 
+    @method_decorator(login_required(login_url='log_in'))
     def post(self, request, *args, **kwargs):
         return render(request, "risultati.html")
