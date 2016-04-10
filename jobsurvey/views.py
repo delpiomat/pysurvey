@@ -887,18 +887,26 @@ class Grazie(View):
 class RisultatiAziende(View):
     def get(self, request, *args, **kwargs):
 
-        #aziende
+        result={}
+        # aziende
         list_aziende = Azienda.objects.all().select_related()
-        for i in list_aziende:
-            if i.citta_sede != None:
-                logger.error(i.citta_sede.valore)
 
+        # altra sede
         list_altra_sede = AltraSede.objects.all().select_related()
-        result_altra_sede = {}
-        for i in list_altra_sede:
-            result_altra_sede[i.azienda_id] = i
 
-        return render(request, "risultati.html", {"results" : list_aziende, "altra_sede" : result_altra_sede})
+        for a in list_aziende:
+            result[a.id] = {'id': a.id, 'note': a.note, 'email': a.email, "nome_referente":  a.nome_referente, 'altra_sede': ""}
+
+        for las in list_altra_sede:
+            if las.citta != None:
+                if result[las.azienda.id]['altra_sede'] != "":
+                    result[las.azienda.id]['altra_sede'] += ","+las.citta.valore
+                else:
+                    result[las.azienda.id]['altra_sede'] += las.citta.valore
+            else:
+                result[las.azienda.id]['altra_sede'] += "null"
+
+        return render(request, "risultati.html", {"result": result})
 
     def post(self, request, *args, **kwargs):
         return render(request, "risultati.html")

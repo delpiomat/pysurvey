@@ -14,24 +14,20 @@
                 <th>id</th>
                 <th>note</th>
                 <th>email</th>
-                <th>nomenome_referente</th>
+                <th>nome_referente</th>
                 <th>citta_sede</th>
-                <th>altra</th>
+                <th>altre_sedi</th>
             </tr>
         </thead>
         <tbody>
-            {% for col in results %}
+            {% for key,value in result.items %}
                 <tr>
-                    <td>{{ col.id }}</td>
-                    <td>{{ col.note }}</td>
-                    <td>{{ col.email }}</td>
-                    <td>{{ col.nome_referente }}</td>
-                    <td>{{ col.citta_sede.valore }}</td>
-                    {% if col.id in risultati_aziende %}
-                        <td>{{ col.citta_sede.valore }}</td>
-                        {% else  %}
-                        <td>null</td>
-                    {% endif %}
+                    <td>{{ value.id }}</td>
+                    <td>{{ value.note }}</td>
+                    <td>{{ value.email }}</td>
+                    <td>{{ value.nome_referente }}</td>
+                    <td>{{ value.citta_sede }}</td>
+                    <td>{{ value.altra_sede }}</td>
                </tr>
             {% endfor %}
         </tbody>
