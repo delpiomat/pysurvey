@@ -910,8 +910,7 @@ class RisultatiOffertaLavoro(View):
                             'note_azienda': l.azienda.note,"email_riferimento_azienda": l.azienda.email ,
                             'email_riferimento_lavoro': l.email_referente, "citta_lavoro":  "", 'lingua': "",
                             'campo_studi': "", 'esami': "", 'area_operativa': "", 'livello_cariera': "",
-                            'tipo_contratto': "", 'livello_cariera': "", 'distanza': l.distanza_massima,
-                            'note': l.note_lavoro}
+                            'tipo_contratto': "", 'distanza': l.distanza_massima, 'note': l.note_lavoro}
 
         # citta lavoro
         list_citta_lavoro = CercaCitta.objects.all().select_related()
@@ -978,6 +977,17 @@ class RisultatiOffertaLavoro(View):
                     result[llc.lavoro.id]['livello_cariera'] += llc.livello_cariera.valore
             else:
                 result[llc.lavoro.id]['livello_cariera'] += "None"
+
+        # tipo_contratto cerca lavoro
+        list_tipo_contratto = CercaTipoContratto.objects.all().select_related()
+        for ltc in list_tipo_contratto:
+            if ltc.tipo_contratto != None:
+                if result[ltc.lavoro.id]['tipo_contratto'] != "":
+                    result[ltc.lavoro.id]['tipo_contratto'] += ","+ltc.tipo_contratto.valore
+                else:
+                    result[ltc.lavoro.id]['tipo_contratto'] += ltc.tipo_contratto.valore
+            else:
+                result[ltc.lavoro.id]['tipo_contratto'] += "None"
 
         return render(request, "risultati.html", {"result": result, "type": 2})
 
