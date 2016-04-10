@@ -37,5 +37,6 @@ urlpatterns = [
     url(r'^lavori/$', jobSurvey.views.Lavori.as_view(), name='lavori'),
     url(r'^grazie/$', jobSurvey.views.Grazie.as_view(), name='grazie'),
     url(r'^risultati/aziende/$', jobSurvey.views.RisultatiAziende.as_view(), name='risultati_aziende'),
+    url(r'^risultati/lavori/$', jobSurvey.views.RisultatiOffertaLavoro.as_view(), name='risultati_lavori'),
     url(r'^admin/', include(admin.site.urls)),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

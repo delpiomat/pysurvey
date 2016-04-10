@@ -3,34 +3,83 @@
 
 {% block title %}Risultati{% endblock %}
 
-
 {% block topcontent %}
-<div class="container">
-    <h2>Sondaggio numero</h2>
-    <p>risultati:</p>
-    <table  class="table">
-        <thead>
-            <tr>
-                <th>id</th>
-                <th>note</th>
-                <th>email</th>
-                <th>nome_referente</th>
-                <th>citta_sede</th>
-                <th>altre_sedi</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for key,value in result.items %}
+{% if type == 1 %}
+    <div class="container">
+        <h2>Anagrafica Aziende</h2>
+        <p>risultati:</p>
+        <table  class="table">
+            <thead>
                 <tr>
-                    <td>{{ value.id }}</td>
-                    <td>{{ value.note }}</td>
-                    <td>{{ value.email }}</td>
-                    <td>{{ value.nome_referente }}</td>
-                    <td>{{ value.citta_sede }}</td>
-                    <td>{{ value.altra_sede }}</td>
-               </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+                    <th>id</th>
+                    <th>note</th>
+                    <th>email</th>
+                    <th>nome_referente</th>
+                    <th>citta_sede</th>
+                    <th>altre_sedi</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for key,value in result.items %}
+                    <tr>
+                        <td>{{ value.id }}</td>
+                        <td>{{ value.note }}</td>
+                        <td>{{ value.email }}</td>
+                        <td>{{ value.nome_referente }}</td>
+                        <td>{{ value.citta_sede }}</td>
+                        <td>{{ value.altra_sede }}</td>
+                   </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endif %}
+
+{% if type == 2 %}
+    <div class="container">
+        <h2>Offerta di Lavoro</h2>
+        <p>risultati:</p>
+        <table  class="table">
+            <thead>
+                <tr>
+                    <th>id_lavoro</th>
+                    <th>id_azienda</th>
+                    <th>note_azienda</th>
+                    <th>email_riferimento_azienda</th>
+                    <th>email_riferimento_lavoro</th>
+                    <th>citta_lavoro</th>
+                    <th>lingua</th>
+                    <th>campo_studi</th>
+                    <th>esami</th>
+                    <th>area_operativa</th>
+                    <th>tipo_contratto</th>
+                    <th>livello_cariera</th>
+                    <th>distanza</th>
+                    <th>note</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for key,value in result.items %}
+                    <tr>
+                        <th>{{ value.id }}</th>
+                        <th>{{ value.id_azienda }}</th>
+                        <th>{{ value.note_azienda }}</th>
+                        <th>{{ value.email_riferimento_azienda }}</th>
+                        <th>{{ value.email_riferimento_lavoro }}</th>
+                        <th>{{ value.citta_lavoro }}</th>
+                        <th>{{ value.lingua }}</th>
+                        <th>{{ value.campo_studi }}</th>
+                        <th>{{ value.esami }}</th>
+                        <th>{{ value.area_operativa }}</th>
+                        <th>{{ value.tipo_contratto }}</th>
+                        <th>{{ value.livello_cariera }}</th>
+                        <th>{{ value.distanza }}</th>
+                         <th>{{ value.note }}</th>
+
+                   </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endif %}
 {% endblock %}

@@ -830,24 +830,6 @@ class Lavori(View):
                         nuovo_valore_gia_esistente.livello_cariera = nuova_valore_nuovo
                         nuovo_valore_gia_esistente.save()
 
-            valore_list = json.loads(request.POST["cerca_livello_cariera"])
-            if len(valore_list) <= 0:
-                nuovo_valore_nullo = CercaLivelloCariera(lavoro=nuovo_lavoro)
-                nuovo_valore_nullo.livello_cariera = None
-                nuovo_valore_nullo.save()
-            else:
-                for v in valore_list:
-                    if len(LivelloCariera.objects.filter(valore=v.capitalize())) > 0:
-                        nuovo_valore_gia_esistente = CercaLivelloCariera(lavoro=nuovo_lavoro)
-                        nuovo_valore_gia_esistente.livello_cariera = LivelloCariera.objects.filter(valore=v.capitalize())[0]
-                        nuovo_valore_gia_esistente.save()
-                    else:
-                        nuova_valore_nuovo = LivelloCariera(valore=v)
-                        nuova_valore_nuovo.save()
-                        # ora essite nel db quel valore
-                        nuovo_valore_gia_esistente = CercaLivelloCariera(lavoro=nuovo_lavoro)
-                        nuovo_valore_gia_esistente.livello_cariera = nuova_valore_nuovo
-                        nuovo_valore_gia_esistente.save()
 
             valore_list = json.loads(request.POST["cerca_tipo_contratto"])
             if len(valore_list) <= 0:
@@ -895,7 +877,11 @@ class RisultatiAziende(View):
         list_altra_sede = AltraSede.objects.all().select_related()
 
         for a in list_aziende:
-            result[a.id] = {'id': a.id, 'note': a.note, 'email': a.email, "nome_referente":  a.nome_referente, 'altra_sede': ""}
+            if a.citta_sede != None:
+                citta_sede= a.citta_sede.valore
+            else:
+                citta_sede = "None"
+            result[a.id] = {'id': a.id, 'note': a.note, 'citta_sede': citta_sede ,'email': a.email, "nome_referente":  a.nome_referente, 'altra_sede': ""}
 
         for las in list_altra_sede:
             if las.citta != None:
@@ -904,9 +890,96 @@ class RisultatiAziende(View):
                 else:
                     result[las.azienda.id]['altra_sede'] += las.citta.valore
             else:
-                result[las.azienda.id]['altra_sede'] += "null"
+                result[las.azienda.id]['altra_sede'] += "None"
 
-        return render(request, "risultati.html", {"result": result})
+        return render(request, "risultati.html", {"result": result, "type": 1})
+
+    def post(self, request, *args, **kwargs):
+        return render(request, "risultati.html")
+
+class RisultatiOffertaLavoro(View):
+    def get(self, request, *args, **kwargs):
+
+        result={}
+        # lavori
+        list_lavori = Lavoro.objects.all().select_related()
+
+        for l in list_lavori:
+
+            result[l.id] = {"id": l.id, 'id_azienda': l.azienda_id,
+                            'note_azienda': l.azienda.note,"email_riferimento_azienda": l.azienda.email ,
+                            'email_riferimento_lavoro': l.email_referente, "citta_lavoro":  "", 'lingua': "",
+                            'campo_studi': "", 'esami': "", 'area_operativa': "", 'livello_cariera': "",
+                            'tipo_contratto': "", 'livello_cariera': "", 'distanza': l.distanza_massima,
+                            'note': l.note_lavoro}
+
+        # citta lavoro
+        list_citta_lavoro = CercaCitta.objects.all().select_related()
+        for lcs in list_citta_lavoro:
+            if lcs.citta != None:
+                if result[lcs.lavoro.id]['citta_lavoro'] != "":
+                    result[lcs.lavoro.id]['citta_lavoro'] += ","+lcs.citta.valore
+                else:
+                    result[lcs.lavoro.id]['citta_lavoro'] += lcs.citta.valore
+            else:
+                result[lcs.lavoro.id]['citta_lavoro'] += "None"
+
+        # lingua cerca lavoro
+        list_lingua = CercaLingua.objects.all().select_related()
+        for ll in list_lingua:
+            if ll.lingua != None:
+                if result[ll.lavoro.id]['lingua'] != "":
+                    result[ll.lavoro.id]['lingua'] += ","+ll.lingua.valore
+                else:
+                    result[ll.lavoro.id]['lingua'] += ll.lingua.valore
+            else:
+                result[ll.lavoro.id]['lingua'] += "None"
+
+        # campo studi cerca lavoro
+        list_campo_studi = CercaCampoStudio.objects.all().select_related()
+        for lcs in list_campo_studi:
+            if lcs.campo_studio != None:
+                if result[lcs.lavoro.id]['campo_studi'] != "":
+                    result[lcs.lavoro.id]['campo_studi'] += ","+lcs.campo_studio.valore
+                else:
+                    result[lcs.lavoro.id]['campo_studi'] += lcs.campo_studio.valore
+            else:
+                result[lcs.lavoro.id]['campo_studi'] += "None"
+
+        # esami cerca lavoro
+        list_esami = CercaEsami.objects.all().select_related()
+        for le in list_esami:
+            if le.esame != None:
+                if result[le.lavoro.id]['esami'] != "":
+                    result[le.lavoro.id]['esami'] += ","+le.esame.valore
+                else:
+                    result[le.lavoro.id]['esami'] += le.esame.valore
+            else:
+                result[le.lavoro.id]['esami'] += "None"
+
+        # area_operativa cerca lavoro
+        list_area_operativa = CercaAreaOperativa.objects.all().select_related()
+        for lao in list_area_operativa:
+            if lao.area_operativa != None:
+                if result[lao.lavoro.id]['area_operativa'] != "":
+                    result[lao.lavoro.id]['area_operativa'] += ","+lao.area_operativa.valore
+                else:
+                    result[lao.lavoro.id]['area_operativa'] += lao.area_operativa.valore
+            else:
+                result[lao.lavoro.id]['area_operativa'] += "None"
+
+        # livello_cariera cerca lavoro
+        list_livello_cariera = CercaLivelloCariera.objects.all().select_related()
+        for llc in list_livello_cariera:
+            if llc.livello_cariera != None:
+                if result[llc.lavoro.id]['livello_cariera'] != "":
+                    result[llc.lavoro.id]['livello_cariera'] += ","+llc.livello_cariera.valore
+                else:
+                    result[llc.lavoro.id]['livello_cariera'] += llc.livello_cariera.valore
+            else:
+                result[llc.lavoro.id]['livello_cariera'] += "None"
+
+        return render(request, "risultati.html", {"result": result, "type": 2})
 
     def post(self, request, *args, **kwargs):
         return render(request, "risultati.html")
