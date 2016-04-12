@@ -61,21 +61,114 @@
             <tbody>
                 {% for key,value in result.items %}
                     <tr>
-                        <th>{{ value.id }}</th>
-                        <th>{{ value.id_azienda }}</th>
-                        <th>{{ value.note_azienda }}</th>
-                        <th>{{ value.email_riferimento_azienda }}</th>
-                        <th>{{ value.email_riferimento_lavoro }}</th>
-                        <th>{{ value.citta_lavoro }}</th>
-                        <th>{{ value.lingua }}</th>
-                        <th>{{ value.campo_studi }}</th>
-                        <th>{{ value.esami }}</th>
-                        <th>{{ value.area_operativa }}</th>
-                        <th>{{ value.tipo_contratto }}</th>
-                        <th>{{ value.livello_cariera }}</th>
-                        <th>{{ value.distanza }}</th>
-                         <th>{{ value.note }}</th>
+                        <td>{{ value.id }}</td>
+                        <td>{{ value.id_azienda }}</td>
+                        <td>{{ value.note_azienda }}</td>
+                        <td>{{ value.email_riferimento_azienda }}</td>
+                        <td>{{ value.email_riferimento_lavoro }}</td>
+                        <td>{{ value.citta_lavoro }}</td>
+                        <td>{{ value.lingua }}</td>
+                        <td>{{ value.campo_studi }}</td>
+                        <td>{{ value.esami }}</td>
+                        <td>{{ value.area_operativa }}</td>
+                        <td>{{ value.tipo_contratto }}</td>
+                        <td>{{ value.livello_cariera }}</td>
+                        <td>{{ value.distanza }}</td>
+                        <td>{{ value.note }}</td>
 
+                   </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+{% endif %}
+    {% if type == 0 %}
+        <h2>Studenti</h2>
+        <p>risultati:</p>
+        <table  class="table">
+            <thead>
+                <tr>
+                    <!--37 piu uno id-->
+                    <th>id_studente</th>
+                    <th>cap</th>
+                    <th>email</th>
+                    <th>anno</th>
+                    <th>citta</th>
+                    <th>zona</th>
+                    <th>grado_studi</th>
+                    <th>voto</th>
+                    <th>esami</th>
+                    <th>campo_studi</th>
+                    <th>livello_pc</th>
+                    <th>lingua</th>
+                    <th>conoscenza_specifica</th>
+                    <th>stato</th>
+                    <th>note</th>
+                    <th>mansione_attuale</th>
+                    <th>livello_cariera_attuale</th>
+                    <th>ruolo_attuale</th>
+                    <th>area_operativa_attuale</th>
+                    <th>tipo_contratto_attuale</th>
+                    <th>lavoro_passato</th>
+                    <th>numero_attivita_svolte</th>
+                    <th>mesi_attivita_svolte</th>
+                    <th>descrizione_esperienza_pregressa</th>
+                    <th>mansione_pregressa</th>
+                    <th>livello_cariera_pregressa</th>
+                    <th>ruolo_pregresso</th>
+                    <th>area_operativa_pregressa</th>
+                    <th>tipo_contratto_pregressa</th>
+                    <th>mansione_futura</th>
+                    <th>livello_cariera_futura</th>
+                    <th>ruolo_futura</th>
+                    <th>area_operativa_futura</th>
+                    <th>tipo_contratto_futura</th>
+                    <th>benefit</th>
+                    <th>stipendio</th>
+                    <th>interesse</th>
+                    <th>possibilita_trasferirsi</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for key,value in result.items %}
+                    <tr>
+                        <td>{{ value.id }}</td>
+                        <td>{{ value.cap }}</td>
+                        <td>{{ value.email }}</td>
+                        <td>{{ value.anno }}</td>
+                        <td>{{ value.citta }}</td>
+                        <td>{{ value.zona }}</td>
+                        <td>{{ value.grado_studi }}</td>
+                        <td>{{ value.voto }}</td>
+                        <td>{{ value.esami }}</td>
+                        <td>{{ value.campo_studi }}</td>
+                        <td>{{ value.livello_pc }}</td>
+                        <td>{{ value.lingua }}</td>
+                        <td>{{ value.conoscenza_specifica }}</td>
+                        <td>{{ value.stato }}</td>
+                        <td>{{ value.note }}</td>
+                        <td>{{ value.mansione_attuale }}</td>
+                        <td>{{ value.livello_cariera_attuale }}</td>
+                        <td>{{ value.ruolo_attuale }}</td>
+                        <td>{{ value.area_operativa_attuale }}</td>
+                        <td>{{ value.tipo_contratto_attuale }}</td>
+                        <td>{{ value.lavoro_passato }}</td>
+                        <td>{{ value.numero_attivita_svolte }}</td>
+                        <td>{{ value.mesi_attivita_svolte }}</td>
+                        <td>{{ value.descrizione_esperienza_pregressa }}</td>
+                        <td>{{ value.mansione_pregressa }}</td>
+                        <td>{{ value.livello_cariera_pregressa }}</td>
+                        <td>{{ value.ruolo_pregressa }}</td>
+                        <td>{{ value.area_operativa_pregressa }}</td>
+                        <td>{{ value.tipo_contratto_pregressa }}</td>
+                        <td>{{ value.mansione_futura }}</td>
+                        <td>{{ value.livello_cariera_futura }}</td>
+                        <td>{{ value.ruolo_futura }}</td>
+                        <td>{{ value.area_operativa_futura.id }}</td>
+                        <td>{{ value.tipo_contratto_futura }}</td>
+                        <td>{{ value.benefit }}</td>
+                        <td>{{ value.stipendio }}</td>
+                        <td>{{ value.interesse }}</td>
+                        <td>{{ value.possibilita_trasferirsi }}</td>
                    </tr>
                 {% endfor %}
             </tbody>
