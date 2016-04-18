@@ -138,6 +138,8 @@ class Persona(models.Model):
     grado_studi = models.ForeignKey(GradoStudi, on_delete=models.CASCADE, null=True)
     livello_uso_computer = models.ForeignKey(LivelloPC, on_delete=models.CASCADE, null=True)
 
+    #data
+    pub_date = models.DateTimeField(auto_now_add=True, blank=True)
 
 class StatoAttuale(models.Model):
     stato = models.ForeignKey(Stato, on_delete=models.CASCADE, null=True)
@@ -262,6 +264,8 @@ class Azienda(models.Model):
     nome_referente = models.CharField(max_length=512, null=True)
     note = models.CharField(max_length=512, null=True)
     citta_sede = models.ForeignKey(Citta, on_delete=models.CASCADE, null=True)
+    #data
+    pub_date = models.DateTimeField(auto_now_add=True, blank=True)
 
 
 class AltraSede(models.Model):
@@ -275,6 +279,8 @@ class Lavoro(models.Model):
     durata_lavoro = models.IntegerField(null=True)
     azienda = models.ForeignKey(Azienda, on_delete=models.CASCADE)
     distanza_massima = models.CharField(max_length=64, null=True)
+    #data
+    pub_date = models.DateTimeField(auto_now_add=True, blank=True)
 
 
 class CercaLingua(models.Model):

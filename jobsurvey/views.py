@@ -891,7 +891,8 @@ class RisultatiAziende(View):
                 citta_sede= a.citta_sede.valore
             else:
                 citta_sede = "None"
-            result[a.id] = {'id': a.id, 'note': a.note, 'citta_sede': citta_sede ,'email': a.email, "nome_referente":  a.nome_referente, 'altra_sede': ""}
+            result[a.id] = {'id': a.id, 'note': a.note, 'citta_sede': citta_sede, 'email': a.email,
+                            "nome_referente":  a.nome_referente, 'altra_sede': "", 'data': a.pub_date}
 
         for las in list_altra_sede:
             if las.citta != None:
@@ -922,7 +923,8 @@ class RisultatiOffertaLavoro(View):
                             'note_azienda': l.azienda.note,"email_riferimento_azienda": l.azienda.email ,
                             'email_riferimento_lavoro': l.email_referente, "citta_lavoro":  "", 'lingua': "",
                             'campo_studi': "", 'esami': "", 'area_operativa': "", 'livello_cariera': "",
-                            'tipo_contratto': "", 'distanza': l.distanza_massima, 'note': l.note_lavoro}
+                            'tipo_contratto': "", 'distanza': l.distanza_massima, 'note': l.note_lavoro,
+                            'data': l.pub_date}
 
         # citta lavoro
         list_citta_lavoro = CercaCitta.objects.all().select_related()
@@ -1048,7 +1050,8 @@ class RisultatiStudenti(View):
                             'livello_cariera_pregressa': "", 'ruolo_pregressa': "", 'area_operativa_pregressa': "",
                             'tipo_contratto_pregressa': "", 'mansione_futura': "", 'livello_cariera_futura': "",
                             'ruolo_futura': "", 'area_operativa_futura': "", 'tipo_contratto_futura': "", 'benefit': "",
-                            'stipendio': s.stipendio_futuro, 'possibilita_trasferirsi': s.possibilita_trasferirsi}
+                            'stipendio': s.stipendio_futuro, 'possibilita_trasferirsi': s.possibilita_trasferirsi,
+                            'data': s.pub_date}
 
         # esami
         list_esami = EsameAttuale.objects.all().select_related()
