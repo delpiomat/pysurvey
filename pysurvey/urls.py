@@ -23,7 +23,7 @@ import jobSurvey.views
 
 urlpatterns = [
     url(r'^log_in/', createSurvey.views.AuthLogin.as_view(), name="log_in"),
-    url(r'^sign_up/', createSurvey.views.SignUp.as_view(), name="sign_up"),
+    url(r'^sign_up/aiolli/aiolli', createSurvey.views.SignUp.as_view(), name="sign_up"),
     url(r'^logout/', createSurvey.views.log_out, name="log_out"),
     url(r'^$', createSurvey.views.Index.as_view(), name="index"),
     url(r'^new_survey', createSurvey.views.NewSurvey.as_view(), name="new_survey"),
@@ -39,5 +39,4 @@ urlpatterns = [
     url(r'^risultati/aziende/$', jobSurvey.views.RisultatiAziende.as_view(), name='risultati_aziende'),
     url(r'^risultati/lavori/$', jobSurvey.views.RisultatiOffertaLavoro.as_view(), name='risultati_lavori'),
     url(r'^risultati/studenti/$', jobSurvey.views.RisultatiStudenti.as_view(), name='risultati_studenti'),
-    url(r'^admin/', include(admin.site.urls)),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
