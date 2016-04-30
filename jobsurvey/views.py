@@ -1278,5 +1278,8 @@ class RisultatiStudenti(View):
 
     @method_decorator(login_required(login_url='log_in'))
     def post(self, request, *args, **kwargs):
-        return render(request, "risultati.html")
-
+        if request.is_ajax():
+            message = "Yes, AJAX!"
+        else:
+            message = "Not Ajax"
+        return HttpResponse(message)

@@ -3,11 +3,35 @@
 
 {% block title %}Risultati{% endblock %}
 
+{% block scripts %}
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+           $("#delete_persona").submit(function(event){
+                $.ajax({
+                     type:"POST",
+                     url:"/risultati/studenti/",
+                     data: {
+                            'video': $('#delete_persona').val() // from form
+                            },
+                     success: function(){
+                         $('#message').html("<h2>Contact Form Submitted!</h2>")
+                     }
+                });
+                return false; //<---- move it here
+           });
+
+        });
+    </script>
+
+{% endblock %}
+
+
 {% block topcontent %}
+        <div id = 'message'></div>
 {% if type == 1 %}
     <div class="container">
         <h2>Anagrafica Aziende</h2>
-        <p>risultati:</p>
         <table  class="table">
             <thead>
                 <tr>
@@ -40,7 +64,6 @@
 
 {% if type == 2 %}
         <h2>Offerta di Lavoro</h2>
-        <p>risultati:</p>
         <table  class="table">
             <thead>
                 <tr>
@@ -86,10 +109,12 @@
 {% endif %}
     {% if type == 0 %}
         <h2>Studenti</h2>
-        <p>risultati:</p>
+        <form id="forminvio" data-toggle="validator" method="POST" role="form">{% csrf_token %}
+
         <table  class="table">
             <thead>
                 <tr>
+                    <th>modifiche</th>
                     <!--37 piu uno id-->
                     <th>id_studente</th>
                     <th>cap</th>
@@ -135,6 +160,7 @@
             <tbody>
                 {% for key,value in result.items %}
                     <tr>
+                        <td><button type="submit" id="delete_persona" value="{{value.id}}" onclick="return confirm('Eliminare. Sei sicuro?')" class="btn btn-primary">Elimina</button></td>
                         <td>{{ value.id }}</td>
                         <td>{{ value.cap }}</td>
                         <td>{{ value.email }}</td>
@@ -178,5 +204,10 @@
                 {% endfor %}
             </tbody>
         </table>
+    </form>
 {% endif %}
+
+
+
 {% endblock %}
+
