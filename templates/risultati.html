@@ -11,8 +11,9 @@ function csrfSafeMethod(method) {
     return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
 }
 
-function deleteEnter(id){
-    var result = confirm("Eliminare?");
+{% if type == 0 %}
+function deleteStudente(id){
+    var result = confirm("Eliminare questo studente?");
     if(result) {
         var csrf_token = $("input[name$='csrfmiddlewaretoken']").val();
 
@@ -27,14 +28,75 @@ function deleteEnter(id){
         $.ajax({
             type: "POST",
             url: "#",
-            data: {unsubscribe: id},
+            data: {id: id},
             success: function (data) {
-                //$("#tr"+id).remove();
-                location.href = location.href;
+                $("#persona_"+id).hide();
+                $("#msg").show();
+                $("#msg").text(data.msg);
+                //location.href = location.href;
             }
         });
     }
 }
+{% endif %}
+
+{% if type == 1 %}
+function deleteAzienda(id){
+    var result = confirm("Eliminare questa azienda?");
+    if(result) {
+        var csrf_token = $("input[name$='csrfmiddlewaretoken']").val();
+
+        $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrf_token);
+                }
+            }
+        });
+
+        $.ajax({
+            type: "POST",
+            url: "#",
+            data: {id: id},
+            success: function (data) {
+                $("#azienda_"+id).hide();
+                $("#msg").show();
+                $("#msg").text(data.msg);
+                //location.href = location.href;
+            }
+        });
+    }
+}
+{% endif %}
+
+{% if type == 2 %}
+function deleteLavoro(id){
+    var result = confirm("Eliminare questa ofeerta di lavoro?");
+    if(result) {
+        var csrf_token = $("input[name$='csrfmiddlewaretoken']").val();
+
+        $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrf_token);
+                }
+            }
+        });
+
+        $.ajax({
+            type: "POST",
+            url: "#",
+            data: {id: id},
+            success: function (data) {
+                $("#lavoro_"+id).hide();
+                $("#msg").show();
+                $("#msg").text(data.msg);
+                //location.href = location.href;
+            }
+        });
+    }
+}
+{% endif %}
 </script>
 
 
@@ -43,10 +105,11 @@ function deleteEnter(id){
 
 
 {% block topcontent %}
-        <div id = 'message'></div>
+        <div id="msg" style="display: none;" class="alert alert-success" role="alert"></div>
 {% if type == 1 %}
     <div class="container">
         <h2>Anagrafica Aziende</h2>
+        <form id="forminvio" data-toggle="validator" method="POST" role="form">{% csrf_token %}
         <table  class="table">
             <thead>
                 <tr>
@@ -61,7 +124,8 @@ function deleteEnter(id){
             </thead>
             <tbody>
                 {% for key,value in result.items %}
-                    <tr>
+                    <tr id="azienda_{{ value.id }}">
+                        <td><a type="submit" id="delete_azienda" value="{{value.id}}" onclick="deleteAzienda({{ value.id }});" class="btn btn-primary">Elimina</a></td>
                         <td>{{ value.id }}</td>
                         <td>{{ value.note }}</td>
                         <td>{{ value.email }}</td>
@@ -73,15 +137,18 @@ function deleteEnter(id){
                 {% endfor %}
             </tbody>
         </table>
+        </form>
     </div>
 {% endif %}
 
 
 {% if type == 2 %}
         <h2>Offerta di Lavoro</h2>
+        <form id="forminvio" data-toggle="validator" method="POST" role="form">{% csrf_token %}
         <table  class="table">
             <thead>
                 <tr>
+                    <th>modifiche</th>
                     <th>id_lavoro</th>
                     <th>id_azienda</th>
                     <th>note_azienda</th>
@@ -101,7 +168,8 @@ function deleteEnter(id){
             </thead>
             <tbody>
                 {% for key,value in result.items %}
-                    <tr>
+                    <tr id="lavoro_{{ value.id }}">
+                        <td><a type="submit" id="delete_lavoro" value="{{value.id}}" onclick="deleteLavoro({{ value.id }});" class="btn btn-primary">Elimina</a></td>
                         <td>{{ value.id }}</td>
                         <td>{{ value.id_azienda }}</td>
                         <td>{{ value.note_azienda }}</td>
@@ -121,6 +189,7 @@ function deleteEnter(id){
                 {% endfor %}
             </tbody>
         </table>
+    </form>
 {% endif %}
     {% if type == 0 %}
         <h2>Studenti</h2>
@@ -174,8 +243,8 @@ function deleteEnter(id){
             </thead>
             <tbody>
                 {% for key,value in result.items %}
-                    <tr>
-                        <td><a type="submit" id="delete_persona" value="{{value.id}}" onclick="deleteEnter({{ value.id }});" class="btn btn-primary">Elimina</a></td>
+                    <tr id="persona_{{ value.id }}">
+                        <td><a type="submit" id="delete_persona" value="{{value.id}}" onclick="deleteStudente({{ value.id }});" class="btn btn-primary">Elimina</a></td>
                         <td>{{ value.id }}</td>
                         <td>{{ value.cap }}</td>
                         <td>{{ value.email }}</td>

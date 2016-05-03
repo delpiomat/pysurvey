@@ -910,7 +910,24 @@ class RisultatiAziende(View):
 
     @method_decorator(login_required(login_url='log_in'))
     def post(self, request, *args, **kwargs):
-        return render(request, "risultati.html")
+        if request.method == 'POST':
+            if "id" in request.POST:
+                azienda = Azienda.objects.get(pk=int(request.POST["id"]))
+                azienda.delete()
+
+            response_data = {}
+
+            response_data['msg'] = 'Azienda eliminato con id: ' + request.POST["id"]
+
+            return HttpResponse(
+                json.dumps(response_data),
+                content_type="application/json"
+            )
+        else:
+            return HttpResponse(
+                json.dumps({"niente da vedere": "errore!"}),
+                content_type="application/json"
+            )
 
 class RisultatiOffertaLavoro(View):
     @method_decorator(login_required(login_url='log_in'))
@@ -1010,7 +1027,24 @@ class RisultatiOffertaLavoro(View):
 
     @method_decorator(login_required(login_url='log_in'))
     def post(self, request, *args, **kwargs):
-        return render(request, "risultati.html")
+        if request.method == 'POST':
+            if "id" in request.POST:
+                lavoro = Lavoro.objects.get(pk=int(request.POST["id"]))
+                lavoro.delete()
+
+            response_data = {}
+
+            response_data['msg'] = 'Lavoro eliminato con id: ' + request.POST["id"]
+
+            return HttpResponse(
+                json.dumps(response_data),
+                content_type="application/json"
+            )
+        else:
+            return HttpResponse(
+                json.dumps({"nothing to see": "errore imprevisto"}),
+                content_type="application/json"
+            )
 
 
 class RisultatiStudenti(View):
@@ -1282,32 +1316,13 @@ class RisultatiStudenti(View):
     @method_decorator(login_required(login_url='log_in'))
     def post(self, request, *args, **kwargs):
         if request.method == 'POST':
+            if "id" in request.POST:
+                studente = Persona.objects.get(pk=int(request.POST["id"]))
+                studente.delete()
 
-            #studente = Persona.objects.get(pk=int(request.get('postpk')))
-            #post.delete()
-
-            logger.error("DELETE!!!")
-
-            #data = json.loads(request.body)
             response_data = {}
 
-            for a in request.body:
-                logger.error("primo")
-                logger.error(a)
-
-
-            for a in QueryDict(request.body):
-                logger.error("secondo")
-                logger.error(a)
-
-            for a in request.POST:
-                logger.error("quarto")
-                logger.error(a)
-
-            logger.error('Raw Data: "%s"' % request.body)
-
-            #response_data['msg'] = 'Post was deleted.' + request.POST["postpk"]
-            request.POST['unsubscribe']
+            response_data['msg'] = 'Studente eliminato con id: ' + request.POST["id"]
 
             return HttpResponse(
                 json.dumps(response_data),
