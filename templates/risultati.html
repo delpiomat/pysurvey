@@ -5,12 +5,14 @@
 
 {% block scripts %}
 
+<script src="{% static 'tabletocsv/table2CSV.js'%}"></script>
+
+
 <script type="text/javascript">
 function csrfSafeMethod(method) {
     // these HTTP methods do not require CSRF protection
     return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
 }
-
 {% if type == 0 %}
 function deleteStudente(id){
     var result = confirm("Eliminare questo studente?");
@@ -97,6 +99,15 @@ function deleteLavoro(id){
     }
 }
 {% endif %}
+function tableToCsv(){
+
+    var csv = $("#tblRisultati").table2CSV({
+        delivery: 'value'
+    });
+    window.location.href = 'data:text/csv;charset=UTF-8,' + encodeURIComponent(csv);
+
+}
+
 </script>
 
 
@@ -105,12 +116,13 @@ function deleteLavoro(id){
 
 
 {% block topcontent %}
+        <a type="buttom" id="esporta"  onclick="tableToCsv();" class="btn btn-primary">Esporta CSV</a>
         <div id="msg" style="display: none;" class="alert alert-success" role="alert"></div>
 {% if type == 1 %}
     <div class="container">
         <h2>Anagrafica Aziende</h2>
         <form id="forminvio" data-toggle="validator" method="POST" role="form">{% csrf_token %}
-        <table  class="table">
+        <table id="tblRisultati"  class="table">
             <thead>
                 <tr>
                     <th>id</th>
@@ -145,7 +157,7 @@ function deleteLavoro(id){
 {% if type == 2 %}
         <h2>Offerta di Lavoro</h2>
         <form id="forminvio" data-toggle="validator" method="POST" role="form">{% csrf_token %}
-        <table  class="table">
+        <table id="tblRisultati" class="table">
             <thead>
                 <tr>
                     <th>modifiche</th>
@@ -195,7 +207,7 @@ function deleteLavoro(id){
         <h2>Studenti</h2>
         <form id="forminvio" data-toggle="validator" method="POST" role="form">{% csrf_token %}
 
-        <table  class="table">
+        <table id="tblRisultati" class="table">
             <thead>
                 <tr>
                     <th>modifiche</th>
