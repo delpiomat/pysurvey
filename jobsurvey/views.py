@@ -23,6 +23,9 @@ import json
 # for utility
 from createSurvey.utils import *
 
+# for ajax json
+from django.http import QueryDict
+
 # import the logging library #per debug scrive nella Console
 import logging
 # Get an instance of a logger
@@ -1278,8 +1281,41 @@ class RisultatiStudenti(View):
 
     @method_decorator(login_required(login_url='log_in'))
     def post(self, request, *args, **kwargs):
-        if request.is_ajax():
-            message = "Yes, AJAX!"
+        if request.method == 'POST':
+
+            #studente = Persona.objects.get(pk=int(request.get('postpk')))
+            #post.delete()
+
+            logger.error("DELETE!!!")
+
+            #data = json.loads(request.body)
+            response_data = {}
+
+            for a in request.body:
+                logger.error("primo")
+                logger.error(a)
+
+
+            for a in QueryDict(request.body):
+                logger.error("secondo")
+                logger.error(a)
+
+            for a in request.POST:
+                logger.error("quarto")
+                logger.error(a)
+
+            logger.error('Raw Data: "%s"' % request.body)
+
+            #response_data['msg'] = 'Post was deleted.' + request.POST["postpk"]
+            request.POST['unsubscribe']
+
+            return HttpResponse(
+                json.dumps(response_data),
+                content_type="application/json"
+            )
         else:
-            message = "Not Ajax"
-        return HttpResponse(message)
+            return HttpResponse(
+                json.dumps({"nothing to see": "this isn't happening"}),
+                content_type="application/json"
+            )
+

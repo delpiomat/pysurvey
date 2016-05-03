@@ -5,24 +5,39 @@
 
 {% block scripts %}
 
-    <script type="text/javascript">
-        $(document).ready(function() {
-           $("#delete_persona").submit(function(event){
-                $.ajax({
-                     type:"POST",
-                     url:"/risultati/studenti/",
-                     data: {
-                            'video': $('#delete_persona').val() // from form
-                            },
-                     success: function(){
-                         $('#message').html("<h2>Contact Form Submitted!</h2>")
-                     }
-                });
-                return false; //<---- move it here
-           });
+<script type="text/javascript">
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
 
+function deleteEnter(id){
+    var result = confirm("Eliminare?");
+    if(result) {
+        var csrf_token = $("input[name$='csrfmiddlewaretoken']").val();
+
+        $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrf_token);
+                }
+            }
         });
-    </script>
+
+        $.ajax({
+            type: "POST",
+            url: "#",
+            data: {unsubscribe: id},
+            success: function (data) {
+                //$("#tr"+id).remove();
+                location.href = location.href;
+            }
+        });
+    }
+}
+</script>
+
+
 
 {% endblock %}
 
@@ -160,7 +175,7 @@
             <tbody>
                 {% for key,value in result.items %}
                     <tr>
-                        <td><button type="submit" id="delete_persona" value="{{value.id}}" onclick="return confirm('Eliminare. Sei sicuro?')" class="btn btn-primary">Elimina</button></td>
+                        <td><a type="submit" id="delete_persona" value="{{value.id}}" onclick="deleteEnter({{ value.id }});" class="btn btn-primary">Elimina</a></td>
                         <td>{{ value.id }}</td>
                         <td>{{ value.cap }}</td>
                         <td>{{ value.email }}</td>

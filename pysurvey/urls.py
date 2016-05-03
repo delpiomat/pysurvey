@@ -19,7 +19,7 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 import createSurvey.views
-import jobSurvey.views
+import jobsurvey.views
 
 urlpatterns = [
     url(r'^log_in/', createSurvey.views.AuthLogin.as_view(), name="log_in"),
@@ -31,12 +31,12 @@ urlpatterns = [
     url(r'^make_survey/(?P<id>[0-9]+)/$', createSurvey.views.MakeSurvey.as_view(), name="make_survey"),
     url(r'^result/(?P<id>[0-9]+)/$', createSurvey.views.ResultSurvey.as_view(), name="result"),
     url(r'^download/(?P<type>.*)/(?P<survey_id>[0-9]+)/$', createSurvey.views.result_download, name='result_download'),
-    url(r'^studenti/valore/$', jobSurvey.views.StudentiValore.as_view(), name='studenti_valore'),
-    url(r'^studenti/$', jobSurvey.views.Studenti.as_view(), name='studenti'),
-    url(r'^aziende/$', jobSurvey.views.Aziende.as_view(), name='aziende'),
-    url(r'^lavori/$', jobSurvey.views.Lavori.as_view(), name='lavori'),
-    url(r'^grazie/$', jobSurvey.views.Grazie.as_view(), name='grazie'),
-    url(r'^risultati/aziende/$', jobSurvey.views.RisultatiAziende.as_view(), name='risultati_aziende'),
-    url(r'^risultati/lavori/$', jobSurvey.views.RisultatiOffertaLavoro.as_view(), name='risultati_lavori'),
-    url(r'^risultati/studenti/$', jobSurvey.views.RisultatiStudenti.as_view(), name='risultati_studenti'),
+    url(r'^studenti/valore/$', jobsurvey.views.StudentiValore.as_view(), name='studenti_valore'),
+    url(r'^studenti/$', jobsurvey.views.Studenti.as_view(), name='studenti'),
+    url(r'^aziende/$', jobsurvey.views.Aziende.as_view(), name='aziende'),
+    url(r'^lavori/$', jobsurvey.views.Lavori.as_view(), name='lavori'),
+    url(r'^grazie/$', jobsurvey.views.Grazie.as_view(), name='grazie'),
+    url(r'^risultati/aziende/$', jobsurvey.views.RisultatiAziende.as_view(), name='risultati_aziende'),
+    url(r'^risultati/lavori/$', jobsurvey.views.RisultatiOffertaLavoro.as_view(), name='risultati_lavori'),
+    url(r'^risultati/studenti/$', jobsurvey.views.RisultatiStudenti.as_view(), name='risultati_studenti'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
