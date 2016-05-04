@@ -14,6 +14,7 @@ function csrfSafeMethod(method) {
     return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
 }
 {% if type == 0 %}
+
 function deleteStudente(id){
     var result = confirm("Eliminare questo studente?");
     if(result) {
@@ -256,7 +257,9 @@ function tableToCsv(){
             <tbody>
                 {% for key,value in result.items %}
                     <tr id="persona_{{ value.id }}">
-                        <td><a type="submit" id="delete_persona" value="{{value.id}}" onclick="deleteStudente({{ value.id }});" class="btn btn-primary">Elimina</a></td>
+                        <td>
+                            <a type="submit" id="delete_persona" value="{{value.id}}" onclick="deleteStudente({{ value.id }});" class="btn btn-primary">Elimina</a>
+                        </td>
                         <td>{{ value.id }}</td>
                         <td>{{ value.cap }}</td>
                         <td>{{ value.email }}</td>
@@ -289,7 +292,7 @@ function tableToCsv(){
                         <td>{{ value.mansione_futura }}</td>
                         <td>{{ value.livello_cariera_futura }}</td>
                         <td>{{ value.ruolo_futura }}</td>
-                        <td>{{ value.area_operativa_futura.id }}</td>
+                        <td>{{ value.area_operativa_futura }}</td>
                         <td>{{ value.tipo_contratto_futura }}</td>
                         <td>{{ value.benefit }}</td>
                         <td>{{ value.stipendio }}</td>

@@ -300,8 +300,13 @@
 
 
 <script type="text/javascript">
+
+//esempio precompilato
+//tagsItems : [ 'Basic', 'JavaScript', 'PHP', 'Scala' ],
+
     $('#zona')
         .textext({
+            tagsItems : [ ],
             plugins : 'tags autocomplete'
         })
         .bind('getSuggestions', function(e, data)
