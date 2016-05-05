@@ -96,6 +96,13 @@ class Studenti(View):
         result['ruolo'] = Ruolo.objects.all()
         result['interesse'] = Interesse.objects.all()
 
+        # per creare copie uso url GET
+        copy={}
+        copy['cap']=""
+        if 'cap' in kwargs:
+            copy['cap'] = kwargs['cap']
+
+        result["copy"] = copy
         return render(request, "studenti.html", result)
 
     @method_decorator(login_required(login_url='log_in'))
