@@ -259,6 +259,7 @@ function tableToCsv(){
                     <tr id="persona_{{ value.id }}">
                         <td>
                             <a type="submit" id="delete_persona" value="{{value.id}}" onclick="deleteStudente({{ value.id }});" class="btn btn-primary">Elimina</a>
+                            <a type="submit" id="copy_persona" value="{{value.id}}" href="{% url 'studenti' value.id %}" class="btn btn-primary">Copia</a>
                         </td>
                         <td>{{ value.id }}</td>
                         <td>{{ value.cap }}</td>

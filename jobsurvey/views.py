@@ -97,10 +97,51 @@ class Studenti(View):
         result['interesse'] = Interesse.objects.all()
 
         # per creare copie uso url GET
-        copy={}
-        copy['cap']=""
-        if 'cap' in kwargs:
-            copy['cap'] = kwargs['cap']
+        copy = {}
+        copy['id'] = ""
+        copy['cap'] = ""
+        copy['email'] = ""
+        copy['citta'] = ""
+        copy['anno_nascita'] = ""
+        copy['note'] = ""
+        copy['voto_finale'] = ""
+
+        copy['esperienze_pregresse'] = False #si no
+        copy['desc_esperienze_pregresse'] = ""
+        copy['numero_attivita_svolte'] = ""
+        copy['numero_mesi_attivita_svolte'] = ""
+
+        copy['possibilita_trasferirsi'] = False #si no
+        copy['stipendio_futuro'] = ""
+
+        if 'id' in kwargs:
+            copy['id'] = kwargs['id']
+            studente_copia=Persona.objects.select_related().get(pk=kwargs['id'])
+            if studente_copia.cap != None:
+                copy['cap'] = studente_copia.cap
+            if studente_copia.email != None:
+                copy['email'] = studente_copia.email
+            if studente_copia.citta != None:
+                copy['citta'] = studente_copia.citta
+            if studente_copia.anno_nascita != None:
+                copy['anno_nascita'] = studente_copia.anno_nascita
+            if studente_copia.note != None:
+                copy['note'] = studente_copia.note
+            if studente_copia.voto_finale != None:
+                copy['voto_finale'] = studente_copia.voto_finale
+            if studente_copia.esperienze_pregresse != None:
+                copy['esperienze_pregresse'] = studente_copia.esperienze_pregresse
+            if studente_copia.desc_esperienze_pregresse != None:
+                copy['desc_esperienze_pregresse'] = studente_copia.desc_esperienze_pregresse
+            if studente_copia.numero_attivita_svolte != None:
+                copy['numero_attivita_svolte'] = studente_copia.numero_attivita_svolte
+            if studente_copia.numero_mesi_attivita_svolte != None:
+                copy['numero_mesi_attivita_svolte'] = studente_copia.numero_mesi_attivita_svolte
+            if studente_copia.possibilita_trasferirsi != None:
+                copy['possibilita_trasferirsi'] = studente_copia.possibilita_trasferirsi
+            if studente_copia.stipendio_futuro != None:
+                copy['stipendio_futuro'] = studente_copia.stipendio_futuro
+
 
         result["copy"] = copy
         return render(request, "studenti.html", result)

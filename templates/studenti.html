@@ -42,25 +42,25 @@
     <h2>Anagrafica</h2>
     <div class="form-group">
         <label for="cap">Cap:</label>
-        <input type="text" name="cap" id="cap" class="form-control">
+        <input type="text" name="cap" value="{{ copy.cap }}" id="cap" class="form-control">
 		<span class="help-block">CAP della città di residenza (5 cifre)</span>
     </div>
 
     <div class="form-group">
         <label for="email">Email:</label>
-        <input type="text" name="email" id="email" class="form-control">
+        <input type="text" value="{{ copy.email }}" name="email" id="email" class="form-control">
 		<span class="help-block">email per riferimento dello studente</span>
     </div>
 
     <div class="form-group">
         <label for="anno">Anno:</label>
-        <input type="text" name="anno" id="anno" class="form-control">
+        <input type="text" value="{{ copy.anno_nascita }}" name="anno" id="anno" class="form-control">
 		<span class="help-block">anno di nascita dello studente</span>
     </div>
 
     <div class="form-group">
         <label for="citta">Citta':</label>
-        <input type="text" name="citta" id="citta" class="form-control">
+        <input type="text" value="{{ copy.citta }}" name="citta" id="citta" class="form-control">
 		<span class="help-block">Nome città in cui si vive</span>
     </div>
 
@@ -78,7 +78,7 @@
 
     <div class="form-group">
         <label for="voto">Voto:</label>
-        <input type="text" name="voto" id="voto" class="form-control">
+        <input type="text" value="{{ copy.voto_finale }}"  name="voto" id="voto" class="form-control">
         <span class="help-block">Riferito al grado di studi acquisito o una stima di quello che si sta per acquisire</span>
     </div>
 
@@ -123,7 +123,7 @@
 
     <div class="form-group">
         <label for="note">Note</label>
-        <input type="text" name="note" id="note" class="form-control">
+        <input type="text" value="{{ copy.note }}" name="note" id="note" class="form-control">
     </div>
 
     <hr>
@@ -163,6 +163,7 @@
     <h2>Lavoro Passato</h2>
     <div class="form-group">
         <label for="tipo_contratto_attuale">Esperienza pregressa</label>
+        {% if copy.esperienze_pregresse %}
         <div class="radio">
             <label>
                 <input type="radio" name="optionsRadios" id="esperienza_pregressa_true" value="true" checked>Si
@@ -170,28 +171,40 @@
         </div>
         <div class="radio">
             <label>
-                <input type="radio" name="optionsRadios" id="esperienza_pregressa_false" value="false"> No
+                <input type="radio" name="optionsRadios" id="esperienza_pregressa_false" value="false" > No
             </label>
         </div>
+        {% else %}
+        <div class="radio">
+            <label>
+                <input type="radio" name="optionsRadios" id="esperienza_pregressa_true" value="true" >Si
+            </label>
+        </div>
+        <div class="radio">
+            <label>
+                <input type="radio" name="optionsRadios" id="esperienza_pregressa_false" value="false" checked> No
+            </label>
+        </div>
+        {% endif %}
     </div>
 	<br />
 	<hr />
 
     <div class="form-group">
         <label for="numero_attivita_svolte">Numero Attivita Svolte:</label>
-        <input type="text" name="numero_attivita_svolte" id="numero_attivita_svolte" class="form-control">
+        <input type="text" value="{{ copy.numero_attivita_svolte }}" name="numero_attivita_svolte" id="numero_attivita_svolte" class="form-control">
 		<span class="help-block">Inserire il numero complessivo di attività svolte nel passato</span>
     </div>
 
     <div class="form-group">
         <label for="numero_mesi_attivita_svolte">Mesi Attivita Svolte:</label>
-        <input type="text" name="numero_mesi_attivita_svolte" id="numero_mesi_attivita_svolte" class="form-control">
+        <input type="text" value="{{ copy.numero_mesi_attivita_svolte }}" name="numero_mesi_attivita_svolte" id="numero_mesi_attivita_svolte" class="form-control">
 		<span class="help-block">Inserire il numero complessivo di mesi lavorativi di tutte le attività svolte nel passato</span>
     </div>
 
     <div class="form-group">
         <label for="desc_esperienze_pregresse">descrizione Esperienze Pregresse:</label>
-        <input type="text" name="desc_esperienze_pregresso" id="desc_esperienze_pregresso" class="form-control">
+        <input type="text" value="{{ copy.desc_esperienze_pregresse }}" name="desc_esperienze_pregresso" id="desc_esperienze_pregresso" class="form-control">
 		<span class="help-block">Inserire alcune parole per descrivere le attività svolte in passato</span>
     </div>
 
@@ -274,12 +287,13 @@
 
     <div class="form-group">
         <label for="stipendio_futuro">Stipendio Futuro:</label>
-        <input type="text" name="stipendio_futuro" id="stipendio_futuro" class="form-control">
+        <input type="text" value="{{ copy.stipendio_futuro }}" name="stipendio_futuro" id="stipendio_futuro" class="form-control">
         <span class="help-block">Una stima sullo stipendio netto al mese</span>
     </div>
 
     <div class="form-group">
         <label for="possibilita_trasferirsi">Possibilita' trasfersi</label>
+        {% if copy.possibilita_trasferirsi %}
         <div class="radio">
             <label>
                 <input type="radio" name="possibilita_trasferirsi_option" id="possibilita_trasferirsi" value="true" checked>Si
@@ -290,6 +304,19 @@
                 <input type="radio" name="possibilita_trasferirsi_option" id="possibilita_trasferirsi" value="false"> No
             </label>
         </div>
+        {% else %}
+                <div class="radio">
+            <label>
+                <input type="radio" name="possibilita_trasferirsi_option" id="possibilita_trasferirsi" value="true" >Si
+            </label>
+        </div>
+        <div class="radio">
+            <label>
+                <input type="radio" name="possibilita_trasferirsi_option" id="possibilita_trasferirsi" value="false" checked> No
+            </label>
+        </div>
+        {% endif %}
+        
     </div>
     <div class="form-group">
         <button type="submit" id="conf" onclick="return confirm('Questionario completato. Sei sicuro?')" class="btn btn-primary">Invia</button>
