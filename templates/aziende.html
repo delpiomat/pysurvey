@@ -48,7 +48,7 @@
 
     <div class="form-group">
         <label for="email">Email:</label>
-        <input type="text" name="email" id="email" class="form-control">
+        <input type="text" value="{{ copy.email }}" name="email" id="email" class="form-control">
 		<span class="help-block">email per riferimento dell'azienda</span>
     </div>
 
@@ -60,13 +60,13 @@
 
     <div class="form-group">
         <label for="nome_referente">Nome referente:</label>
-        <input type="text" name="nome_referente" id="nome_referente" class="form-control">
+        <input type="text" value="{{ copy.nome_referente }}" name="nome_referente" id="nome_referente" class="form-control">
 		<span class="help-block">nome del referente</span>
     </div>
 
     <div class="form-group">
         <label for="note">Note:</label>
-        <input type="text" name="note" id="note" class="form-control">
+        <input type="text" value="{{ copy.note }}" name="note" id="note" class="form-control">
 		<span class="help-block">descrizione dell'azienda</span>
     </div>
 
@@ -80,6 +80,7 @@
 <script type="text/javascript">
     $('#citta_sede')
         .textext({
+            tagsItems : ["{{ copy.citta }}"],
             plugins : 'tags autocomplete'
         })
         .bind('getSuggestions', function(e, data)
@@ -100,8 +101,14 @@
         }
     );
 
-        $('#altra_sede')
+    var tagCopy=[
+        {% for a in copy.altra_sede %}
+            '{{a.citta.valore}}',
+        {% endfor %}
+    ];
+    $('#altra_sede')
         .textext({
+            tagsItems : tagCopy,
             plugins : 'tags autocomplete'
         })
         .bind('getSuggestions', function(e, data)

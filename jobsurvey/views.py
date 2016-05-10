@@ -141,9 +141,8 @@ class Studenti(View):
                 copy['possibilita_trasferirsi'] = studente_copia.possibilita_trasferirsi
             if studente_copia.stipendio_futuro != None:
                 copy['stipendio_futuro'] = studente_copia.stipendio_futuro
-
-
         result["copy"] = copy
+
         return render(request, "studenti.html", result)
 
     @method_decorator(login_required(login_url='log_in'))
@@ -682,6 +681,34 @@ class Aziende(View):
     def get(self, request, *args, **kwargs):
         result = {}
         result['citta'] = Citta.objects.all()
+
+        # per creare copie uso url GET
+        copy = {}
+        copy['id'] = ""
+        copy['email'] = ""
+        copy['citta'] = ""
+        copy['altra_sede'] = ""
+        copy['note'] = ""
+        copy['nome_referente'] = ""
+
+        if 'id' in kwargs:
+            copy['id'] = kwargs['id']
+            azienda_copia = Azienda.objects.select_related().get(pk=kwargs['id'])
+            if azienda_copia.email != None:
+                copy['email'] = azienda_copia.email
+            if azienda_copia.note != None:
+                copy['note'] = azienda_copia.note
+            if azienda_copia.nome_referente != None:
+                copy['nome_referente'] = azienda_copia.nome_referente
+
+            #esterno singolo
+            if azienda_copia.citta_sede != None:
+                copy['citta'] = azienda_copia.citta_sede.valore
+
+            # esterno multiplo
+                copy['altra_sede'] = AltraSede.objects.select_related().filter(azienda_id=copy['id']).exclude(citta=None)
+            result["copy"] = copy
+
         return render(request, "aziende.html", result)
 
     @method_decorator(login_required(login_url='log_in'))
