@@ -272,6 +272,9 @@ class AltraSede(models.Model):
     citta = models.ForeignKey(Citta, on_delete=models.CASCADE, null=True)
     azienda = models.ForeignKey(Azienda, on_delete=models.CASCADE)
 
+# -----------------------------------------------------------------------------------------------------------------
+# Lavoro
+
 
 class Lavoro(models.Model):
     email_referente = models.CharField(max_length=64, null=True)

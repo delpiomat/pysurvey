@@ -777,6 +777,43 @@ class Lavori(View):
         result['area_operativa'] = AreaOperativa.objects.all()
         result['tipo_contratto'] = TipoContratto.objects.all()
         result['citta'] = Citta.objects.all()
+
+        # per creare copie uso url GET
+        copy = {}
+        copy['id'] = ""
+        copy['codice_azienda'] = ""
+        copy['email_referente'] = ""
+        copy['distanza'] = ""
+        copy['note'] = ""
+
+        copy['lingua'] = ""
+        copy['campo_studi'] = ""
+        copy['esame'] = ""
+        copy['livello_cariera'] = ""
+        copy['area_operativa'] = ""
+        copy['tipo_contratto'] = ""
+        copy['citta'] = ""
+
+        if 'id' in kwargs:
+            copy['id'] = kwargs['id']
+            lavoro_copia = Lavoro.objects.select_related().get(pk=kwargs['id'])
+            if lavoro_copia.azienda_id != None:
+                copy['codice_azienda'] = lavoro_copia.azienda_id
+            if lavoro_copia.email_referente != None:
+                copy['email_referente'] = lavoro_copia.email_referente
+            if lavoro_copia.distanza_massima != None:
+                copy['distanza_massima'] = lavoro_copia.distanza_massima
+            if lavoro_copia.note_lavoro != None:
+                copy['note_lavoro'] = lavoro_copia.note_lavoro
+
+            #esterno singolo
+            # if lavoro_copia.citta_sede != None:
+                # copy['citta'] = lavoro_copia.citta_sede.valore
+
+            # esterno multiplo
+               # copy['altra_sede'] = AltraSede.objects.select_related().filter(azienda_id=copy['id']).exclude(citta=None)
+            result["copy"] = copy
+
         return render(request, "lavoro.html", result)
 
     @method_decorator(login_required(login_url='log_in'))
