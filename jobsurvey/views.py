@@ -664,7 +664,8 @@ class Aziende(View):
                 copy['citta'] = azienda_copia.citta_sede.valore
 
             # esterno multiplo
-                copy['altra_sede'] = AltraSede.objects.select_related().filter(azienda_id=copy['id']).exclude(citta=None)
+            copy['altra_sede'] = AltraSede.objects.select_related().filter(azienda_id=copy['id']).exclude(citta=None)
+                
             result["copy"] = copy
 
         return render(request, "aziende.html", result)
