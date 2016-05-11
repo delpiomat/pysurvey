@@ -31,7 +31,6 @@ urlpatterns = [
     url(r'^make_survey/(?P<id>[0-9]+)/$', createSurvey.views.MakeSurvey.as_view(), name="make_survey"),
     url(r'^result/(?P<id>[0-9]+)/$', createSurvey.views.ResultSurvey.as_view(), name="result"),
     url(r'^download/(?P<type>.*)/(?P<survey_id>[0-9]+)/$', createSurvey.views.result_download, name='result_download'),
-    url(r'^studenti/valore/$', jobsurvey.views.StudentiValore.as_view(), name='studenti_valore'),
     url(r'^studenti/(?P<id>.*)/$', jobsurvey.views.Studenti.as_view(), name='studenti'),
     url(r'^studenti/$', jobsurvey.views.Studenti.as_view(), name='studenti'),
     url(r'^aziende/(?P<id>.*)/$', jobsurvey.views.Aziende.as_view(), name='aziende'),

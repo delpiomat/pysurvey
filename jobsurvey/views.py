@@ -31,48 +31,6 @@ import logging
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
-# per test
-class StudentiValore(View):
-
-    def get(self, request, *args, **kwargs):
-        result = {}
-        result['zona'] = Zona.objects.all()
-        result['livello_pc'] = LivelloPC.objects.all()
-        result['grado_studi'] = GradoStudi.objects.all()
-        result['stato'] = Stato.objects.all()
-        result['lingua'] = Lingua.objects.all()
-        result['conoscenza_specifica'] = ConoscenzaSpecifica.objects.all()
-        result['mansione'] = Mansione.objects.all()
-        result['livello_cariera'] = LivelloCariera.objects.all()
-        result['area_operativa'] = AreaOperativa.objects.all()
-        result['tipo_contratto'] = TipoContratto.objects.all()
-        result['benefit'] = Benefit.objects.all()
-        result['ruolo'] = Ruolo.objects.all()
-        result['interesse'] = Interesse.objects.all()
-        return render(request, "studenti_value.html", result)
-
-    def post(self, request, *args, **kwargs):
-        logger.error("la post! ")
-        logger.error(request)
-        #for a in request:
-            #logger.error(str(a)+"adasdasdasd")
-        result = {}
-        result['zona'] = Zona.objects.all()
-        result['livello_pc'] = LivelloPC.objects.all()
-        result['grado_studi'] = GradoStudi.objects.all()
-        result['stato'] = Stato.objects.all()
-        result['lingua'] = Lingua.objects.all()
-        result['esame'] = Esame.objects.all()
-        result['conoscenza_specifica'] = ConoscenzaSpecifica.objects.all()
-        result['mansione'] = Mansione.objects.all()
-        result['livello_cariera'] = LivelloCariera.objects.all()
-        result['area_operativa'] = AreaOperativa.objects.all()
-        result['tipo_contratto'] = TipoContratto.objects.all()
-        result['benefit'] = Benefit.objects.all()
-        result['ruolo'] = Ruolo.objects.all()
-        result['interesse'] = Interesse.objects.all()
-        return render(request, 'studenti_value.html',result)
-
 
 # per sondaggio
 class Studenti(View):
