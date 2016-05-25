@@ -99,6 +99,78 @@ class Studenti(View):
                 copy['possibilita_trasferirsi'] = studente_copia.possibilita_trasferirsi
             if studente_copia.stipendio_futuro != None:
                 copy['stipendio_futuro'] = studente_copia.stipendio_futuro
+
+            #chiavi esterne
+            copy['zona'] = ""
+            copy['grado_studi'] = ""
+            copy['livello_pc'] = ""
+            if studente_copia.zona != None:
+                copy['zona'] = studente_copia.zona.valore
+            if studente_copia.grado_studi != None:
+                copy['grado_studi'] = studente_copia.grado_studi.valore
+            if studente_copia.livello_uso_computer != None:
+                copy['livello_pc'] = studente_copia.livello_uso_computer.valore
+
+            # per campi multivalore esterni alla tabella studente
+            copy['esame'] = ""
+            copy['campo_studi'] = ""
+            copy['lingua'] = ""
+            copy['conoscenza_specifica'] = ""
+            copy['stato'] = ""
+            copy['benefit_fututo'] = ""
+            copy['interesse_futuro'] = ""
+
+            copy['esame'] = EsameAttuale.objects.select_related().filter(persona_id=copy['id']).exclude(esame=None)
+            copy['campo_studi'] = CampoStudiAttuale.objects.select_related().filter(persona_id=copy['id']).exclude(campo_studi=None)
+            copy['lingue'] = LinguaAttuale.objects.select_related().filter(persona_id=copy['id']).exclude(lingua=None)
+            copy['conoscenza_specifica'] = ConoscenzaSpecificaAttuale.objects.select_related().filter(persona_id=copy['id']).exclude(conoscenza_specifica=None)
+            copy['stato'] = StatoAttuale.objects.select_related().filter(persona_id=copy['id']).exclude(stato=None)
+            copy['benefit_fututo'] = BenefitFuturo.objects.select_related().filter(persona_id=copy['id']).exclude(benefit=None)
+            copy['interesse_futuro'] = InteresseFuturo.objects.select_related().filter(persona_id=copy['id']).exclude(interesse=None)
+
+            copy['mansione_attuale'] = ""
+            copy['mansione_pregressa'] = ""
+            copy['mansione_futura'] = ""
+
+            copy['mansione_attuale'] = MansioneAttuale.objects.select_related().filter(persona_id=copy['id']).exclude(mansione=None)
+            copy['mansione_pregressa'] = MansionePregresso.objects.select_related().filter(persona_id=copy['id']).exclude(mansione=None)
+            copy['mansione_futura'] = MansioneFuturo.objects.select_related().filter(persona_id=copy['id']).exclude(mansione=None)
+
+
+            copy['livello_cariera_attuale'] = ""
+            copy['livello_cariera_pregressa'] = ""
+            copy['livello_cariera_futura'] = ""
+
+            copy['livello_cariera_attuale'] = LivelloCarieraAttuale.objects.select_related().filter(persona_id=copy['id']).exclude(livello_cariera=None)
+            copy['livello_cariera_pregressa'] = LivelloCarieraPregresso.objects.select_related().filter(persona_id=copy['id']).exclude(livello_cariera=None)
+            copy['livello_cariera_pregressa'] = LivelloCarieraFuturo.objects.select_related().filter(persona_id=copy['id']).exclude(livello_cariera=None)
+
+
+            copy['ruolo_attuale'] = ""
+            copy['ruolo_pregressa'] = ""
+            copy['ruolo_futura'] = ""
+
+            copy['ruolo_attuale'] = RuoloAttuale.objects.select_related().filter(persona_id=copy['id']).exclude(ruolo=None)
+            copy['ruolo_pregressa'] = RuoloPregresso.objects.select_related().filter(persona_id=copy['id']).exclude(ruolo=None)
+            copy['ruolo_futura'] = RuoloFuturo.objects.select_related().filter(persona_id=copy['id']).exclude(ruolo=None)
+
+
+            copy['area_operativa_attuale'] = ""
+            copy['area_operativa_pregressa'] = ""
+            copy['area_operativa_futura'] = ""
+
+            copy['area_operativa_attuale'] = AreaOperativaAttuale.objects.select_related().filter(persona_id=copy['id']).exclude(area_operativa=None)
+            copy['area_operativa_pregressa'] = AreaOperativaPregresso.objects.select_related().filter(persona_id=copy['id']).exclude(area_operativa=None)
+            copy['area_operativa_futura'] = AreaOperativaFuturo.objects.select_related().filter(persona_id=copy['id']).exclude(area_operativa=None)
+
+            copy['tipo_contratto_attuale'] = ""
+            copy['tipo_contratto_pregressa'] = ""
+            copy['tipo_contratto_futura'] = ""
+
+            copy['tipo_contratto_attuale'] = TipoContrattoAttuale.objects.select_related().filter(persona_id=copy['id']).exclude(tipo_contratto=None)
+            copy['tipo_contratto_pregressa'] = TipoContrattoPregesso.objects.select_related().filter(persona_id=copy['id']).exclude(tipo_contratto=None)
+            copy['tipo_contratto_futura'] = TipoContrattoFuturo.objects.select_related().filter(persona_id=copy['id']).exclude(tipo_contratto=None)
+
         result["copy"] = copy
 
         return render(request, "studenti.html", result)
@@ -773,6 +845,10 @@ class Lavori(View):
                 copy['lingua'] = CercaLingua.objects.select_related().filter(lavoro_id=copy['id']).exclude(lingua=None)
                 copy['campo_studi'] = CercaCampoStudio.objects.select_related().filter(lavoro_id=copy['id']).exclude(campo_studio=None)
                 copy['esame'] = CercaEsami.objects.select_related().filter(lavoro_id=copy['id']).exclude(esame=None)
+
+                copy['livello_cariera'] = CercaLivelloCariera.objects.select_related().filter(lavoro_id=copy['id']).exclude(livello_cariera=None)
+                copy['area_operativa'] = CercaAreaOperativa.objects.select_related().filter(lavoro_id=copy['id']).exclude(area_operativa=None)
+                copy['tipo_contratto'] = CercaTipoContratto.objects.select_related().filter(lavoro_id=copy['id']).exclude(tipo_contratto=None)
 
             result["copy"] = copy
 

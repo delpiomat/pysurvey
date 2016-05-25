@@ -178,8 +178,15 @@
         }
     );
 
+    tagCopy=[
+        {% for a in copy.livello_cariera %}
+            '{{a.livello_cariera.valore}}',
+        {% endfor %}
+    ];
+
     $('#cerca_livello_cariera')
         .textext({
+            tagsItems : tagCopy,
             plugins : 'tags autocomplete'
         })
         .bind('getSuggestions', function(e, data)
@@ -229,8 +236,15 @@
         }
     );
 
+    tagCopy=[
+        {% for a in copy.tipo_contratto %}
+            '{{a.tipo_contratto.valore}}',
+        {% endfor %}
+    ];
+
         $('#cerca_tipo_contratto')
         .textext({
+            tagsItems : tagCopy,
             plugins : 'tags autocomplete'
         })
         .bind('getSuggestions', function(e, data)
@@ -250,8 +264,16 @@
             );
         }
     );
+
+    tagCopy=[
+        {% for a in copy.area_operativa %}
+            '{{a.area_operativa.valore}}',
+        {% endfor %}
+    ];
+
     $('#cerca_area_operativa')
         .textext({
+            tagsItems : tagCopy,
             plugins : 'tags autocomplete'
         })
         .bind('getSuggestions', function(e, data)
