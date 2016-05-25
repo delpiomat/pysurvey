@@ -328,12 +328,17 @@
 
 <script type="text/javascript">
 
+{% comment "tagCopy contiene parti precompilate serve per modifcare sondaggi gia fatti" %}{% endcomment %}
+{% comment "list invece contiene possibili campi per l'auto completamento contiene parti precompilate" %}{% endcomment %}
+
 //esempio precompilato
 //tagsItems : [ 'Basic', 'JavaScript', 'PHP', 'Scala' ],
 
+    var tagCopy=['{{copy.zona}}'];
+
     $('#zona')
         .textext({
-            tagsItems : [ ],
+            tagsItems : tagCopy,
             plugins : 'tags autocomplete'
         })
         .bind('getSuggestions', function(e, data)
@@ -354,8 +359,11 @@
         }
     );
 
-        $('#livello_pc')
+    tagCopy=['{{copy.livello_pc}}'];
+
+    $('#livello_pc')
         .textext({
+            tagsItems : tagCopy,
             plugins : 'tags autocomplete'
         })
         .bind('getSuggestions', function(e, data)
@@ -376,8 +384,11 @@
         }
     );
 
+    tagCopy=['{{copy.grado_studi}}'];
+
     $('#grado_studi')
         .textext({
+            tagsItems : tagCopy,
             plugins : 'tags autocomplete'
         })
         .bind('getSuggestions', function(e, data)
@@ -398,8 +409,14 @@
         }
     );
 
+    tagCopy=[
+        {% for a in copy.campo_studi %}
+            '{{a.campo_studi.valore}}',
+        {% endfor %}
+    ];
     $('#campo_studi')
         .textext({
+            tagsItems : tagCopy,
             plugins : 'tags autocomplete'
         })
         .bind('getSuggestions', function(e, data)
@@ -420,8 +437,14 @@
         }
     );
 
+    tagCopy=[
+        {% for a in copy.stato %}
+            '{{a.stato.valore}}',
+        {% endfor %}
+    ];
     $('#stato')
         .textext({
+            tagsItems : tagCopy,
             plugins : 'tags autocomplete'
         })
         .bind('getSuggestions', function(e, data)
@@ -442,8 +465,14 @@
         }
     );
 
+    tagCopy=[
+        {% for a in copy.lingua %}
+            '{{a.lingua.valore}}',
+        {% endfor %}
+    ];
     $('#lingua')
         .textext({
+            tagsItems : tagCopy,
             plugins : 'tags autocomplete'
         })
         .bind('getSuggestions', function(e, data)
@@ -464,8 +493,14 @@
         }
     );
 
+    tagCopy=[
+        {% for a in copy.conoscenza_specifica %}
+            '{{a.conoscenza_specifica.valore}}',
+        {% endfor %}
+    ];
     $('#conoscenza_specifica')
         .textext({
+            tagsItems : tagCopy,
             plugins : 'tags autocomplete'
         })
         .bind('getSuggestions', function(e, data)
@@ -486,8 +521,14 @@
         }
     );
 
+    tagCopy=[
+        {% for a in copy.esame %}
+            '{{a.esame.valore}}',
+        {% endfor %}
+    ];
     $('#esame_attuale')
         .textext({
+            tagsItems : tagCopy,
             plugins : 'tags autocomplete'
         })
         .bind('getSuggestions', function(e, data)
@@ -509,8 +550,14 @@
     );
 
 
-        $('#mansione_attuale')
+    tagCopy=[
+        {% for a in copy.mansione_attuale %}
+            '{{a.mansione.valore}}',
+        {% endfor %}
+    ];
+    $('#mansione_attuale')
         .textext({
+            tagsItems : tagCopy,
             plugins : 'tags autocomplete'
         })
         .bind('getSuggestions', function(e, data)
@@ -530,8 +577,16 @@
             );
         }
     );
-        $('#livello_cariera_attuale')
+
+
+    tagCopy=[
+        {% for a in copy.livello_cariera_attuale %}
+            '{{a.livello_cariera.valore}}',
+        {% endfor %}
+    ];
+    $('#livello_cariera_attuale')
         .textext({
+            tagsItems : tagCopy,
             plugins : 'tags autocomplete'
         })
         .bind('getSuggestions', function(e, data)
@@ -551,8 +606,15 @@
             );
         }
     );
+
+    tagCopy=[
+        {% for a in copy.ruolo_attuale %}
+            '{{a.ruolo.valore}}',
+        {% endfor %}
+    ];
     $('#ruolo_attuale')
         .textext({
+            tagsItems : tagCopy,
             plugins : 'tags autocomplete'
         })
         .bind('getSuggestions', function(e, data)
@@ -573,8 +635,14 @@
         }
     );
 
+    tagCopy=[
+        {% for a in copy.area_operativa_attuale %}
+            '{{a.area_operativa.valore}}',
+        {% endfor %}
+    ];
     $('#area_operativa_attuale')
         .textext({
+            tagsItems : tagCopy,
             plugins : 'tags autocomplete'
         })
         .bind('getSuggestions', function(e, data)
@@ -595,8 +663,14 @@
         }
     );
 
+    tagCopy=[
+        {% for a in copy.tipo_contratto_attuale %}
+            '{{a.tipo_contratto.valore}}',
+        {% endfor %}
+    ];
     $('#tipo_contratto_attuale')
         .textext({
+            tagsItems : tagCopy,
             plugins : 'tags autocomplete'
         })
         .bind('getSuggestions', function(e, data)
@@ -617,8 +691,15 @@
         }
     );
 //passato----------------------------------------------------------------------------------------------
+
+    tagCopy=[
+        {% for a in copy.mansione_pregressa %}
+            '{{a.mansione.valore}}',
+        {% endfor %}
+    ];
      $('#mansione_pregresso')
         .textext({
+            tagsItems : tagCopy,
             plugins : 'tags autocomplete'
         })
         .bind('getSuggestions', function(e, data)
@@ -638,8 +719,15 @@
             );
         }
     );
-        $('#livello_cariera_pregresso')
+
+    tagCopy=[
+        {% for a in copy.livello_cariera_pregressa %}
+            '{{a.livello_cariera.valore}}',
+        {% endfor %}
+    ];
+    $('#livello_cariera_pregresso')
         .textext({
+            tagsItems : tagCopy,
             plugins : 'tags autocomplete'
         })
         .bind('getSuggestions', function(e, data)
@@ -659,8 +747,15 @@
             );
         }
     );
+
+    tagCopy=[
+        {% for a in copy.ruolo_pregressa %}
+            '{{a.ruolo.valore}}',
+        {% endfor %}
+    ];
     $('#ruolo_pregresso')
         .textext({
+            tagsItems : tagCopy,
             plugins : 'tags autocomplete'
         })
         .bind('getSuggestions', function(e, data)
@@ -681,8 +776,14 @@
         }
     );
 
+    tagCopy=[
+        {% for a in copy.area_operativa_pregressa %}
+            '{{a.area_operativa.valore}}',
+        {% endfor %}
+    ];
     $('#area_operativa_pregresso')
         .textext({
+            tagsItems : tagCopy,
             plugins : 'tags autocomplete'
         })
         .bind('getSuggestions', function(e, data)
@@ -703,8 +804,14 @@
         }
     );
 
+    tagCopy=[
+        {% for a in copy.tipo_contratto_pregressa %}
+            '{{a.tipo_contratto.valore}}',
+        {% endfor %}
+    ];
     $('#tipo_contratto_pregresso')
         .textext({
+            tagsItems : tagCopy,
             plugins : 'tags autocomplete'
         })
         .bind('getSuggestions', function(e, data)
@@ -725,9 +832,16 @@
         }
     );
 
-//futuoro----------------------------------------------------------------------------------------------------------
-         $('#mansione_futuro')
+//futuro----------------------------------------------------------------------------------------------------------
+
+    tagCopy=[
+        {% for a in copy.mansione_futura %}
+            '{{a.mansione.valore}}',
+        {% endfor %}
+    ];
+    $('#mansione_futuro')
         .textext({
+            tagsItems : tagCopy,
             plugins : 'tags autocomplete'
         })
         .bind('getSuggestions', function(e, data)
@@ -747,8 +861,15 @@
             );
         }
     );
-        $('#livello_cariera_futuro')
+
+    tagCopy=[
+        {% for a in copy.livello_cariera_futura %}
+            '{{a.livello_cariera.valore}}',
+        {% endfor %}
+    ];
+    $('#livello_cariera_futuro')
         .textext({
+            tagsItems : tagCopy,
             plugins : 'tags autocomplete'
         })
         .bind('getSuggestions', function(e, data)
@@ -768,8 +889,15 @@
             );
         }
     );
+
+    tagCopy=[
+        {% for a in copy.ruolo_futura %}
+            '{{a.ruolo.valore}}',
+        {% endfor %}
+    ];
     $('#ruolo_futuro')
         .textext({
+            tagsItems : tagCopy,
             plugins : 'tags autocomplete'
         })
         .bind('getSuggestions', function(e, data)
@@ -790,8 +918,15 @@
         }
     );
 
+
+    tagCopy=[
+        {% for a in copy.area_operativa_futura %}
+            '{{a.area_operativa.valore}}',
+        {% endfor %}
+    ];
     $('#area_operativa_futuro')
         .textext({
+            tagsItems : tagCopy,
             plugins : 'tags autocomplete'
         })
         .bind('getSuggestions', function(e, data)
@@ -812,8 +947,14 @@
         }
     );
 
+    tagCopy=[
+        {% for a in copy.tipo_contratto_futura %}
+            '{{a.tipo_contratto.valore}}',
+        {% endfor %}
+    ];
     $('#tipo_contratto_futuro')
         .textext({
+            tagsItems : tagCopy,
             plugins : 'tags autocomplete'
         })
         .bind('getSuggestions', function(e, data)
@@ -834,8 +975,15 @@
         }
     );
 
+
+    tagCopy=[
+        {% for a in copy.benefit_futuro %}
+            '{{a.benefit.valore}}',
+        {% endfor %}
+    ];
     $('#benefit_futuro')
         .textext({
+            tagsItems : tagCopy,
             plugins : 'tags autocomplete'
         })
         .bind('getSuggestions', function(e, data)
@@ -856,8 +1004,14 @@
         }
     );
 
+    tagCopy=[
+        {% for a in copy.interesse_futura %}
+            '{{a.interesse.valore}}',
+        {% endfor %}
+    ];
     $('#interesse_futuro')
         .textext({
+            tagsItems : tagCopy,
             plugins : 'tags autocomplete'
         })
         .bind('getSuggestions', function(e, data)

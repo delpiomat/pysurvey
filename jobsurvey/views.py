@@ -122,10 +122,10 @@ class Studenti(View):
 
             copy['esame'] = EsameAttuale.objects.select_related().filter(persona_id=copy['id']).exclude(esame=None)
             copy['campo_studi'] = CampoStudiAttuale.objects.select_related().filter(persona_id=copy['id']).exclude(campo_studi=None)
-            copy['lingue'] = LinguaAttuale.objects.select_related().filter(persona_id=copy['id']).exclude(lingua=None)
+            copy['lingua'] = LinguaAttuale.objects.select_related().filter(persona_id=copy['id']).exclude(lingua=None)
             copy['conoscenza_specifica'] = ConoscenzaSpecificaAttuale.objects.select_related().filter(persona_id=copy['id']).exclude(conoscenza_specifica=None)
             copy['stato'] = StatoAttuale.objects.select_related().filter(persona_id=copy['id']).exclude(stato=None)
-            copy['benefit_fututo'] = BenefitFuturo.objects.select_related().filter(persona_id=copy['id']).exclude(benefit=None)
+            copy['benefit_futuro'] = BenefitFuturo.objects.select_related().filter(persona_id=copy['id']).exclude(benefit=None)
             copy['interesse_futuro'] = InteresseFuturo.objects.select_related().filter(persona_id=copy['id']).exclude(interesse=None)
 
             copy['mansione_attuale'] = ""
@@ -143,7 +143,7 @@ class Studenti(View):
 
             copy['livello_cariera_attuale'] = LivelloCarieraAttuale.objects.select_related().filter(persona_id=copy['id']).exclude(livello_cariera=None)
             copy['livello_cariera_pregressa'] = LivelloCarieraPregresso.objects.select_related().filter(persona_id=copy['id']).exclude(livello_cariera=None)
-            copy['livello_cariera_pregressa'] = LivelloCarieraFuturo.objects.select_related().filter(persona_id=copy['id']).exclude(livello_cariera=None)
+            copy['livello_cariera_futura'] = LivelloCarieraFuturo.objects.select_related().filter(persona_id=copy['id']).exclude(livello_cariera=None)
 
 
             copy['ruolo_attuale'] = ""
@@ -1237,7 +1237,7 @@ class RisultatiStudenti(View):
                             'livello_cariera_pregressa': "", 'ruolo_pregressa': "", 'area_operativa_pregressa': "",
                             'tipo_contratto_pregressa': "", 'mansione_futura': "", 'livello_cariera_futura': "",
                             'ruolo_futura': "", 'area_operativa_futura': "", 'tipo_contratto_futura': "", 'benefit': "",
-                            'stipendio': s.stipendio_futuro, 'possibilita_trasferirsi': s.possibilita_trasferirsi,
+                            'stipendio': s.stipendio_futuro, 'interesse': "",'possibilita_trasferirsi': s.possibilita_trasferirsi,
                             'data': s.pub_date}
 
         # esami
@@ -1460,6 +1460,28 @@ class RisultatiStudenti(View):
                     result[ltcf.persona.id]['tipo_contratto_futura'] += ltcf.tipo_contratto.valore
             else:
                 result[ltcf.persona.id]['tipo_contratto_futura'] += "None"
+
+        # benefit
+        list_benefit = BenefitFuturo.objects.all().select_related()
+        for lb in list_benefit:
+            if lb.benefit != None:
+                if result[lb.persona.id]['benefit'] != "":
+                    result[lb.persona.id]['benefit'] += ","+lb.benefit.valore
+                else:
+                    result[lb.persona.id]['benefit'] += lb.benefit.valore
+            else:
+                result[lb.persona.id]['benefit'] += "None"
+
+        # interesse
+        list_interesse_futuro = InteresseFuturo.objects.all().select_related()
+        for lif in list_interesse_futuro:
+            if lif.interesse != None:
+                if result[lif.persona.id]['interesse'] != "":
+                    result[lif.persona.id]['interesse'] += ","+lif.interesse.valore
+                else:
+                    result[lif.persona.id]['interesse'] += lif.interesse.valore
+            else:
+                result[lif.persona.id]['interesse'] += "None"
 
         return render(request, "risultati.html", {"result": result, "type": 0})
 
