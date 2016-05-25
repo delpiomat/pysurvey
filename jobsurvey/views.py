@@ -665,7 +665,7 @@ class Aziende(View):
 
             # esterno multiplo
             copy['altra_sede'] = AltraSede.objects.select_related().filter(azienda_id=copy['id']).exclude(citta=None)
-                
+
             result["copy"] = copy
 
         return render(request, "aziende.html", result)
@@ -753,11 +753,10 @@ class Lavori(View):
         copy['tipo_contratto'] = ""
         copy['citta'] = ""
 
+        # passo nella lista copy le parti gia esistenti da copiare
         if 'id' in kwargs:
             copy['id'] = kwargs['id']
             lavoro_copia = Lavoro.objects.select_related().get(pk=kwargs['id'])
-            if lavoro_copia.azienda_id != None:
-                copy['codice_azienda'] = lavoro_copia.azienda_id
             if lavoro_copia.email_referente != None:
                 copy['email_referente'] = lavoro_copia.email_referente
             if lavoro_copia.distanza_massima != None:
@@ -765,12 +764,16 @@ class Lavori(View):
             if lavoro_copia.note_lavoro != None:
                 copy['note_lavoro'] = lavoro_copia.note_lavoro
 
-            #esterno singolo
-            # if lavoro_copia.citta_sede != None:
-                # copy['citta'] = lavoro_copia.citta_sede.valore
+            # chiave esterna
+            if lavoro_copia.azienda_id != None:
+                copy['codice_azienda'] = lavoro_copia.azienda_id
 
             # esterno multiplo
-               # copy['altra_sede'] = AltraSede.objects.select_related().filter(azienda_id=copy['id']).exclude(citta=None)
+                copy['citta'] = CercaCitta.objects.select_related().filter(lavoro_id=copy['id']).exclude(citta=None)
+                copy['lingua'] = CercaLingua.objects.select_related().filter(lavoro_id=copy['id']).exclude(lingua=None)
+                copy['campo_studi'] = CercaCampoStudio.objects.select_related().filter(lavoro_id=copy['id']).exclude(campo_studio=None)
+                copy['esame'] = CercaEsami.objects.select_related().filter(lavoro_id=copy['id']).exclude(esame=None)
+
             result["copy"] = copy
 
         return render(request, "lavoro.html", result)

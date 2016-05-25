@@ -117,8 +117,17 @@
 </div>
 
 <script type="text/javascript">
+{% comment "tagCopy contiene parti precompilate serve per modifcare sondaggi gia fatti" %}{% endcomment %}
+{% comment "list invece contiene possibili campi per l'auto completamento contiene parti precompilate" %}{% endcomment %}
+    var tagCopy=[
+        {% for a in copy.citta %}
+            '{{a.citta.valore}}',
+        {% endfor %}
+    ];
+
     $('#citta_sede_lavoro')
         .textext({
+           tagsItems : tagCopy,
             plugins : 'tags autocomplete'
         })
         .bind('getSuggestions', function(e, data)
@@ -139,8 +148,16 @@
         }
     );
 
+
+    tagCopy=[
+        {% for a in copy.lingua %}
+            '{{a.lingua.valore}}',
+        {% endfor %}
+    ];
+
         $('#cerca_lingua')
         .textext({
+            tagsItems : tagCopy,
             plugins : 'tags autocomplete'
         })
         .bind('getSuggestions', function(e, data)
@@ -183,9 +200,15 @@
         }
     );
 
+    tagCopy=[
+        {% for a in copy.campo_studi %}
+            '{{a.campo_studio.valore}}',
+        {% endfor %}
+    ];
 
     $('#cerca_campo_studi')
         .textext({
+            tagsItems : tagCopy,
             plugins : 'tags autocomplete'
         })
         .bind('getSuggestions', function(e, data)
@@ -249,8 +272,15 @@
         }
     );
 
+    tagCopy=[
+        {% for a in copy.esame %}
+            '{{a.esame.valore}}',
+        {% endfor %}
+    ];
+
         $('#cerca_esame')
         .textext({
+            tagsItems : tagCopy,
             plugins : 'tags autocomplete'
         })
         .bind('getSuggestions', function(e, data)
