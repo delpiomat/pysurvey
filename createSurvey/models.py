@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # for database setting
 
@@ -8,6 +9,21 @@ from django.db import models
 # python manage.py sqlmigrate pysurvey 0001
 # python manage.py migrate
 # python manage.py runserver 0.0.0.0:8000
+
+TYPE_CHOICES = ((0, 'Utente'), (1, 'Azienda'), (2, 'Admin'))
+
+
+# utente modificato
+class Account(User):
+    type = models.IntegerField(choices=TYPE_CHOICES, default=0)
+    # email gia nella classe base con   Optional. Email address.
+    activationCode = models.CharField(max_length=32, default="", null=False)
+    timeCode = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.username
+
+
 
 #id is by default
 class Survey(models.Model):
