@@ -3,7 +3,7 @@ from django.core.context_processors import csrf
 from django.shortcuts import render, redirect, render_to_response, RequestContext
 
 from django.views.generic import View
-from .models import Column, Survey, Interview, Result
+from .models import Column, Survey, Interview, Result, Account
 
 # for login
 from django.contrib.auth import authenticate, login, logout
@@ -27,6 +27,9 @@ from createSurvey.utils import *
 import logging
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
+
+# server per lo sleep
+import time
 
 
 # login
@@ -94,6 +97,20 @@ def log_out(request):
     logout(request)
     return redirect('index')
 
+# attivazione account
+def verification(request, id, str):
+    user = None
+    try:
+        user = Account.objects.get(user_ptr_id=id)
+    except:
+        pass
+    if user and user.activationCode == str:
+        user.is_active = True
+        user.save()
+        return render(request, 'verification.html', {'msg': 'activated'})
+
+    time.sleep(2)
+    return render(request, 'verification.html', {'msg': 'Errore'})
 
 # Index Page.
 class Index(View):

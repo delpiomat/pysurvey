@@ -8,12 +8,17 @@ import csv
 from django.http import HttpResponse
 from django.utils.encoding import smart_str
 
+# per prendere il path
+from django.conf import settings
 
 # import the logging library #per debug scrive nella Console
 import logging
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
+# per la mail di verifica
+from django.core.urlresolvers import reverse
+from django.core.mail import send_mail
 
 def json_form_in_html(survey):
     form = dict()
@@ -80,3 +85,33 @@ def export_csv(survey, col_list, final_list, filename):
         writer.writerow(row)
         row = []
     return response
+
+import random
+import string
+
+# password generator
+def gen_password():
+    # Legge un file.
+    file = open(settings.STATICFILES_DIRS[0]+"/dict/words_italian.txt", "r")
+    list_num = [line.strip() for line in file]
+    file.close()
+
+    password = "1234567"
+    while len(password) > 7:
+        first = random.choice(list_num)+random.choice(list_num)+random.choice(string.digits)+random.choice(string.digits)
+        second = random.choice(list_num)+random.choice(string.digits)+random.choice(list_num)+random.choice(string.digits)
+        password = random.choice(first, second)
+        password = random.choice(password.capitalize(), password)
+    return password
+
+
+# manda mail con codice attivazione
+def send_verification_email(request, user, isAzienda,password):
+    # se nel futuro vogliamo persoanlizzare messaggio azienda o stundete modificare qui
+    if user.type == 1:
+        link = request.build_absolute_uri(reverse('verification', args=[user.id, user.activationCode]))
+    else:
+        link = request.build_absolute_uri(reverse('verification', args=[user.id, user.activationCode]))
+    text_content = "Benvenuto in UnipdJob\nApri il link per verificare l'account\n" + link
+    html_content = "<h2>UnipdJOB</h2><br>Apri il link per verificare l'account\n<br><a href='" + link + "'>link</a> <br> <p>La tua password: "+password+"</p>"
+    return send_mail('Verifica account', text_content, "delpiomat@hotmail.it", [user.email], fail_silently=False, html_message=html_content)

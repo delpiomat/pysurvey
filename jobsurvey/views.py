@@ -26,6 +26,10 @@ from createSurvey.utils import *
 # for ajax json
 from django.http import QueryDict
 
+# for random
+import random
+import string
+
 # import the logging library #per debug scrive nella Console
 import logging
 # Get an instance of a logger
@@ -35,8 +39,19 @@ logger = logging.getLogger(__name__)
 # per sondaggio
 class Studenti(View):
 
-    @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
+
+        # controllo errori per registrazione
+        error = None
+        if 'error' in request.GET:
+            error = request.GET['error']
+        result = None
+        if 'result' in request.GET:
+            result = request.GET['result']
+        c = {'error': error, 'result': result}
+        c.update(csrf(request))
+
+        # inizio questionario
         result = {}
         result['zona'] = Zona.objects.all()
         result['livello_pc'] = LivelloPC.objects.all()
@@ -175,10 +190,31 @@ class Studenti(View):
 
         return render(request, "studenti.html", result)
 
-    @method_decorator(login_required(login_url='log_in'))
     def post(self, request, *args, **kwargs):
-        logger.error("la post! ")
+        #logger.error("la post! ")
 
+        # nuovo sondaggio quindi creo account
+        post = request.POST
+        username = None
+        password = None
+        name = None
+
+        if request.POST['email']== "":
+            return render(request, 'studenti.html', {"error": 'No email inserita'})
+
+        # problema se la mail facoltativa
+        name = post['email']
+        username = post['email']
+        password = gen_password()
+        user_count = Account.objects.filter(username=username).count()
+        if user_count != 0:
+            return render(request, 'studenti.html', {"error": 'Email gia esistente'})
+        user = Account(is_active=False, first_name=name, username=username)
+        user.set_password(password)
+        user.activationCode = ''.join([random.choice(string.ascii_letters + string.digits) for n in range(32)])
+        user.save()
+        # invio mail
+        send_verification_email(request, user, False, password)
 
         for key in request.POST:
             logger.error(key)

@@ -1,0 +1,24 @@
+{% extends "base_generic.html" %}
+{% load staticfiles %}
+{% block title %}Verifica email{% endblock %}
+
+
+{% block content %}
+
+    {% if msg == 'activated' %}
+        <br><br>
+        <p class="lead text-center">Benvenuto {{ user.first_name  }}</p>
+        <p class="lead text-center">Il tuo account e' stato attivato</p>
+        <a  class="btn btn-primary center-block" href="{% url 'index' %}" >Pagina Iniziale</a>
+    {% elif msg == 'sent' %}
+
+        email inviata
+
+    {% elif msg == 'error' %}
+
+        errore
+
+    {% endif %}
+    
+{% endblock %}
+

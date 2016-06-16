@@ -26,6 +26,7 @@ urlpatterns = [
     url(r'^sign_up/aiolli/aiolli', createSurvey.views.SignUp.as_view(), name="sign_up"),
     url(r'^logout/', createSurvey.views.log_out, name="log_out"),
     url(r'^$', createSurvey.views.Index.as_view(), name="index"),
+    url(r'^verification/(?P<id>[0-9]+)/(?P<str>.*)/$', createSurvey.views.verification, name="verification"),
     url(r'^new_survey', createSurvey.views.NewSurvey.as_view(), name="new_survey"),
     url(r'^preview_survey/(?P<id>[0-9]+)/$', createSurvey.views.PreviewSurvey.as_view(), name="preview_survey"),
     url(r'^make_survey/(?P<id>[0-9]+)/$', createSurvey.views.MakeSurvey.as_view(), name="make_survey"),
