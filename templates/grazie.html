@@ -16,8 +16,9 @@
     <div class="container">
 
             <h1 class="text-center" >Grazie!</h1>
+            <p class="lead" >Una mail ti è stata inviata per poter aggiornare il tuo sondaggio</p>
             {% if azienda == '0' %}
-                <a id="thank" href="{% url 'studenti' %}" class="btn btn-primary center-block">Fine</a>
+                <a id="thank" href="{% url 'index' %}" class="btn btn-primary center-block">Fine</a>
             {% elif azienda == '1' %}
                 <h2>il tuo codice Azienda: {{ id }}</h2>
                 <a id="thank" href="{% url 'aziende' %}" class="btn btn-primary center-block">Fine</a>

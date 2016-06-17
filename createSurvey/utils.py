@@ -96,12 +96,12 @@ def gen_password():
     list_num = [line.strip() for line in file]
     file.close()
 
-    password = "1234567"
-    while len(password) > 7:
+    password = "123456"
+    while len(password) < 8:
         first = random.choice(list_num)+random.choice(list_num)+random.choice(string.digits)+random.choice(string.digits)
         second = random.choice(list_num)+random.choice(string.digits)+random.choice(list_num)+random.choice(string.digits)
-        password = random.choice(first, second)
-        password = random.choice(password.capitalize(), password)
+        password = random.choice([first, second])
+        password = random.choice([password.capitalize(), password])
     return password
 
 
@@ -114,4 +114,8 @@ def send_verification_email(request, user, isAzienda,password):
         link = request.build_absolute_uri(reverse('verification', args=[user.id, user.activationCode]))
     text_content = "Benvenuto in UnipdJob\nApri il link per verificare l'account\n" + link
     html_content = "<h2>UnipdJOB</h2><br>Apri il link per verificare l'account\n<br><a href='" + link + "'>link</a> <br> <p>La tua password: "+password+"</p>"
-    return send_mail('Verifica account', text_content, "delpiomat@hotmail.it", [user.email], fail_silently=False, html_message=html_content)
+    mittenti = [user.email]
+    logger.error("il mittente "+ mittenti[0])
+    logger.error("la password" + password)
+    logger.error(" ")
+    return send_mail('Verifica account', text_content, "jobunipd@gmail.com", mittenti, fail_silently=False, html_message=html_content)

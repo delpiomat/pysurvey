@@ -6,22 +6,14 @@ from django.contrib.auth.models import User
 # python manage.py makemigrations
 
 # change 0001 every time####
-# python manage.py sqlmigrate pysurvey 0001
+# python manage.py sqlmigrate createSurvey 0001
 # python manage.py migrate
 # python manage.py runserver 0.0.0.0:8000
 
 TYPE_CHOICES = ((0, 'Utente'), (1, 'Azienda'), (2, 'Admin'))
 
 
-# utente modificato
-class Account(User):
-    type = models.IntegerField(choices=TYPE_CHOICES, default=0)
-    # email gia nella classe base con   Optional. Email address.
-    activationCode = models.CharField(max_length=32, default="", null=False)
-    timeCode = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return self.username
 
 
 
@@ -156,6 +148,19 @@ class Persona(models.Model):
 
     #data
     pub_date = models.DateTimeField(auto_now_add=True, blank=True)
+
+
+# utente modificato
+class Account(User):
+    type = models.IntegerField(choices=TYPE_CHOICES, default=0)
+    # email gia nella classe base con   Optional. Email address.
+    activationCode = models.CharField(max_length=32, default="", null=False)
+    timeCode = models.DateTimeField(auto_now_add=True)
+    survey = models.ForeignKey(Persona, null=True, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.username
+
 
 class StatoAttuale(models.Model):
     stato = models.ForeignKey(Stato, on_delete=models.CASCADE, null=True)

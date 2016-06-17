@@ -6,6 +6,10 @@
 
 {% block topcontent %}
 <div class="container">
+    {% if user.account %}
+        <h2>Menu</h2>
+        <a class="btn btn-primary" href="{%  url 'studenti' user.account.survey.id  %}">Modifica sondaggio studente</a>
+    {% else %}
     <h2>Sondaggi Creati</h2>
     <p>elenco dei sondaggi creati:</p>
     <table class="table table-bordered">
@@ -74,7 +78,6 @@
             {% endif %}
         </span>
     </div>
-
-
+    {% endif %}
 </div>
 {% endblock %}

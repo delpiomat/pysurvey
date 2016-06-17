@@ -147,3 +147,9 @@ MEDIA_ROOT = 'C:/Users/Casa/PycharmProjects/pysurvey/media/'
 # trailing slash.
 # Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
 MEDIA_URL = '/media/'
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'jobunipd@gmail.com'
+EMAIL_HOST_PASSWORD = 'bocciati'

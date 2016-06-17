@@ -195,30 +195,38 @@ class Studenti(View):
 
         # nuovo sondaggio quindi creo account
         post = request.POST
-        username = None
-        password = None
-        name = None
 
-        if request.POST['email']== "":
-            return render(request, 'studenti.html', {"error": 'No email inserita'})
+        #creo utente nuovo
+        new_user=None
+        if not request.user.is_authenticated():
+            username = None
+            password = None
+            name = None
 
-        # problema se la mail facoltativa
-        name = post['email']
-        username = post['email']
-        password = gen_password()
-        user_count = Account.objects.filter(username=username).count()
-        if user_count != 0:
-            return render(request, 'studenti.html', {"error": 'Email gia esistente'})
-        user = Account(is_active=False, first_name=name, username=username)
-        user.set_password(password)
-        user.activationCode = ''.join([random.choice(string.ascii_letters + string.digits) for n in range(32)])
-        user.save()
-        # invio mail
-        send_verification_email(request, user, False, password)
+            if request.POST['email']== "":
+                return render(request, 'studenti.html', {"error": 'No email inserita'})
 
+            # problema se la mail facoltativa
+            name = post['email']
+            username = post['email']
+            password = gen_password()
+            user_count = Account.objects.filter(username=username).count()
+            if user_count != 0:
+                return render(request, 'studenti.html', {"error": 'Email gia esistente'})
+            nuovo_user = Account(is_active=False, first_name=name, username=username, email=post['email'])
+            nuovo_user.set_password(password)
+            nuovo_user.activationCode = ''.join([random.choice(string.ascii_letters + string.digits) for n in range(32)])
+            nuovo_user.save()
+
+            # invio mail
+            send_verification_email(request, nuovo_user, False, password)
+
+        #stampa tutti valori della post
+        '''
         for key in request.POST:
             logger.error(key)
             logger.error("value "+request.POST[key])
+        '''
 
         nuova_persona = Persona()
         if request.POST['cap']== "":
@@ -282,7 +290,7 @@ class Studenti(View):
             nuova_persona.possibilita_trasferirsi = False
 
 
-        # Ora parliamo delle chiavi esterne con solo un valore Possibile--------------------------------------------
+        # Ora parliamo delle chiavi esterne con solo un valore Possibile-------------------------
         livello_pc_post = json.loads(request.POST["livello_pc"])
         if len(livello_pc_post) <= 0:
             nuova_persona.livello_uso_computer = None
@@ -316,6 +324,32 @@ class Studenti(View):
 
         # bisogna salverlo qua
         nuova_persona.save()
+        #collego account al sondaggio
+        if not request.user.is_authenticated:
+            # nuovo utente
+            new_user.survey = nuova_persona
+            new_user.save()
+        elif request.user.account.type==0:
+            update_usr = Account.objects.get(pk=request.user.id)
+            # cancello vecchio sondaggio
+            old_survey = Persona.objects.get(pk=update_usr.survey_id)
+            old_survey.delete()
+            # aggiorno utente
+            update_usr.survey = nuova_persona
+            update_usr.save()
+        else:
+            logger.error("admin modifica persona studente")
+            # un admin che fa modifiche
+            #ATTENZIONE SE SI CAMBIA con una post l'id del vecchio sondaggio esplode tutto
+            # non conosciamo l'identita dell'utene quindi dobbiamo leggerlo dalla POST
+            #per l'utente non lo facciamo salta la sicurezza
+            old_survey = Persona.objects.get(pk=request.POST["id_survey"])
+            update_usr = Account.objects.get(old_survey)
+            update_usr.survey = nuova_persona
+            update_usr.save()
+            old_survey.delete()
+
+
         # Ora la parte tosta i multivalore! buona fortuna-----------------------------------------------------------
         lingua_list = json.loads(request.POST["lingua"])
         if len(lingua_list) <= 0:

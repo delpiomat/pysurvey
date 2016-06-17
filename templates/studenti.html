@@ -48,6 +48,11 @@
 
 
     <h2>Anagrafica</h2>
+
+    {% if user %}
+        <input type="hidden" name="id_survey" value="{{ copy.id }}" id="cap" class="form-control">
+    {% endif %}
+
     <div class="form-group">
         <label for="cap">Cap:</label>
         <input type="text" name="cap" value="{{ copy.cap }}" id="cap" class="form-control">
