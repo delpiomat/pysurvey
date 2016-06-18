@@ -36,11 +36,11 @@
 <div class="container">{% csrf_token %}
 
 {% if error %}
-<div class="alert alert-danger" role="alert">
-  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-  <span class="sr-only">Error:</span>
-  {{ error }}
-</div>
+    <div class="alert alert-danger" role="alert">
+      <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+      <span class="sr-only">Error:</span>
+      {{ error }}
+    </div>
 {% endif %}
 
 
@@ -50,7 +50,7 @@
     <h2>Anagrafica</h2>
 
     {% if user %}
-        <input type="hidden" name="id_survey" value="{{ copy.id }}" id="cap" class="form-control">
+        <input type="hidden" name="id_survey" value="{{ copy.id }}" id="id_survey" class="form-control">
     {% endif %}
 
     <div class="form-group">

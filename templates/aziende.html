@@ -35,11 +35,22 @@
 {% block topcontent %}
 <div class="container">{% csrf_token %}
 
+{% if error %}
+    <div class="alert alert-danger" role="alert">
+      <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+      <span class="sr-only">Error:</span>
+      {{ error }}
+    </div>
+{% endif %}
 
 <form id="forminvio" data-toggle="validator" method="POST" role="form">{% csrf_token %}
 
-
     <h2>Anagrafica</h2>
+
+    {% if user %}
+        <input type="hidden" name="id_survey" value="{{ copy.id }}" id="id_survey" class="form-control">
+    {% endif %}
+
     <div class="form-group">
         <label for="citta_sede">Città:</label>
         <textarea style="width: 270px; height: 30px; box-shadow: inset 0 1px 1px rgba(0,0,0,.075);" name="citta_sede" id="citta_sede" class="example" rows="1"></textarea>

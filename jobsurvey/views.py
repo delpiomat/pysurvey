@@ -43,16 +43,18 @@ class Studenti(View):
 
         # controllo errori per registrazione
         error = None
-        if 'error' in request.GET:
-            error = request.GET['error']
-        result = None
-        if 'result' in request.GET:
-            result = request.GET['result']
-        c = {'error': error, 'result': result}
-        c.update(csrf(request))
+
+        logger.error('cerca errore')
+        logger.error(kwargs)
+        if 'error' in kwargs:
+            error = kwargs['error']
+            logger.error(' ')
+            logger.error('errore trovato '+ error)
+            logger.error(' ')
 
         # inizio questionario
         result = {}
+        result['error'] = error
         result['zona'] = Zona.objects.all()
         result['livello_pc'] = LivelloPC.objects.all()
         result['grado_studi'] = GradoStudi.objects.all()
@@ -197,14 +199,17 @@ class Studenti(View):
         post = request.POST
 
         #creo utente nuovo
-        new_user=None
+        nuovo_user=None
+        logger.error("primo controllo autenticazione"+str(request.user.is_authenticated()))
+        not_usr_authenticated = False
         if not request.user.is_authenticated():
+            not_usr_authenticated = True # utente Anonimo
             username = None
             password = None
             name = None
 
             if request.POST['email']== "":
-                return render(request, 'studenti.html', {"error": 'No email inserita'})
+                return redirect('studenti', 'Email non valida inserita')
 
             # problema se la mail facoltativa
             name = post['email']
@@ -212,7 +217,7 @@ class Studenti(View):
             password = gen_password()
             user_count = Account.objects.filter(username=username).count()
             if user_count != 0:
-                return render(request, 'studenti.html', {"error": 'Email gia esistente'})
+                return redirect('studenti', 'Email gia esistente')
             nuovo_user = Account(is_active=False, first_name=name, username=username, email=post['email'])
             nuovo_user.set_password(password)
             nuovo_user.activationCode = ''.join([random.choice(string.ascii_letters + string.digits) for n in range(32)])
@@ -325,10 +330,10 @@ class Studenti(View):
         # bisogna salverlo qua
         nuova_persona.save()
         #collego account al sondaggio
-        if not request.user.is_authenticated:
+        if (not_usr_authenticated):
             # nuovo utente
-            new_user.survey = nuova_persona
-            new_user.save()
+            nuovo_user.survey = nuova_persona
+            nuovo_user.save()
         elif request.user.account.type==0:
             update_usr = Account.objects.get(pk=request.user.id)
             # cancello vecchio sondaggio
@@ -344,7 +349,7 @@ class Studenti(View):
             # non conosciamo l'identita dell'utene quindi dobbiamo leggerlo dalla POST
             #per l'utente non lo facciamo salta la sicurezza
             old_survey = Persona.objects.get(pk=request.POST["id_survey"])
-            update_usr = Account.objects.get(old_survey)
+            update_usr = Account.objects.get(survey=old_survey)
             update_usr.survey = nuova_persona
             update_usr.save()
             old_survey.delete()
@@ -777,9 +782,16 @@ class Studenti(View):
 
 class Aziende(View):
 
-    @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
         result = {}
+
+        # controllo errori per registrazione
+        error = None
+        if 'error' in kwargs:
+            error = kwargs['error']
+
+        result['error']=error
+
         result['citta'] = Citta.objects.all()
 
         # per creare copie uso url GET
@@ -812,8 +824,39 @@ class Aziende(View):
 
         return render(request, "aziende.html", result)
 
-    @method_decorator(login_required(login_url='log_in'))
     def post(self, request, *args, **kwargs):
+
+
+        post = request.POST
+        #creo utente nuovo se non esiste
+        new_azienda_account = None
+
+        not_usr_authenticated = False
+        if not request.user.is_authenticated():
+            not_usr_authenticated = True # utente Anonimo
+            username = None
+            password = None
+            name = None
+
+            #va controllata meglio la mail
+            if request.POST['email']== "":
+                return redirect('aziende', 'Non hai inserito una valida')
+
+            # problema se la mail facoltativa
+            name = post['email']
+            username = post['email']
+            password = gen_password()
+            user_count = Account.objects.filter(username=username).count()
+            if user_count != 0:
+                return redirect('aziende', 'Email gia esistente')
+            new_azienda_account = Account(is_active=False, first_name=name, username=username, email=post['email'])
+            new_azienda_account.set_password(password)
+            new_azienda_account.activationCode = ''.join([random.choice(string.ascii_letters + string.digits) for n in range(32)])
+            new_azienda_account.save()
+
+            # invio mail
+            send_verification_email(request, new_azienda_account, False, password)
+
         nuova_azienda = Azienda()
 
         if request.POST['email'] == "":
@@ -843,6 +886,33 @@ class Aziende(View):
             nuova_azienda.citta_sede = citta
 
         nuova_azienda.save()
+
+        # dopo aver salvato il sondaggio aziendale, colleghiamo account a sondaggio vecchio o nuovo
+        # collego account al sondaggio
+        if not_usr_authenticated:
+            # nuovo utente
+            new_azienda_account.azienda = nuova_azienda
+            new_azienda_account.save()
+        elif request.user.account.type==1:
+            update_usr = Account.objects.get(pk=request.user.id)
+            # cancello vecchio sondaggio
+            old_survey = Azienda.objects.get(pk=update_usr.survey_id)
+            # aggiorno utente
+            update_usr.azienda = nuova_azienda
+            old_survey.delete()
+            update_usr.save()
+        else:
+            logger.error("admin modifica persona studente")
+            # un admin che fa modifiche
+            #ATTENZIONE SE SI CAMBIA con una post l'id del vecchio sondaggio esplode tutto
+            # non conosciamo l'identita dell'utene quindi dobbiamo leggerlo dalla POST
+            #per l'utente non lo facciamo salta la sicurezza
+            old_survey = Azienda.objects.get(pk=request.POST["id_survey"])
+            update_usr = Account.objects.get(azienda=old_survey)
+            update_usr.azienda = nuova_azienda
+            old_survey.delete()
+            update_usr.save()
+
         # Ora parliamo dei multi valore-------------------------------------------
         valore_list = json.loads(request.POST["altra_sede"])
         if len(valore_list) <= 0:

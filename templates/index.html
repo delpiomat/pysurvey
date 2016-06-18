@@ -8,7 +8,11 @@
 <div class="container">
     {% if user.account %}
         <h2>Menu</h2>
-        <a class="btn btn-primary" href="{%  url 'studenti' user.account.survey.id  %}">Modifica sondaggio studente</a>
+        {% if user.account.type == 0 %}
+        <a class="btn btn-primary" href="{%  url 'studenti_modifica' user.account.survey.id  %}">Modifica sondaggio studente</a>
+        {% elif user.account.type == 0%}
+        <a class="btn btn-primary" href="{%  url 'aziende_modifica' user.account.survey.id  %}">Modifica sondaggio azienda</a>
+        {% endif %}
     {% else %}
     <h2>Sondaggi Creati</h2>
     <p>elenco dei sondaggi creati:</p>

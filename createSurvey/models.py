@@ -13,10 +13,6 @@ from django.contrib.auth.models import User
 TYPE_CHOICES = ((0, 'Utente'), (1, 'Azienda'), (2, 'Admin'))
 
 
-
-
-
-
 #id is by default
 class Survey(models.Model):
     name = models.CharField(max_length=256)
@@ -149,17 +145,6 @@ class Persona(models.Model):
     #data
     pub_date = models.DateTimeField(auto_now_add=True, blank=True)
 
-
-# utente modificato
-class Account(User):
-    type = models.IntegerField(choices=TYPE_CHOICES, default=0)
-    # email gia nella classe base con   Optional. Email address.
-    activationCode = models.CharField(max_length=32, default="", null=False)
-    timeCode = models.DateTimeField(auto_now_add=True)
-    survey = models.ForeignKey(Persona, null=True, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.username
 
 
 class StatoAttuale(models.Model):
@@ -339,6 +324,18 @@ class CercaCampoStudio(models.Model):
     lavoro = models.ForeignKey(Lavoro, on_delete=models.CASCADE)
     campo_studio = models.ForeignKey(CampoStudi, on_delete=models.CASCADE, null=True)
 
+
+# utente modificato
+class Account(User):
+    type = models.IntegerField(choices=TYPE_CHOICES, default=0)
+    # email gia nella classe base con   Optional. Email address.
+    activationCode = models.CharField(max_length=32, default="", null=False)
+    timeCode = models.DateTimeField(auto_now_add=True)
+    survey = models.ForeignKey(Persona, null=True, on_delete=models.CASCADE)
+    azienda = models.ForeignKey(Azienda, null=True, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.username
 
 
 
