@@ -141,7 +141,7 @@ function tableToCsv(){
                     <tr id="azienda_{{ value.id }}">
                         <td>
                             <a type="submit" id="delete_azienda" value="{{value.id}}" onclick="deleteAzienda({{ value.id }});" class="btn btn-primary">Elimina</a>
-                            <a type="submit" id="copy_azienda" value="{{value.id}}" href="{% url 'aziende' value.id %}" class="btn btn-primary">Copia</a>
+                            <a type="submit" id="copy_azienda" value="{{value.id}}" href="{% url 'azienda_modifica' value.id %}" class="btn btn-primary">Copia</a>
                         </td>
                         <td>{{ value.id }}</td>
                         <td>{{ value.note }}</td>
@@ -267,7 +267,7 @@ function tableToCsv(){
                     <tr id="persona_{{ value.id }}">
                         <td>
                             <a type="submit" id="delete_persona" value="{{value.id}}" onclick="deleteStudente({{ value.id }});" class="btn btn-primary">Elimina</a>
-                            <a type="submit" id="copy_persona" value="{{value.id}}" href="{% url 'studenti' value.id %}" class="btn btn-primary">Copia</a>
+                            <a type="submit" id="copy_persona" value="{{value.id}}" href="{% url 'studenti_modifica' value.id %}" class="btn btn-primary">Copia</a>
                         </td>
                         <td>{{ value.id }}</td>
                         <td>{{ value.cap }}</td>

@@ -36,40 +36,579 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-# per sondaggio
-class Studenti(View):
+#Per ogni campo del questionario studente restituisce possibili valori
+def find_all_option_student():
+    # inizio questionario
+    result = {}
+    result['zona'] = Zona.objects.all()
+    result['livello_pc'] = LivelloPC.objects.all()
+    result['grado_studi'] = GradoStudi.objects.all()
+    result['stato'] = Stato.objects.all()
+    result['lingua'] = Lingua.objects.all()
+    result['campo_studi'] = CampoStudi.objects.all()
+    result['esame'] = Esame.objects.all()
+    result['conoscenza_specifica'] = ConoscenzaSpecifica.objects.all()
+    result['mansione'] = Mansione.objects.all()
+    result['livello_cariera'] = LivelloCariera.objects.all()
+    result['area_operativa'] = AreaOperativa.objects.all()
+    result['tipo_contratto'] = TipoContratto.objects.all()
+    result['benefit'] = Benefit.objects.all()
+    result['ruolo'] = Ruolo.objects.all()
+    result['interesse'] = Interesse.objects.all()
+    return result
 
+
+def create_modify_student_persona_survey_by_post(request,user,is_new_user,is_admin=False):
+    nuova_persona = Persona()
+    if request.POST['cap']== "":
+        nuova_persona.cap = None
+    else:
+        nuova_persona.cap = request.POST['cap']
+
+    if request.POST['anno']== "":
+        nuova_persona.anno_nascita = None
+    else:
+        nuova_persona.anno_nascita = request.POST['anno']
+
+    if request.POST['citta']== "":
+        nuova_persona.citta = None
+    else:
+        nuova_persona.citta = request.POST['citta']
+
+    if request.POST['email']== "":
+        nuova_persona.email = None
+    else:
+        nuova_persona.email = request.POST['email']
+
+    if request.POST['voto']== "":
+        nuova_persona.voto_finale = None
+    else:
+        nuova_persona.voto_finale = request.POST['voto']
+
+    if request.POST['note']== "":
+        nuova_persona.note = None
+    else:
+        nuova_persona.note = request.POST['note']
+
+    if request.POST['optionsRadios']== "true":
+        nuova_persona.esperienze_pregresse = True
+    else:
+        nuova_persona.esperienze_pregresse = False
+
+    if request.POST['numero_attivita_svolte']== "":
+        nuova_persona.numero_attivita_svolte = None
+    else:
+        nuova_persona.numero_attivita_svolte = request.POST['numero_attivita_svolte']
+
+    if request.POST['numero_mesi_attivita_svolte']== "":
+        nuova_persona.numero_mesi_attivita_svolte = None
+    else:
+        nuova_persona.numero_mesi_attivita_svolte = request.POST['numero_mesi_attivita_svolte']
+
+    if request.POST['desc_esperienze_pregresso']== "":
+        nuova_persona.desc_esperienze_pregresse = None
+    else:
+        nuova_persona.desc_esperienze_pregresse = request.POST['desc_esperienze_pregresso']
+
+    if request.POST['stipendio_futuro']== "":
+        nuova_persona.stipendio_futuro = None
+    else:
+        nuova_persona.stipendio_futuro = request.POST['stipendio_futuro']
+
+    if request.POST['possibilita_trasferirsi_option']== "true":
+        nuova_persona.possibilita_trasferirsi = True
+    else:
+        nuova_persona.possibilita_trasferirsi = False
+
+
+    # Ora parliamo delle chiavi esterne con solo un valore Possibile-------------------------
+    livello_pc_post = json.loads(request.POST["livello_pc"])
+    if len(livello_pc_post) <= 0:
+        nuova_persona.livello_uso_computer = None
+    elif len( LivelloPC.objects.filter(valore=livello_pc_post[0].capitalize()) ) > 0 :
+        nuova_persona.livello_uso_computer = LivelloPC.objects.filter(valore=livello_pc_post[0].capitalize())[0]
+    else:
+        livello_pc = LivelloPC(valore=livello_pc_post[0].capitalize())
+        livello_pc.save()
+        nuova_persona.livello_uso_computer = livello_pc
+
+
+    zona_post = json.loads(request.POST["zona"])
+    if len(zona_post) <= 0:
+        nuova_persona.zona = None
+    elif len(Zona.objects.filter(valore=zona_post[0].capitalize())) > 0:
+        nuova_persona.zona = Zona.objects.filter(valore=zona_post[0].capitalize())[0]
+    else:
+        zona = Zona(valore=zona_post[0].capitalize())
+        zona.save()
+        nuova_persona.zona = zona
+
+    grado_studi_post = json.loads(request.POST["grado_studi"])
+    if len(grado_studi_post) <= 0:
+        nuova_persona.grado_studi_post = None
+    elif len(GradoStudi.objects.filter(valore=grado_studi_post[0].capitalize())) > 0:
+        nuova_persona.grado_studi = GradoStudi.objects.filter(valore=grado_studi_post[0].capitalize())[0]
+    else:
+        grado_studi = GradoStudi(valore=grado_studi_post[0].capitalize())
+        grado_studi.save()
+        nuova_persona.grado_studi = grado_studi
+
+    # bisogna salverlo qua
+    nuova_persona.save()
+    #collego account al sondaggio
+    if (is_new_user):
+        # nuovo utente
+        user.survey = nuova_persona
+        user.save()
+    elif is_admin:
+        logger.error("admin modifica persona studente")
+        # un admin che fa modifiche
+        #ATTENZIONE SE SI CAMBIA con una post l'id del vecchio sondaggio esplode tutto
+        # non conosciamo l'identita dell'utene quindi dobbiamo leggerlo dalla POST
+        #per l'utente non lo facciamo salta la sicurezza
+        old_survey = Persona.objects.get(pk=request.POST["id_survey"])
+        user = Account.objects.get(survey=old_survey)
+        user.survey = nuova_persona
+        user.save()
+        old_survey.delete()
+    elif user.account.type==0:
+        # cancello vecchio sondaggio
+        old_survey = Persona.objects.get(pk=user.survey_id)
+        old_survey.delete()
+        # aggiorno utente
+        user.survey = nuova_persona
+        user.save()
+
+
+    # Ora la parte tosta i multivalore! buona fortuna-----------------------------------------------------------
+    lingua_list = json.loads(request.POST["lingua"])
+    if len(lingua_list) <= 0:
+        nuova_lingua_attuale = LinguaAttuale(persona=nuova_persona)
+        nuova_lingua_attuale.lingua = None
+        nuova_lingua_attuale.save()
+    else:
+        for v in lingua_list:
+            # esiste quella lingua nel db
+            if len(Lingua.objects.filter(valore=v.capitalize())) > 0:
+                nuova_lingua_attuale = LinguaAttuale(persona=nuova_persona)
+                nuova_lingua_attuale.lingua = Lingua.objects.filter(valore=v.capitalize())[0]
+                nuova_lingua_attuale.save()
+            else:
+                nuova_lingua = Lingua(valore=v)
+                nuova_lingua.save()
+                nuova_lingua_attuale = LinguaAttuale(persona=nuova_persona)
+                nuova_lingua_attuale.lingua = nuova_lingua
+                nuova_lingua_attuale.save()
+
+    # provo ad usare variabili con stesso nome risparmio codice
+    valore_list = json.loads(request.POST["conoscenza_specifica"])
+    if len(valore_list) <= 0:
+        nuovo_valore_nullo = ConoscenzaSpecificaAttuale(persona=nuova_persona)
+        nuovo_valore_nullo.conoscenza_specifica = None
+        nuovo_valore_nullo.save()
+    else:
+        for v in valore_list:
+            if len(ConoscenzaSpecifica.objects.filter(valore=v.capitalize())) > 0:
+                nuovo_valore_gia_esistente = ConoscenzaSpecificaAttuale(persona=nuova_persona)
+                nuovo_valore_gia_esistente.conoscenza_specifica = ConoscenzaSpecifica.objects.filter(valore=v.capitalize())[0]
+                nuovo_valore_gia_esistente.save()
+            else:
+                nuova_valore_nuovo = ConoscenzaSpecifica(valore=v)
+                nuova_valore_nuovo.save()
+                # ora essite nel db quel valore
+                nuovo_valore_gia_esistente = ConoscenzaSpecificaAttuale(persona=nuova_persona)
+                nuovo_valore_gia_esistente.conoscenza_specifica = nuova_valore_nuovo
+                nuovo_valore_gia_esistente.save()
+
+    valore_list = json.loads(request.POST["stato"])
+    if len(valore_list) <= 0:
+        nuovo_valore_nullo = StatoAttuale(persona=nuova_persona)
+        nuovo_valore_nullo.stato = None
+        nuovo_valore_nullo.save()
+    else:
+        for v in valore_list:
+            if len(Stato.objects.filter(valore=v.capitalize())) > 0:
+                nuovo_valore_gia_esistente = StatoAttuale(persona=nuova_persona)
+                nuovo_valore_gia_esistente.stato = Stato.objects.filter(valore=v.capitalize())[0]
+                nuovo_valore_gia_esistente.save()
+            else:
+                nuova_valore_nuovo = Stato(valore=v)
+                nuova_valore_nuovo.save()
+                # ora essite nel db quel valore
+                nuovo_valore_gia_esistente = StatoAttuale(persona=nuova_persona)
+                nuovo_valore_gia_esistente.stato = nuova_valore_nuovo
+                nuovo_valore_gia_esistente.save()
+
+    valore_list = json.loads(request.POST["mansione_attuale"])
+    if len(valore_list) <= 0:
+        nuovo_valore_nullo = MansioneAttuale(persona=nuova_persona)
+        nuovo_valore_nullo.mansione = None
+        nuovo_valore_nullo.save()
+    else:
+        for v in valore_list:
+            if len(Mansione.objects.filter(valore=v.capitalize())) > 0:
+                nuovo_valore_gia_esistente = MansioneAttuale(persona=nuova_persona)
+                nuovo_valore_gia_esistente.mansione = Mansione.objects.filter(valore=v.capitalize())[0]
+                nuovo_valore_gia_esistente.save()
+            else:
+                nuova_valore_nuovo = Mansione(valore=v)
+                nuova_valore_nuovo.save()
+                # ora essite nel db quel valore
+                nuovo_valore_gia_esistente = MansioneAttuale(persona=nuova_persona)
+                nuovo_valore_gia_esistente.mansione = nuova_valore_nuovo
+                nuovo_valore_gia_esistente.save()
+
+    valore_list = json.loads(request.POST["mansione_pregresso"])
+    if len(valore_list) <= 0:
+        nuovo_valore_nullo = MansionePregresso(persona=nuova_persona)
+        nuovo_valore_nullo.mansione = None
+        nuovo_valore_nullo.save()
+    else:
+        for v in valore_list:
+            if len(Mansione.objects.filter(valore=v.capitalize())) > 0:
+                nuovo_valore_gia_esistente = MansionePregresso(persona=nuova_persona)
+                nuovo_valore_gia_esistente.mansione = Mansione.objects.filter(valore=v.capitalize())[0]
+                nuovo_valore_gia_esistente.save()
+            else:
+                nuova_valore_nuovo = Mansione(valore=v)
+                nuova_valore_nuovo.save()
+                # ora essite nel db quel valore
+                nuovo_valore_gia_esistente = MansionePregresso(persona=nuova_persona)
+                nuovo_valore_gia_esistente.mansione = nuova_valore_nuovo
+                nuovo_valore_gia_esistente.save()
+
+    valore_list = json.loads(request.POST["mansione_futuro"])
+    if len(valore_list) <= 0:
+        nuovo_valore_nullo = MansioneFuturo(persona=nuova_persona)
+        nuovo_valore_nullo.mansione = None
+        nuovo_valore_nullo.save()
+    else:
+        for v in valore_list:
+            if len(Mansione.objects.filter(valore=v.capitalize())) > 0:
+                nuovo_valore_gia_esistente = MansioneFuturo(persona=nuova_persona)
+                nuovo_valore_gia_esistente.mansione = Mansione.objects.filter(valore=v.capitalize())[0]
+                nuovo_valore_gia_esistente.save()
+            else:
+                nuova_valore_nuovo = Mansione(valore=v)
+                nuova_valore_nuovo.save()
+                # ora essite nel db quel valore
+                nuovo_valore_gia_esistente = MansioneFuturo(persona=nuova_persona)
+                nuovo_valore_gia_esistente.mansione = nuova_valore_nuovo
+                nuovo_valore_gia_esistente.save()
+
+    valore_list = json.loads(request.POST["livello_cariera_attuale"])
+    if len(valore_list) <= 0:
+        nuovo_valore_nullo = LivelloCarieraAttuale(persona=nuova_persona)
+        nuovo_valore_nullo.livello_cariera = None
+        nuovo_valore_nullo.save()
+    else:
+        for v in valore_list:
+            if len(LivelloCariera.objects.filter(valore=v.capitalize())) > 0:
+                nuovo_valore_gia_esistente = LivelloCarieraAttuale(persona=nuova_persona)
+                nuovo_valore_gia_esistente.livello_cariera = LivelloCariera.objects.filter(valore=v.capitalize())[0]
+                nuovo_valore_gia_esistente.save()
+            else:
+                nuova_valore_nuovo = LivelloCariera(valore=v)
+                nuova_valore_nuovo.save()
+                # ora essite nel db quel valore
+                nuovo_valore_gia_esistente = LivelloCarieraAttuale(persona=nuova_persona)
+                nuovo_valore_gia_esistente.livello_cariera = nuova_valore_nuovo
+                nuovo_valore_gia_esistente.save()
+
+    valore_list = json.loads(request.POST["livello_cariera_pregresso"])
+    if len(valore_list) <= 0:
+        nuovo_valore_nullo = LivelloCarieraPregresso(persona=nuova_persona)
+        nuovo_valore_nullo.livello_cariera = None
+        nuovo_valore_nullo.save()
+    else:
+        for v in valore_list:
+            if len(LivelloCariera.objects.filter(valore=v.capitalize())) > 0:
+                nuovo_valore_gia_esistente = LivelloCarieraPregresso(persona=nuova_persona)
+                nuovo_valore_gia_esistente.livello_cariera = LivelloCariera.objects.filter(valore=v.capitalize())[0]
+                nuovo_valore_gia_esistente.save()
+            else:
+                nuova_valore_nuovo = LivelloCariera(valore=v)
+                nuova_valore_nuovo.save()
+                # ora essite nel db quel valore
+                nuovo_valore_gia_esistente = LivelloCarieraPregresso(persona=nuova_persona)
+                nuovo_valore_gia_esistente.livello_cariera = nuova_valore_nuovo
+                nuovo_valore_gia_esistente.save()
+
+    valore_list = json.loads(request.POST["livello_cariera_futuro"])
+    if len(valore_list) <= 0:
+        nuovo_valore_nullo = LivelloCarieraFuturo(persona=nuova_persona)
+        nuovo_valore_nullo.livello_cariera = None
+        nuovo_valore_nullo.save()
+    else:
+        for v in valore_list:
+            if len(LivelloCariera.objects.filter(valore=v.capitalize())) > 0:
+                nuovo_valore_gia_esistente = LivelloCarieraFuturo(persona=nuova_persona)
+                nuovo_valore_gia_esistente.livello_cariera = LivelloCariera.objects.filter(valore=v.capitalize())[0]
+                nuovo_valore_gia_esistente.save()
+            else:
+                nuova_valore_nuovo = LivelloCariera(valore=v)
+                nuova_valore_nuovo.save()
+                # ora essite nel db quel valore
+                nuovo_valore_gia_esistente = LivelloCarieraFuturo(persona=nuova_persona)
+                nuovo_valore_gia_esistente.livello_cariera = nuova_valore_nuovo
+                nuovo_valore_gia_esistente.save()
+
+    valore_list = json.loads(request.POST["ruolo_attuale"])
+    if len(valore_list) <= 0:
+        nuovo_valore_nullo = RuoloAttuale(persona=nuova_persona)
+        nuovo_valore_nullo.ruolo = None
+        nuovo_valore_nullo.save()
+    else:
+        for v in valore_list:
+            if len(Ruolo.objects.filter(valore=v.capitalize())) > 0:
+                nuovo_valore_gia_esistente = RuoloAttuale(persona=nuova_persona)
+                nuovo_valore_gia_esistente.ruolo = Ruolo.objects.filter(valore=v.capitalize())[0]
+                nuovo_valore_gia_esistente.save()
+            else:
+                nuova_valore_nuovo = Ruolo(valore=v)
+                nuova_valore_nuovo.save()
+                # ora essite nel db quel valore
+                nuovo_valore_gia_esistente = RuoloAttuale(persona=nuova_persona)
+                nuovo_valore_gia_esistente.ruolo = nuova_valore_nuovo
+                nuovo_valore_gia_esistente.save()
+
+    valore_list = json.loads(request.POST["ruolo_pregresso"])
+    if len(valore_list) <= 0:
+        nuovo_valore_nullo = RuoloPregresso(persona=nuova_persona)
+        nuovo_valore_nullo.ruolo = None
+        nuovo_valore_nullo.save()
+    else:
+        for v in valore_list:
+            if len(Ruolo.objects.filter(valore=v.capitalize())) > 0:
+                nuovo_valore_gia_esistente = RuoloPregresso(persona=nuova_persona)
+                nuovo_valore_gia_esistente.ruolo = Ruolo.objects.filter(valore=v.capitalize())[0]
+                nuovo_valore_gia_esistente.save()
+            else:
+                nuova_valore_nuovo = Ruolo(valore=v)
+                nuova_valore_nuovo.save()
+                # ora essite nel db quel valore
+                nuovo_valore_gia_esistente = RuoloPregresso(persona=nuova_persona)
+                nuovo_valore_gia_esistente.ruolo = nuova_valore_nuovo
+                nuovo_valore_gia_esistente.save()
+
+    valore_list = json.loads(request.POST["ruolo_futuro"])
+    if len(valore_list) <= 0:
+        nuovo_valore_nullo = RuoloFuturo(persona=nuova_persona)
+        nuovo_valore_nullo.ruolo = None
+        nuovo_valore_nullo.save()
+    else:
+        for v in valore_list:
+            if len(Ruolo.objects.filter(valore=v.capitalize())) > 0:
+                nuovo_valore_gia_esistente = RuoloFuturo(persona=nuova_persona)
+                nuovo_valore_gia_esistente.ruolo = Ruolo.objects.filter(valore=v.capitalize())[0]
+                nuovo_valore_gia_esistente.save()
+            else:
+                nuova_valore_nuovo = Ruolo(valore=v)
+                nuova_valore_nuovo.save()
+                # ora essite nel db quel valore
+                nuovo_valore_gia_esistente = RuoloFuturo(persona=nuova_persona)
+                nuovo_valore_gia_esistente.ruolo = nuova_valore_nuovo
+                nuovo_valore_gia_esistente.save()
+
+    valore_list = json.loads(request.POST["area_operativa_attuale"])
+    if len(valore_list) <= 0:
+        nuovo_valore_nullo = AreaOperativaAttuale(persona=nuova_persona)
+        nuovo_valore_nullo.area_operativa = None
+        nuovo_valore_nullo.save()
+    else:
+        for v in valore_list:
+            if len(AreaOperativa.objects.filter(valore=v.capitalize())) > 0:
+                nuovo_valore_gia_esistente = AreaOperativaAttuale(persona=nuova_persona)
+                nuovo_valore_gia_esistente.area_operativa = AreaOperativa.objects.filter(valore=v.capitalize())[0]
+                nuovo_valore_gia_esistente.save()
+            else:
+                nuova_valore_nuovo = AreaOperativa(valore=v)
+                nuova_valore_nuovo.save()
+                # ora essite nel db quel valore
+                nuovo_valore_gia_esistente = AreaOperativaAttuale(persona=nuova_persona)
+                nuovo_valore_gia_esistente.area_operativa = nuova_valore_nuovo
+                nuovo_valore_gia_esistente.save()
+
+    valore_list = json.loads(request.POST["area_operativa_pregresso"])
+    if len(valore_list) <= 0:
+        nuovo_valore_nullo = AreaOperativaPregresso(persona=nuova_persona)
+        nuovo_valore_nullo.area_operativa = None
+        nuovo_valore_nullo.save()
+    else:
+        for v in valore_list:
+            if len(AreaOperativa.objects.filter(valore=v.capitalize())) > 0:
+                nuovo_valore_gia_esistente = AreaOperativaPregresso(persona=nuova_persona)
+                nuovo_valore_gia_esistente.area_operativa = AreaOperativa.objects.filter(valore=v.capitalize())[0]
+                nuovo_valore_gia_esistente.save()
+            else:
+                nuova_valore_nuovo = AreaOperativa(valore=v)
+                nuova_valore_nuovo.save()
+                # ora essite nel db quel valore
+                nuovo_valore_gia_esistente = AreaOperativaPregresso(persona=nuova_persona)
+                nuovo_valore_gia_esistente.area_operativa = nuova_valore_nuovo
+                nuovo_valore_gia_esistente.save()
+
+    valore_list = json.loads(request.POST["area_operativa_futuro"])
+    if len(valore_list) <= 0:
+        nuovo_valore_nullo = AreaOperativaFuturo(persona=nuova_persona)
+        nuovo_valore_nullo.area_operativa = None
+        nuovo_valore_nullo.save()
+    else:
+        for v in valore_list:
+            if len(AreaOperativa.objects.filter(valore=v.capitalize())) > 0:
+                nuovo_valore_gia_esistente = AreaOperativaFuturo(persona=nuova_persona)
+                nuovo_valore_gia_esistente.area_operativa = AreaOperativa.objects.filter(valore=v.capitalize())[0]
+                nuovo_valore_gia_esistente.save()
+            else:
+                nuova_valore_nuovo = AreaOperativa(valore=v)
+                nuova_valore_nuovo.save()
+                # ora essite nel db quel valore
+                nuovo_valore_gia_esistente = AreaOperativaFuturo(persona=nuova_persona)
+                nuovo_valore_gia_esistente.area_operativa = nuova_valore_nuovo
+                nuovo_valore_gia_esistente.save()
+
+    valore_list = json.loads(request.POST["tipo_contratto_attuale"])
+    if len(valore_list) <= 0:
+        nuovo_valore_nullo = TipoContrattoAttuale(persona=nuova_persona)
+        nuovo_valore_nullo.tipo_contratto = None
+        nuovo_valore_nullo.save()
+    else:
+        for v in valore_list:
+            if len(TipoContratto.objects.filter(valore=v.capitalize())) > 0:
+                nuovo_valore_gia_esistente = TipoContrattoAttuale(persona=nuova_persona)
+                nuovo_valore_gia_esistente.tipo_contratto = TipoContratto.objects.filter(valore=v.capitalize())[0]
+                nuovo_valore_gia_esistente.save()
+            else:
+                nuova_valore_nuovo = TipoContratto(valore=v)
+                nuova_valore_nuovo.save()
+                # ora essite nel db quel valore
+                nuovo_valore_gia_esistente = TipoContrattoAttuale(persona=nuova_persona)
+                nuovo_valore_gia_esistente.tipo_contratto = nuova_valore_nuovo
+                nuovo_valore_gia_esistente.save()
+
+    valore_list = json.loads(request.POST["tipo_contratto_pregresso"])
+    if len(valore_list) <= 0:
+        nuovo_valore_nullo = TipoContrattoPregesso(persona=nuova_persona)
+        nuovo_valore_nullo.tipo_contratto = None
+        nuovo_valore_nullo.save()
+    else:
+        for v in valore_list:
+            if len(TipoContratto.objects.filter(valore=v.capitalize())) > 0:
+                nuovo_valore_gia_esistente = TipoContrattoPregesso(persona=nuova_persona)
+                nuovo_valore_gia_esistente.tipo_contratto = TipoContratto.objects.filter(valore=v.capitalize())[0]
+                nuovo_valore_gia_esistente.save()
+            else:
+                nuova_valore_nuovo = TipoContratto(valore=v)
+                nuova_valore_nuovo.save()
+                # ora essite nel db quel valore
+                nuovo_valore_gia_esistente = TipoContrattoPregesso(persona=nuova_persona)
+                nuovo_valore_gia_esistente.tipo_contratto = nuova_valore_nuovo
+                nuovo_valore_gia_esistente.save()
+
+    valore_list = json.loads(request.POST["tipo_contratto_futuro"])
+    if len(valore_list) <= 0:
+        nuovo_valore_nullo = TipoContrattoFuturo(persona=nuova_persona)
+        nuovo_valore_nullo.tipo_contratto = None
+        nuovo_valore_nullo.save()
+    else:
+        for v in valore_list:
+            if len(TipoContratto.objects.filter(valore=v.capitalize())) > 0:
+                nuovo_valore_gia_esistente = TipoContrattoFuturo(persona=nuova_persona)
+                nuovo_valore_gia_esistente.tipo_contratto = TipoContratto.objects.filter(valore=v.capitalize())[0]
+                nuovo_valore_gia_esistente.save()
+            else:
+                nuova_valore_nuovo = TipoContratto(valore=v)
+                nuova_valore_nuovo.save()
+                # ora essite nel db quel valore
+                nuovo_valore_gia_esistente = TipoContrattoFuturo(persona=nuova_persona)
+                nuovo_valore_gia_esistente.tipo_contratto = nuova_valore_nuovo
+                nuovo_valore_gia_esistente.save()
+
+    valore_list = json.loads(request.POST["benefit_futuro"])
+    if len(valore_list) <= 0:
+        nuovo_valore_nullo = BenefitFuturo(persona=nuova_persona)
+        nuovo_valore_nullo.benefit = None
+        nuovo_valore_nullo.save()
+    else:
+        for v in valore_list:
+            if len(Benefit.objects.filter(valore=v.capitalize())) > 0:
+                nuovo_valore_gia_esistente = BenefitFuturo(persona=nuova_persona)
+                nuovo_valore_gia_esistente.benefit = Benefit.objects.filter(valore=v.capitalize())[0]
+                nuovo_valore_gia_esistente.save()
+            else:
+                nuova_valore_nuovo = Benefit(valore=v)
+                nuova_valore_nuovo.save()
+                # ora essite nel db quel valore
+                nuovo_valore_gia_esistente = BenefitFuturo(persona=nuova_persona)
+                nuovo_valore_gia_esistente.benefit = nuova_valore_nuovo
+                nuovo_valore_gia_esistente.save()
+
+    valore_list = json.loads(request.POST["interesse_futuro"])
+    if len(valore_list) <= 0:
+        nuovo_valore_nullo = InteresseFuturo(persona=nuova_persona)
+        nuovo_valore_nullo.interesse = None
+        nuovo_valore_nullo.save()
+    else:
+        for v in valore_list:
+            if len(Interesse.objects.filter(valore=v.capitalize())) > 0:
+                nuovo_valore_gia_esistente = InteresseFuturo(persona=nuova_persona)
+                nuovo_valore_gia_esistente.interesse = Interesse.objects.filter(valore=v.capitalize())[0]
+                nuovo_valore_gia_esistente.save()
+            else:
+                nuova_valore_nuovo = Interesse(valore=v)
+                nuova_valore_nuovo.save()
+                # ora essite nel db quel valore
+                nuovo_valore_gia_esistente = InteresseFuturo(persona=nuova_persona)
+                nuovo_valore_gia_esistente.interesse = nuova_valore_nuovo
+                nuovo_valore_gia_esistente.save()
+
+    valore_list = json.loads(request.POST["esame_attuale"])
+    if len(valore_list) <= 0:
+        nuovo_valore_nullo = EsameAttuale(persona=nuova_persona)
+        nuovo_valore_nullo.esame = None
+        nuovo_valore_nullo.save()
+    else:
+        for v in valore_list:
+            if len(Esame.objects.filter(valore=v.capitalize())) > 0:
+                nuovo_valore_gia_esistente = EsameAttuale(persona=nuova_persona)
+                nuovo_valore_gia_esistente.esame = Esame.objects.filter(valore=v.capitalize())[0]
+                nuovo_valore_gia_esistente.save()
+            else:
+                nuova_valore_nuovo = Esame(valore=v)
+                nuova_valore_nuovo.save()
+                # ora essite nel db quel valore
+                nuovo_valore_gia_esistente = EsameAttuale(persona=nuova_persona)
+                nuovo_valore_gia_esistente.esame = nuova_valore_nuovo
+                nuovo_valore_gia_esistente.save()
+
+    valore_list = json.loads(request.POST["campo_studi"])
+    if len(valore_list) <= 0:
+        nuovo_valore_nullo = CampoStudiAttuale(persona=nuova_persona)
+        nuovo_valore_nullo.campo_studi = None
+        nuovo_valore_nullo.save()
+    else:
+        for v in valore_list:
+            if len(CampoStudi.objects.filter(valore=v.capitalize())) > 0:
+                nuovo_valore_gia_esistente = CampoStudiAttuale(persona=nuova_persona)
+                nuovo_valore_gia_esistente.campo_studi = CampoStudi.objects.filter(valore=v.capitalize())[0]
+                nuovo_valore_gia_esistente.save()
+            else:
+                nuova_valore_nuovo = CampoStudi(valore=v)
+                nuova_valore_nuovo.save()
+                # ora essite nel db quel valore
+                nuovo_valore_gia_esistente = CampoStudiAttuale(persona=nuova_persona)
+                nuovo_valore_gia_esistente.campo_studi = nuova_valore_nuovo
+                nuovo_valore_gia_esistente.save()
+
+
+class ModifyStudente(View):
+
+    # solo se autenticato come admin o utente
+    @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
 
-        # controllo errori per registrazione
-        error = None
-
-        logger.error('cerca errore')
-        logger.error(kwargs)
-        if 'error' in kwargs:
-            error = kwargs['error']
-            logger.error(' ')
-            logger.error('errore trovato '+ error)
-            logger.error(' ')
-
-        # inizio questionario
-        result = {}
-        result['error'] = error
-        result['zona'] = Zona.objects.all()
-        result['livello_pc'] = LivelloPC.objects.all()
-        result['grado_studi'] = GradoStudi.objects.all()
-        result['stato'] = Stato.objects.all()
-        result['lingua'] = Lingua.objects.all()
-        result['campo_studi'] = CampoStudi.objects.all()
-        result['esame'] = Esame.objects.all()
-        result['conoscenza_specifica'] = ConoscenzaSpecifica.objects.all()
-        result['mansione'] = Mansione.objects.all()
-        result['livello_cariera'] = LivelloCariera.objects.all()
-        result['area_operativa'] = AreaOperativa.objects.all()
-        result['tipo_contratto'] = TipoContratto.objects.all()
-        result['benefit'] = Benefit.objects.all()
-        result['ruolo'] = Ruolo.objects.all()
-        result['interesse'] = Interesse.objects.all()
+        result={}
+        result = find_all_option_student()
 
         # per creare copie uso url GET
         copy = {}
@@ -89,710 +628,287 @@ class Studenti(View):
         copy['possibilita_trasferirsi'] = False #si no
         copy['stipendio_futuro'] = ""
 
-        if 'id' in kwargs:
-            copy['id'] = kwargs['id']
-            studente_copia=Persona.objects.select_related().get(pk=kwargs['id'])
-            if studente_copia.cap != None:
-                copy['cap'] = studente_copia.cap
-            if studente_copia.email != None:
-                copy['email'] = studente_copia.email
-            if studente_copia.citta != None:
-                copy['citta'] = studente_copia.citta
-            if studente_copia.anno_nascita != None:
-                copy['anno_nascita'] = studente_copia.anno_nascita
-            if studente_copia.note != None:
-                copy['note'] = studente_copia.note
-            if studente_copia.voto_finale != None:
-                copy['voto_finale'] = studente_copia.voto_finale
-            if studente_copia.esperienze_pregresse != None:
-                copy['esperienze_pregresse'] = studente_copia.esperienze_pregresse
-            if studente_copia.desc_esperienze_pregresse != None:
-                copy['desc_esperienze_pregresse'] = studente_copia.desc_esperienze_pregresse
-            if studente_copia.numero_attivita_svolte != None:
-                copy['numero_attivita_svolte'] = studente_copia.numero_attivita_svolte
-            if studente_copia.numero_mesi_attivita_svolte != None:
-                copy['numero_mesi_attivita_svolte'] = studente_copia.numero_mesi_attivita_svolte
-            if studente_copia.possibilita_trasferirsi != None:
-                copy['possibilita_trasferirsi'] = studente_copia.possibilita_trasferirsi
-            if studente_copia.stipendio_futuro != None:
-                copy['stipendio_futuro'] = studente_copia.stipendio_futuro
+        logger.error("modifca studente ")
+        # controllo se autenticato
+        if request.user.is_authenticated:
+            logger.error("Sono autenticato studente")
+            #controllo se passato id
+            if 'id' in kwargs:
+                #controllo se utente con quell ide oppure amministratore BISOGNA IMPOSTARE SUPERUSER A 1
+                if (request.user.is_superuser==1) or (request.user.account.type==0 and int(request.user.account.survey.id) == int(kwargs['id'])):
+                    logger.error("Posso modificare!")
+                    copy['id'] = kwargs['id']
+                    studente_copia=Persona.objects.select_related().get(pk=kwargs['id'])
+                    if studente_copia.cap != None:
+                        copy['cap'] = studente_copia.cap
+                    if studente_copia.email != None:
+                        copy['email'] = studente_copia.email
+                    if studente_copia.citta != None:
+                        copy['citta'] = studente_copia.citta
+                    if studente_copia.anno_nascita != None:
+                        copy['anno_nascita'] = studente_copia.anno_nascita
+                    if studente_copia.note != None:
+                        copy['note'] = studente_copia.note
+                    if studente_copia.voto_finale != None:
+                        copy['voto_finale'] = studente_copia.voto_finale
+                    if studente_copia.esperienze_pregresse != None:
+                        copy['esperienze_pregresse'] = studente_copia.esperienze_pregresse
+                    if studente_copia.desc_esperienze_pregresse != None:
+                        copy['desc_esperienze_pregresse'] = studente_copia.desc_esperienze_pregresse
+                    if studente_copia.numero_attivita_svolte != None:
+                        copy['numero_attivita_svolte'] = studente_copia.numero_attivita_svolte
+                    if studente_copia.numero_mesi_attivita_svolte != None:
+                        copy['numero_mesi_attivita_svolte'] = studente_copia.numero_mesi_attivita_svolte
+                    if studente_copia.possibilita_trasferirsi != None:
+                        copy['possibilita_trasferirsi'] = studente_copia.possibilita_trasferirsi
+                    if studente_copia.stipendio_futuro != None:
+                        copy['stipendio_futuro'] = studente_copia.stipendio_futuro
 
-            #chiavi esterne
-            copy['zona'] = ""
-            copy['grado_studi'] = ""
-            copy['livello_pc'] = ""
-            if studente_copia.zona != None:
-                copy['zona'] = studente_copia.zona.valore
-            if studente_copia.grado_studi != None:
-                copy['grado_studi'] = studente_copia.grado_studi.valore
-            if studente_copia.livello_uso_computer != None:
-                copy['livello_pc'] = studente_copia.livello_uso_computer.valore
+                    #chiavi esterne
+                    copy['zona'] = ""
+                    copy['grado_studi'] = ""
+                    copy['livello_pc'] = ""
+                    if studente_copia.zona != None:
+                        copy['zona'] = studente_copia.zona.valore
+                    if studente_copia.grado_studi != None:
+                        copy['grado_studi'] = studente_copia.grado_studi.valore
+                    if studente_copia.livello_uso_computer != None:
+                        copy['livello_pc'] = studente_copia.livello_uso_computer.valore
 
-            # per campi multivalore esterni alla tabella studente
-            copy['esame'] = ""
-            copy['campo_studi'] = ""
-            copy['lingua'] = ""
-            copy['conoscenza_specifica'] = ""
-            copy['stato'] = ""
-            copy['benefit_fututo'] = ""
-            copy['interesse_futuro'] = ""
+                    # per campi multivalore esterni alla tabella studente
+                    copy['esame'] = ""
+                    copy['campo_studi'] = ""
+                    copy['lingua'] = ""
+                    copy['conoscenza_specifica'] = ""
+                    copy['stato'] = ""
+                    copy['benefit_fututo'] = ""
+                    copy['interesse_futuro'] = ""
 
-            copy['esame'] = EsameAttuale.objects.select_related().filter(persona_id=copy['id']).exclude(esame=None)
-            copy['campo_studi'] = CampoStudiAttuale.objects.select_related().filter(persona_id=copy['id']).exclude(campo_studi=None)
-            copy['lingua'] = LinguaAttuale.objects.select_related().filter(persona_id=copy['id']).exclude(lingua=None)
-            copy['conoscenza_specifica'] = ConoscenzaSpecificaAttuale.objects.select_related().filter(persona_id=copy['id']).exclude(conoscenza_specifica=None)
-            copy['stato'] = StatoAttuale.objects.select_related().filter(persona_id=copy['id']).exclude(stato=None)
-            copy['benefit_futuro'] = BenefitFuturo.objects.select_related().filter(persona_id=copy['id']).exclude(benefit=None)
-            copy['interesse_futuro'] = InteresseFuturo.objects.select_related().filter(persona_id=copy['id']).exclude(interesse=None)
+                    copy['esame'] = EsameAttuale.objects.select_related().filter(persona_id=copy['id']).exclude(esame=None)
+                    copy['campo_studi'] = CampoStudiAttuale.objects.select_related().filter(persona_id=copy['id']).exclude(campo_studi=None)
+                    copy['lingua'] = LinguaAttuale.objects.select_related().filter(persona_id=copy['id']).exclude(lingua=None)
+                    copy['conoscenza_specifica'] = ConoscenzaSpecificaAttuale.objects.select_related().filter(persona_id=copy['id']).exclude(conoscenza_specifica=None)
+                    copy['stato'] = StatoAttuale.objects.select_related().filter(persona_id=copy['id']).exclude(stato=None)
+                    copy['benefit_futuro'] = BenefitFuturo.objects.select_related().filter(persona_id=copy['id']).exclude(benefit=None)
+                    copy['interesse_futuro'] = InteresseFuturo.objects.select_related().filter(persona_id=copy['id']).exclude(interesse=None)
 
-            copy['mansione_attuale'] = ""
-            copy['mansione_pregressa'] = ""
-            copy['mansione_futura'] = ""
+                    copy['mansione_attuale'] = ""
+                    copy['mansione_pregressa'] = ""
+                    copy['mansione_futura'] = ""
 
-            copy['mansione_attuale'] = MansioneAttuale.objects.select_related().filter(persona_id=copy['id']).exclude(mansione=None)
-            copy['mansione_pregressa'] = MansionePregresso.objects.select_related().filter(persona_id=copy['id']).exclude(mansione=None)
-            copy['mansione_futura'] = MansioneFuturo.objects.select_related().filter(persona_id=copy['id']).exclude(mansione=None)
-
-
-            copy['livello_cariera_attuale'] = ""
-            copy['livello_cariera_pregressa'] = ""
-            copy['livello_cariera_futura'] = ""
-
-            copy['livello_cariera_attuale'] = LivelloCarieraAttuale.objects.select_related().filter(persona_id=copy['id']).exclude(livello_cariera=None)
-            copy['livello_cariera_pregressa'] = LivelloCarieraPregresso.objects.select_related().filter(persona_id=copy['id']).exclude(livello_cariera=None)
-            copy['livello_cariera_futura'] = LivelloCarieraFuturo.objects.select_related().filter(persona_id=copy['id']).exclude(livello_cariera=None)
-
-
-            copy['ruolo_attuale'] = ""
-            copy['ruolo_pregressa'] = ""
-            copy['ruolo_futura'] = ""
-
-            copy['ruolo_attuale'] = RuoloAttuale.objects.select_related().filter(persona_id=copy['id']).exclude(ruolo=None)
-            copy['ruolo_pregressa'] = RuoloPregresso.objects.select_related().filter(persona_id=copy['id']).exclude(ruolo=None)
-            copy['ruolo_futura'] = RuoloFuturo.objects.select_related().filter(persona_id=copy['id']).exclude(ruolo=None)
+                    copy['mansione_attuale'] = MansioneAttuale.objects.select_related().filter(persona_id=copy['id']).exclude(mansione=None)
+                    copy['mansione_pregressa'] = MansionePregresso.objects.select_related().filter(persona_id=copy['id']).exclude(mansione=None)
+                    copy['mansione_futura'] = MansioneFuturo.objects.select_related().filter(persona_id=copy['id']).exclude(mansione=None)
 
 
-            copy['area_operativa_attuale'] = ""
-            copy['area_operativa_pregressa'] = ""
-            copy['area_operativa_futura'] = ""
+                    copy['livello_cariera_attuale'] = ""
+                    copy['livello_cariera_pregressa'] = ""
+                    copy['livello_cariera_futura'] = ""
 
-            copy['area_operativa_attuale'] = AreaOperativaAttuale.objects.select_related().filter(persona_id=copy['id']).exclude(area_operativa=None)
-            copy['area_operativa_pregressa'] = AreaOperativaPregresso.objects.select_related().filter(persona_id=copy['id']).exclude(area_operativa=None)
-            copy['area_operativa_futura'] = AreaOperativaFuturo.objects.select_related().filter(persona_id=copy['id']).exclude(area_operativa=None)
+                    copy['livello_cariera_attuale'] = LivelloCarieraAttuale.objects.select_related().filter(persona_id=copy['id']).exclude(livello_cariera=None)
+                    copy['livello_cariera_pregressa'] = LivelloCarieraPregresso.objects.select_related().filter(persona_id=copy['id']).exclude(livello_cariera=None)
+                    copy['livello_cariera_futura'] = LivelloCarieraFuturo.objects.select_related().filter(persona_id=copy['id']).exclude(livello_cariera=None)
 
-            copy['tipo_contratto_attuale'] = ""
-            copy['tipo_contratto_pregressa'] = ""
-            copy['tipo_contratto_futura'] = ""
 
-            copy['tipo_contratto_attuale'] = TipoContrattoAttuale.objects.select_related().filter(persona_id=copy['id']).exclude(tipo_contratto=None)
-            copy['tipo_contratto_pregressa'] = TipoContrattoPregesso.objects.select_related().filter(persona_id=copy['id']).exclude(tipo_contratto=None)
-            copy['tipo_contratto_futura'] = TipoContrattoFuturo.objects.select_related().filter(persona_id=copy['id']).exclude(tipo_contratto=None)
+                    copy['ruolo_attuale'] = ""
+                    copy['ruolo_pregressa'] = ""
+                    copy['ruolo_futura'] = ""
 
+                    copy['ruolo_attuale'] = RuoloAttuale.objects.select_related().filter(persona_id=copy['id']).exclude(ruolo=None)
+                    copy['ruolo_pregressa'] = RuoloPregresso.objects.select_related().filter(persona_id=copy['id']).exclude(ruolo=None)
+                    copy['ruolo_futura'] = RuoloFuturo.objects.select_related().filter(persona_id=copy['id']).exclude(ruolo=None)
+
+
+                    copy['area_operativa_attuale'] = ""
+                    copy['area_operativa_pregressa'] = ""
+                    copy['area_operativa_futura'] = ""
+
+                    copy['area_operativa_attuale'] = AreaOperativaAttuale.objects.select_related().filter(persona_id=copy['id']).exclude(area_operativa=None)
+                    copy['area_operativa_pregressa'] = AreaOperativaPregresso.objects.select_related().filter(persona_id=copy['id']).exclude(area_operativa=None)
+                    copy['area_operativa_futura'] = AreaOperativaFuturo.objects.select_related().filter(persona_id=copy['id']).exclude(area_operativa=None)
+
+                    copy['tipo_contratto_attuale'] = ""
+                    copy['tipo_contratto_pregressa'] = ""
+                    copy['tipo_contratto_futura'] = ""
+
+                    copy['tipo_contratto_attuale'] = TipoContrattoAttuale.objects.select_related().filter(persona_id=copy['id']).exclude(tipo_contratto=None)
+                    copy['tipo_contratto_pregressa'] = TipoContrattoPregesso.objects.select_related().filter(persona_id=copy['id']).exclude(tipo_contratto=None)
+                    copy['tipo_contratto_futura'] = TipoContrattoFuturo.objects.select_related().filter(persona_id=copy['id']).exclude(tipo_contratto=None)
+                else:
+                    logger.error("NON PUO MODIFICARE")
         result["copy"] = copy
 
         return render(request, "studenti.html", result)
 
+    # POST solo se autenticato come admin o utente
+    @method_decorator(login_required(login_url='log_in'))
     def post(self, request, *args, **kwargs):
-        #logger.error("la post! ")
 
-        # nuovo sondaggio quindi creo account
-        post = request.POST
-
-        #creo utente nuovo
-        nuovo_user=None
-        logger.error("primo controllo autenticazione"+str(request.user.is_authenticated()))
-        not_usr_authenticated = False
-        if not request.user.is_authenticated():
-            not_usr_authenticated = True # utente Anonimo
-            username = None
-            password = None
-            name = None
-
-            if request.POST['email']== "":
-                return redirect('studenti', 'Email non valida inserita')
-
-            # problema se la mail facoltativa
-            name = post['email']
-            username = post['email']
-            password = gen_password()
-            user_count = Account.objects.filter(username=username).count()
-            if user_count != 0:
-                return redirect('studenti', 'Email gia esistente')
-            nuovo_user = Account(is_active=False, first_name=name, username=username, email=post['email'])
-            nuovo_user.set_password(password)
-            nuovo_user.activationCode = ''.join([random.choice(string.ascii_letters + string.digits) for n in range(32)])
-            nuovo_user.save()
-
-            # invio mail
-            send_verification_email(request, nuovo_user, False, password)
-
-        #stampa tutti valori della post
-        '''
-        for key in request.POST:
-            logger.error(key)
-            logger.error("value "+request.POST[key])
-        '''
-
-        nuova_persona = Persona()
-        if request.POST['cap']== "":
-            nuova_persona.cap = None
-        else:
-            nuova_persona.cap = request.POST['cap']
-
-        if request.POST['anno']== "":
-            nuova_persona.anno_nascita = None
-        else:
-            nuova_persona.anno_nascita = request.POST['anno']
-
-        if request.POST['citta']== "":
-            nuova_persona.citta = None
-        else:
-            nuova_persona.citta = request.POST['citta']
-
-        if request.POST['email']== "":
-            nuova_persona.email = None
-        else:
-            nuova_persona.email = request.POST['email']
-
-        if request.POST['voto']== "":
-            nuova_persona.voto_finale = None
-        else:
-            nuova_persona.voto_finale = request.POST['voto']
-
-        if request.POST['note']== "":
-            nuova_persona.note = None
-        else:
-            nuova_persona.note = request.POST['note']
-
-        if request.POST['optionsRadios']== "true":
-            nuova_persona.esperienze_pregresse = True
-        else:
-            nuova_persona.esperienze_pregresse = False
-
-        if request.POST['numero_attivita_svolte']== "":
-            nuova_persona.numero_attivita_svolte = None
-        else:
-            nuova_persona.numero_attivita_svolte = request.POST['numero_attivita_svolte']
-
-        if request.POST['numero_mesi_attivita_svolte']== "":
-            nuova_persona.numero_mesi_attivita_svolte = None
-        else:
-            nuova_persona.numero_mesi_attivita_svolte = request.POST['numero_mesi_attivita_svolte']
-
-        if request.POST['desc_esperienze_pregresso']== "":
-            nuova_persona.desc_esperienze_pregresse = None
-        else:
-            nuova_persona.desc_esperienze_pregresse = request.POST['desc_esperienze_pregresso']
-
-        if request.POST['stipendio_futuro']== "":
-            nuova_persona.stipendio_futuro = None
-        else:
-            nuova_persona.stipendio_futuro = request.POST['stipendio_futuro']
-
-        if request.POST['possibilita_trasferirsi_option']== "true":
-            nuova_persona.possibilita_trasferirsi = True
-        else:
-            nuova_persona.possibilita_trasferirsi = False
-
-
-        # Ora parliamo delle chiavi esterne con solo un valore Possibile-------------------------
-        livello_pc_post = json.loads(request.POST["livello_pc"])
-        if len(livello_pc_post) <= 0:
-            nuova_persona.livello_uso_computer = None
-        elif len( LivelloPC.objects.filter(valore=livello_pc_post[0].capitalize()) ) > 0 :
-            nuova_persona.livello_uso_computer = LivelloPC.objects.filter(valore=livello_pc_post[0].capitalize())[0]
-        else:
-            livello_pc = LivelloPC(valore=livello_pc_post[0].capitalize())
-            livello_pc.save()
-            nuova_persona.livello_uso_computer = livello_pc
-
-
-        zona_post = json.loads(request.POST["zona"])
-        if len(zona_post) <= 0:
-            nuova_persona.zona = None
-        elif len(Zona.objects.filter(valore=zona_post[0].capitalize())) > 0:
-            nuova_persona.zona = Zona.objects.filter(valore=zona_post[0].capitalize())[0]
-        else:
-            zona = Zona(valore=zona_post[0].capitalize())
-            zona.save()
-            nuova_persona.zona = zona
-
-        grado_studi_post = json.loads(request.POST["grado_studi"])
-        if len(grado_studi_post) <= 0:
-            nuova_persona.grado_studi_post = None
-        elif len(GradoStudi.objects.filter(valore=grado_studi_post[0].capitalize())) > 0:
-            nuova_persona.grado_studi = GradoStudi.objects.filter(valore=grado_studi_post[0].capitalize())[0]
-        else:
-            grado_studi = GradoStudi(valore=grado_studi_post[0].capitalize())
-            grado_studi.save()
-            nuova_persona.grado_studi = grado_studi
-
-        # bisogna salverlo qua
-        nuova_persona.save()
-        #collego account al sondaggio
-        if (not_usr_authenticated):
-            # nuovo utente
-            nuovo_user.survey = nuova_persona
-            nuovo_user.save()
-        elif request.user.account.type==0:
-            update_usr = Account.objects.get(pk=request.user.id)
-            # cancello vecchio sondaggio
-            old_survey = Persona.objects.get(pk=update_usr.survey_id)
-            old_survey.delete()
-            # aggiorno utente
-            update_usr.survey = nuova_persona
-            update_usr.save()
-        else:
-            logger.error("admin modifica persona studente")
-            # un admin che fa modifiche
-            #ATTENZIONE SE SI CAMBIA con una post l'id del vecchio sondaggio esplode tutto
-            # non conosciamo l'identita dell'utene quindi dobbiamo leggerlo dalla POST
-            #per l'utente non lo facciamo salta la sicurezza
-            old_survey = Persona.objects.get(pk=request.POST["id_survey"])
-            update_usr = Account.objects.get(survey=old_survey)
-            update_usr.survey = nuova_persona
-            update_usr.save()
-            old_survey.delete()
-
-
-        # Ora la parte tosta i multivalore! buona fortuna-----------------------------------------------------------
-        lingua_list = json.loads(request.POST["lingua"])
-        if len(lingua_list) <= 0:
-            nuova_lingua_attuale = LinguaAttuale(persona=nuova_persona)
-            nuova_lingua_attuale.lingua = None
-            nuova_lingua_attuale.save()
-        else:
-            for v in lingua_list:
-                # esiste quella lingua nel db
-                if len(Lingua.objects.filter(valore=v.capitalize())) > 0:
-                    nuova_lingua_attuale = LinguaAttuale(persona=nuova_persona)
-                    nuova_lingua_attuale.lingua = Lingua.objects.filter(valore=v.capitalize())[0]
-                    nuova_lingua_attuale.save()
-                else:
-                    nuova_lingua = Lingua(valore=v)
-                    nuova_lingua.save()
-                    nuova_lingua_attuale = LinguaAttuale(persona=nuova_persona)
-                    nuova_lingua_attuale.lingua = nuova_lingua
-                    nuova_lingua_attuale.save()
-
-        # provo ad usare variabili con stesso nome risparmio codice
-        valore_list = json.loads(request.POST["conoscenza_specifica"])
-        if len(valore_list) <= 0:
-            nuovo_valore_nullo = ConoscenzaSpecificaAttuale(persona=nuova_persona)
-            nuovo_valore_nullo.conoscenza_specifica = None
-            nuovo_valore_nullo.save()
-        else:
-            for v in valore_list:
-                if len(ConoscenzaSpecifica.objects.filter(valore=v.capitalize())) > 0:
-                    nuovo_valore_gia_esistente = ConoscenzaSpecificaAttuale(persona=nuova_persona)
-                    nuovo_valore_gia_esistente.conoscenza_specifica = ConoscenzaSpecifica.objects.filter(valore=v.capitalize())[0]
-                    nuovo_valore_gia_esistente.save()
-                else:
-                    nuova_valore_nuovo = ConoscenzaSpecifica(valore=v)
-                    nuova_valore_nuovo.save()
-                    # ora essite nel db quel valore
-                    nuovo_valore_gia_esistente = ConoscenzaSpecificaAttuale(persona=nuova_persona)
-                    nuovo_valore_gia_esistente.conoscenza_specifica = nuova_valore_nuovo
-                    nuovo_valore_gia_esistente.save()
-
-        valore_list = json.loads(request.POST["stato"])
-        if len(valore_list) <= 0:
-            nuovo_valore_nullo = StatoAttuale(persona=nuova_persona)
-            nuovo_valore_nullo.stato = None
-            nuovo_valore_nullo.save()
-        else:
-            for v in valore_list:
-                if len(Stato.objects.filter(valore=v.capitalize())) > 0:
-                    nuovo_valore_gia_esistente = StatoAttuale(persona=nuova_persona)
-                    nuovo_valore_gia_esistente.stato = Stato.objects.filter(valore=v.capitalize())[0]
-                    nuovo_valore_gia_esistente.save()
-                else:
-                    nuova_valore_nuovo = Stato(valore=v)
-                    nuova_valore_nuovo.save()
-                    # ora essite nel db quel valore
-                    nuovo_valore_gia_esistente = StatoAttuale(persona=nuova_persona)
-                    nuovo_valore_gia_esistente.stato = nuova_valore_nuovo
-                    nuovo_valore_gia_esistente.save()
-
-        valore_list = json.loads(request.POST["mansione_attuale"])
-        if len(valore_list) <= 0:
-            nuovo_valore_nullo = MansioneAttuale(persona=nuova_persona)
-            nuovo_valore_nullo.mansione = None
-            nuovo_valore_nullo.save()
-        else:
-            for v in valore_list:
-                if len(Mansione.objects.filter(valore=v.capitalize())) > 0:
-                    nuovo_valore_gia_esistente = MansioneAttuale(persona=nuova_persona)
-                    nuovo_valore_gia_esistente.mansione = Mansione.objects.filter(valore=v.capitalize())[0]
-                    nuovo_valore_gia_esistente.save()
-                else:
-                    nuova_valore_nuovo = Mansione(valore=v)
-                    nuova_valore_nuovo.save()
-                    # ora essite nel db quel valore
-                    nuovo_valore_gia_esistente = MansioneAttuale(persona=nuova_persona)
-                    nuovo_valore_gia_esistente.mansione = nuova_valore_nuovo
-                    nuovo_valore_gia_esistente.save()
-
-        valore_list = json.loads(request.POST["mansione_pregresso"])
-        if len(valore_list) <= 0:
-            nuovo_valore_nullo = MansionePregresso(persona=nuova_persona)
-            nuovo_valore_nullo.mansione = None
-            nuovo_valore_nullo.save()
-        else:
-            for v in valore_list:
-                if len(Mansione.objects.filter(valore=v.capitalize())) > 0:
-                    nuovo_valore_gia_esistente = MansionePregresso(persona=nuova_persona)
-                    nuovo_valore_gia_esistente.mansione = Mansione.objects.filter(valore=v.capitalize())[0]
-                    nuovo_valore_gia_esistente.save()
-                else:
-                    nuova_valore_nuovo = Mansione(valore=v)
-                    nuova_valore_nuovo.save()
-                    # ora essite nel db quel valore
-                    nuovo_valore_gia_esistente = MansionePregresso(persona=nuova_persona)
-                    nuovo_valore_gia_esistente.mansione = nuova_valore_nuovo
-                    nuovo_valore_gia_esistente.save()
-
-        valore_list = json.loads(request.POST["mansione_futuro"])
-        if len(valore_list) <= 0:
-            nuovo_valore_nullo = MansioneFuturo(persona=nuova_persona)
-            nuovo_valore_nullo.mansione = None
-            nuovo_valore_nullo.save()
-        else:
-            for v in valore_list:
-                if len(Mansione.objects.filter(valore=v.capitalize())) > 0:
-                    nuovo_valore_gia_esistente = MansioneFuturo(persona=nuova_persona)
-                    nuovo_valore_gia_esistente.mansione = Mansione.objects.filter(valore=v.capitalize())[0]
-                    nuovo_valore_gia_esistente.save()
-                else:
-                    nuova_valore_nuovo = Mansione(valore=v)
-                    nuova_valore_nuovo.save()
-                    # ora essite nel db quel valore
-                    nuovo_valore_gia_esistente = MansioneFuturo(persona=nuova_persona)
-                    nuovo_valore_gia_esistente.mansione = nuova_valore_nuovo
-                    nuovo_valore_gia_esistente.save()
-
-        valore_list = json.loads(request.POST["livello_cariera_attuale"])
-        if len(valore_list) <= 0:
-            nuovo_valore_nullo = LivelloCarieraAttuale(persona=nuova_persona)
-            nuovo_valore_nullo.livello_cariera = None
-            nuovo_valore_nullo.save()
-        else:
-            for v in valore_list:
-                if len(LivelloCariera.objects.filter(valore=v.capitalize())) > 0:
-                    nuovo_valore_gia_esistente = LivelloCarieraAttuale(persona=nuova_persona)
-                    nuovo_valore_gia_esistente.livello_cariera = LivelloCariera.objects.filter(valore=v.capitalize())[0]
-                    nuovo_valore_gia_esistente.save()
-                else:
-                    nuova_valore_nuovo = LivelloCariera(valore=v)
-                    nuova_valore_nuovo.save()
-                    # ora essite nel db quel valore
-                    nuovo_valore_gia_esistente = LivelloCarieraAttuale(persona=nuova_persona)
-                    nuovo_valore_gia_esistente.livello_cariera = nuova_valore_nuovo
-                    nuovo_valore_gia_esistente.save()
-
-        valore_list = json.loads(request.POST["livello_cariera_pregresso"])
-        if len(valore_list) <= 0:
-            nuovo_valore_nullo = LivelloCarieraPregresso(persona=nuova_persona)
-            nuovo_valore_nullo.livello_cariera = None
-            nuovo_valore_nullo.save()
-        else:
-            for v in valore_list:
-                if len(LivelloCariera.objects.filter(valore=v.capitalize())) > 0:
-                    nuovo_valore_gia_esistente = LivelloCarieraPregresso(persona=nuova_persona)
-                    nuovo_valore_gia_esistente.livello_cariera = LivelloCariera.objects.filter(valore=v.capitalize())[0]
-                    nuovo_valore_gia_esistente.save()
-                else:
-                    nuova_valore_nuovo = LivelloCariera(valore=v)
-                    nuova_valore_nuovo.save()
-                    # ora essite nel db quel valore
-                    nuovo_valore_gia_esistente = LivelloCarieraPregresso(persona=nuova_persona)
-                    nuovo_valore_gia_esistente.livello_cariera = nuova_valore_nuovo
-                    nuovo_valore_gia_esistente.save()
-
-        valore_list = json.loads(request.POST["livello_cariera_futuro"])
-        if len(valore_list) <= 0:
-            nuovo_valore_nullo = LivelloCarieraFuturo(persona=nuova_persona)
-            nuovo_valore_nullo.livello_cariera = None
-            nuovo_valore_nullo.save()
-        else:
-            for v in valore_list:
-                if len(LivelloCariera.objects.filter(valore=v.capitalize())) > 0:
-                    nuovo_valore_gia_esistente = LivelloCarieraFuturo(persona=nuova_persona)
-                    nuovo_valore_gia_esistente.livello_cariera = LivelloCariera.objects.filter(valore=v.capitalize())[0]
-                    nuovo_valore_gia_esistente.save()
-                else:
-                    nuova_valore_nuovo = LivelloCariera(valore=v)
-                    nuova_valore_nuovo.save()
-                    # ora essite nel db quel valore
-                    nuovo_valore_gia_esistente = LivelloCarieraFuturo(persona=nuova_persona)
-                    nuovo_valore_gia_esistente.livello_cariera = nuova_valore_nuovo
-                    nuovo_valore_gia_esistente.save()
-
-        valore_list = json.loads(request.POST["ruolo_attuale"])
-        if len(valore_list) <= 0:
-            nuovo_valore_nullo = RuoloAttuale(persona=nuova_persona)
-            nuovo_valore_nullo.ruolo = None
-            nuovo_valore_nullo.save()
-        else:
-            for v in valore_list:
-                if len(Ruolo.objects.filter(valore=v.capitalize())) > 0:
-                    nuovo_valore_gia_esistente = RuoloAttuale(persona=nuova_persona)
-                    nuovo_valore_gia_esistente.ruolo = Ruolo.objects.filter(valore=v.capitalize())[0]
-                    nuovo_valore_gia_esistente.save()
-                else:
-                    nuova_valore_nuovo = Ruolo(valore=v)
-                    nuova_valore_nuovo.save()
-                    # ora essite nel db quel valore
-                    nuovo_valore_gia_esistente = RuoloAttuale(persona=nuova_persona)
-                    nuovo_valore_gia_esistente.ruolo = nuova_valore_nuovo
-                    nuovo_valore_gia_esistente.save()
-
-        valore_list = json.loads(request.POST["ruolo_pregresso"])
-        if len(valore_list) <= 0:
-            nuovo_valore_nullo = RuoloPregresso(persona=nuova_persona)
-            nuovo_valore_nullo.ruolo = None
-            nuovo_valore_nullo.save()
-        else:
-            for v in valore_list:
-                if len(Ruolo.objects.filter(valore=v.capitalize())) > 0:
-                    nuovo_valore_gia_esistente = RuoloPregresso(persona=nuova_persona)
-                    nuovo_valore_gia_esistente.ruolo = Ruolo.objects.filter(valore=v.capitalize())[0]
-                    nuovo_valore_gia_esistente.save()
-                else:
-                    nuova_valore_nuovo = Ruolo(valore=v)
-                    nuova_valore_nuovo.save()
-                    # ora essite nel db quel valore
-                    nuovo_valore_gia_esistente = RuoloPregresso(persona=nuova_persona)
-                    nuovo_valore_gia_esistente.ruolo = nuova_valore_nuovo
-                    nuovo_valore_gia_esistente.save()
-
-        valore_list = json.loads(request.POST["ruolo_futuro"])
-        if len(valore_list) <= 0:
-            nuovo_valore_nullo = RuoloFuturo(persona=nuova_persona)
-            nuovo_valore_nullo.ruolo = None
-            nuovo_valore_nullo.save()
-        else:
-            for v in valore_list:
-                if len(Ruolo.objects.filter(valore=v.capitalize())) > 0:
-                    nuovo_valore_gia_esistente = RuoloFuturo(persona=nuova_persona)
-                    nuovo_valore_gia_esistente.ruolo = Ruolo.objects.filter(valore=v.capitalize())[0]
-                    nuovo_valore_gia_esistente.save()
-                else:
-                    nuova_valore_nuovo = Ruolo(valore=v)
-                    nuova_valore_nuovo.save()
-                    # ora essite nel db quel valore
-                    nuovo_valore_gia_esistente = RuoloFuturo(persona=nuova_persona)
-                    nuovo_valore_gia_esistente.ruolo = nuova_valore_nuovo
-                    nuovo_valore_gia_esistente.save()
-
-        valore_list = json.loads(request.POST["area_operativa_attuale"])
-        if len(valore_list) <= 0:
-            nuovo_valore_nullo = AreaOperativaAttuale(persona=nuova_persona)
-            nuovo_valore_nullo.area_operativa = None
-            nuovo_valore_nullo.save()
-        else:
-            for v in valore_list:
-                if len(AreaOperativa.objects.filter(valore=v.capitalize())) > 0:
-                    nuovo_valore_gia_esistente = AreaOperativaAttuale(persona=nuova_persona)
-                    nuovo_valore_gia_esistente.area_operativa = AreaOperativa.objects.filter(valore=v.capitalize())[0]
-                    nuovo_valore_gia_esistente.save()
-                else:
-                    nuova_valore_nuovo = AreaOperativa(valore=v)
-                    nuova_valore_nuovo.save()
-                    # ora essite nel db quel valore
-                    nuovo_valore_gia_esistente = AreaOperativaAttuale(persona=nuova_persona)
-                    nuovo_valore_gia_esistente.area_operativa = nuova_valore_nuovo
-                    nuovo_valore_gia_esistente.save()
-
-        valore_list = json.loads(request.POST["area_operativa_pregresso"])
-        if len(valore_list) <= 0:
-            nuovo_valore_nullo = AreaOperativaPregresso(persona=nuova_persona)
-            nuovo_valore_nullo.area_operativa = None
-            nuovo_valore_nullo.save()
-        else:
-            for v in valore_list:
-                if len(AreaOperativa.objects.filter(valore=v.capitalize())) > 0:
-                    nuovo_valore_gia_esistente = AreaOperativaPregresso(persona=nuova_persona)
-                    nuovo_valore_gia_esistente.area_operativa = AreaOperativa.objects.filter(valore=v.capitalize())[0]
-                    nuovo_valore_gia_esistente.save()
-                else:
-                    nuova_valore_nuovo = AreaOperativa(valore=v)
-                    nuova_valore_nuovo.save()
-                    # ora essite nel db quel valore
-                    nuovo_valore_gia_esistente = AreaOperativaPregresso(persona=nuova_persona)
-                    nuovo_valore_gia_esistente.area_operativa = nuova_valore_nuovo
-                    nuovo_valore_gia_esistente.save()
-
-        valore_list = json.loads(request.POST["area_operativa_futuro"])
-        if len(valore_list) <= 0:
-            nuovo_valore_nullo = AreaOperativaFuturo(persona=nuova_persona)
-            nuovo_valore_nullo.area_operativa = None
-            nuovo_valore_nullo.save()
-        else:
-            for v in valore_list:
-                if len(AreaOperativa.objects.filter(valore=v.capitalize())) > 0:
-                    nuovo_valore_gia_esistente = AreaOperativaFuturo(persona=nuova_persona)
-                    nuovo_valore_gia_esistente.area_operativa = AreaOperativa.objects.filter(valore=v.capitalize())[0]
-                    nuovo_valore_gia_esistente.save()
-                else:
-                    nuova_valore_nuovo = AreaOperativa(valore=v)
-                    nuova_valore_nuovo.save()
-                    # ora essite nel db quel valore
-                    nuovo_valore_gia_esistente = AreaOperativaFuturo(persona=nuova_persona)
-                    nuovo_valore_gia_esistente.area_operativa = nuova_valore_nuovo
-                    nuovo_valore_gia_esistente.save()
-
-        valore_list = json.loads(request.POST["tipo_contratto_attuale"])
-        if len(valore_list) <= 0:
-            nuovo_valore_nullo = TipoContrattoAttuale(persona=nuova_persona)
-            nuovo_valore_nullo.tipo_contratto = None
-            nuovo_valore_nullo.save()
-        else:
-            for v in valore_list:
-                if len(TipoContratto.objects.filter(valore=v.capitalize())) > 0:
-                    nuovo_valore_gia_esistente = TipoContrattoAttuale(persona=nuova_persona)
-                    nuovo_valore_gia_esistente.tipo_contratto = TipoContratto.objects.filter(valore=v.capitalize())[0]
-                    nuovo_valore_gia_esistente.save()
-                else:
-                    nuova_valore_nuovo = TipoContratto(valore=v)
-                    nuova_valore_nuovo.save()
-                    # ora essite nel db quel valore
-                    nuovo_valore_gia_esistente = TipoContrattoAttuale(persona=nuova_persona)
-                    nuovo_valore_gia_esistente.tipo_contratto = nuova_valore_nuovo
-                    nuovo_valore_gia_esistente.save()
-
-        valore_list = json.loads(request.POST["tipo_contratto_pregresso"])
-        if len(valore_list) <= 0:
-            nuovo_valore_nullo = TipoContrattoPregesso(persona=nuova_persona)
-            nuovo_valore_nullo.tipo_contratto = None
-            nuovo_valore_nullo.save()
-        else:
-            for v in valore_list:
-                if len(TipoContratto.objects.filter(valore=v.capitalize())) > 0:
-                    nuovo_valore_gia_esistente = TipoContrattoPregesso(persona=nuova_persona)
-                    nuovo_valore_gia_esistente.tipo_contratto = TipoContratto.objects.filter(valore=v.capitalize())[0]
-                    nuovo_valore_gia_esistente.save()
-                else:
-                    nuova_valore_nuovo = TipoContratto(valore=v)
-                    nuova_valore_nuovo.save()
-                    # ora essite nel db quel valore
-                    nuovo_valore_gia_esistente = TipoContrattoPregesso(persona=nuova_persona)
-                    nuovo_valore_gia_esistente.tipo_contratto = nuova_valore_nuovo
-                    nuovo_valore_gia_esistente.save()
-
-        valore_list = json.loads(request.POST["tipo_contratto_futuro"])
-        if len(valore_list) <= 0:
-            nuovo_valore_nullo = TipoContrattoFuturo(persona=nuova_persona)
-            nuovo_valore_nullo.tipo_contratto = None
-            nuovo_valore_nullo.save()
-        else:
-            for v in valore_list:
-                if len(TipoContratto.objects.filter(valore=v.capitalize())) > 0:
-                    nuovo_valore_gia_esistente = TipoContrattoFuturo(persona=nuova_persona)
-                    nuovo_valore_gia_esistente.tipo_contratto = TipoContratto.objects.filter(valore=v.capitalize())[0]
-                    nuovo_valore_gia_esistente.save()
-                else:
-                    nuova_valore_nuovo = TipoContratto(valore=v)
-                    nuova_valore_nuovo.save()
-                    # ora essite nel db quel valore
-                    nuovo_valore_gia_esistente = TipoContrattoFuturo(persona=nuova_persona)
-                    nuovo_valore_gia_esistente.tipo_contratto = nuova_valore_nuovo
-                    nuovo_valore_gia_esistente.save()
-
-        valore_list = json.loads(request.POST["benefit_futuro"])
-        if len(valore_list) <= 0:
-            nuovo_valore_nullo = BenefitFuturo(persona=nuova_persona)
-            nuovo_valore_nullo.benefit = None
-            nuovo_valore_nullo.save()
-        else:
-            for v in valore_list:
-                if len(Benefit.objects.filter(valore=v.capitalize())) > 0:
-                    nuovo_valore_gia_esistente = BenefitFuturo(persona=nuova_persona)
-                    nuovo_valore_gia_esistente.benefit = Benefit.objects.filter(valore=v.capitalize())[0]
-                    nuovo_valore_gia_esistente.save()
-                else:
-                    nuova_valore_nuovo = Benefit(valore=v)
-                    nuova_valore_nuovo.save()
-                    # ora essite nel db quel valore
-                    nuovo_valore_gia_esistente = BenefitFuturo(persona=nuova_persona)
-                    nuovo_valore_gia_esistente.benefit = nuova_valore_nuovo
-                    nuovo_valore_gia_esistente.save()
-
-        valore_list = json.loads(request.POST["interesse_futuro"])
-        if len(valore_list) <= 0:
-            nuovo_valore_nullo = InteresseFuturo(persona=nuova_persona)
-            nuovo_valore_nullo.interesse = None
-            nuovo_valore_nullo.save()
-        else:
-            for v in valore_list:
-                if len(Interesse.objects.filter(valore=v.capitalize())) > 0:
-                    nuovo_valore_gia_esistente = InteresseFuturo(persona=nuova_persona)
-                    nuovo_valore_gia_esistente.interesse = Interesse.objects.filter(valore=v.capitalize())[0]
-                    nuovo_valore_gia_esistente.save()
-                else:
-                    nuova_valore_nuovo = Interesse(valore=v)
-                    nuova_valore_nuovo.save()
-                    # ora essite nel db quel valore
-                    nuovo_valore_gia_esistente = InteresseFuturo(persona=nuova_persona)
-                    nuovo_valore_gia_esistente.interesse = nuova_valore_nuovo
-                    nuovo_valore_gia_esistente.save()
-
-        valore_list = json.loads(request.POST["esame_attuale"])
-        if len(valore_list) <= 0:
-            nuovo_valore_nullo = EsameAttuale(persona=nuova_persona)
-            nuovo_valore_nullo.esame = None
-            nuovo_valore_nullo.save()
-        else:
-            for v in valore_list:
-                if len(Esame.objects.filter(valore=v.capitalize())) > 0:
-                    nuovo_valore_gia_esistente = EsameAttuale(persona=nuova_persona)
-                    nuovo_valore_gia_esistente.esame = Esame.objects.filter(valore=v.capitalize())[0]
-                    nuovo_valore_gia_esistente.save()
-                else:
-                    nuova_valore_nuovo = Esame(valore=v)
-                    nuova_valore_nuovo.save()
-                    # ora essite nel db quel valore
-                    nuovo_valore_gia_esistente = EsameAttuale(persona=nuova_persona)
-                    nuovo_valore_gia_esistente.esame = nuova_valore_nuovo
-                    nuovo_valore_gia_esistente.save()
-
-        valore_list = json.loads(request.POST["campo_studi"])
-        if len(valore_list) <= 0:
-            nuovo_valore_nullo = CampoStudiAttuale(persona=nuova_persona)
-            nuovo_valore_nullo.campo_studi = None
-            nuovo_valore_nullo.save()
-        else:
-            for v in valore_list:
-                if len(CampoStudi.objects.filter(valore=v.capitalize())) > 0:
-                    nuovo_valore_gia_esistente = CampoStudiAttuale(persona=nuova_persona)
-                    nuovo_valore_gia_esistente.campo_studi = CampoStudi.objects.filter(valore=v.capitalize())[0]
-                    nuovo_valore_gia_esistente.save()
-                else:
-                    nuova_valore_nuovo = CampoStudi(valore=v)
-                    nuova_valore_nuovo.save()
-                    # ora essite nel db quel valore
-                    nuovo_valore_gia_esistente = CampoStudiAttuale(persona=nuova_persona)
-                    nuovo_valore_gia_esistente.campo_studi = nuova_valore_nuovo
-                    nuovo_valore_gia_esistente.save()
-
-
-        return render(request, 'grazie.html',{"azienda":'0'})
+        #si tratta di un utente corretto
+        if request.user.is_superuser==1:
+            create_modify_student_persona_survey_by_post(request, request.user, False, True)
+        elif request.user.account==0:
+            create_modify_student_persona_survey_by_post(request, request.user, False, False)
 
 
 
-class Aziende(View):
+        return render(request, 'index.html')
 
+
+
+# per sondaggio
+class Studenti(View):
+
+    # non deve essere autenticato
     def get(self, request, *args, **kwargs):
-        result = {}
 
         # controllo errori per registrazione
         error = None
         if 'error' in kwargs:
             error = kwargs['error']
 
-        result['error']=error
+        # inizio questionario
+        result = {}
+        result = find_all_option_student()
+        result['error'] = error
 
-        result['citta'] = Citta.objects.all()
+        return render(request, "studenti.html", result)
+
+    # non deve essere autenticato
+    def post(self, request, *args, **kwargs):
+        # logger.error("la post! ")
+
+        # nuovo sondaggio quindi creo account
+        post = request.POST
+
+        #creo utente nuovo
+        nuovo_user = None
+        username = None
+        password = None
+        name = None
+
+        if request.POST['email']== "":
+            return redirect('studenti', 'Email non valida inserita')
+
+        # problema se la mail facoltativa
+        name = post['email']
+        username = post['email']
+        password = gen_password()
+        user_count = Account.objects.filter(username=username).count()
+        if user_count != 0:
+            return redirect('studenti', 'Email gia esistente')
+        nuovo_user = Account(is_active=False, first_name=name, username=username, email=post['email'])
+        nuovo_user.set_password(password)
+        nuovo_user.activationCode = ''.join([random.choice(string.ascii_letters + string.digits) for n in range(32)])
+        nuovo_user.save()
+
+        # invio mail
+        send_verification_email(request, nuovo_user, False, password)
+
+        # inserisco dati sondiaggio in questo caso lo creo nuovo
+        create_modify_student_persona_survey_by_post(request, nuovo_user, True)
+
+        return render(request, 'grazie.html',{"azienda":'0'})
+
+
+# tutti i tag e possibilita per azienda
+def find_all_option_azienda():
+    # Cerco cose per Azienda
+    result = {}
+    result['citta'] = Citta.objects.all()
+    return result
+
+
+def create_modify_azienda_sondaggio_azienda_by_post(request,user,is_new_user,is_admin=False):
+    nuova_azienda = Azienda()
+
+    if request.POST['email'] == "":
+        nuova_azienda.email = None
+    else:
+        nuova_azienda.email = request.POST['email']
+
+    if request.POST['nome_referente'] == "":
+        nuova_azienda.nome_referente = None
+    else:
+        nuova_azienda.nome_referente = request.POST['nome_referente']
+
+    if request.POST['note'] == "":
+        nuova_azienda.note = None
+    else:
+        nuova_azienda.note = request.POST['note']
+
+    # Ora parliamo delle chiavi esterne-------------------------------------------
+    citta_sede_post = json.loads(request.POST["citta_sede"])
+    if len(citta_sede_post) <= 0:
+        nuova_azienda.citta_sede = None
+    elif len(Citta.objects.filter(valore=citta_sede_post[0].capitalize())) > 0:
+        nuova_azienda.citta_sede = Citta.objects.filter(valore=citta_sede_post[0].capitalize())[0]
+    else:
+        citta = Citta(valore=citta_sede_post[0].capitalize())
+        citta.save()
+        nuova_azienda.citta_sede = citta
+
+    # salvo oggetto nuovo sondaggio
+    nuova_azienda.save()
+
+    #collego account al sondaggio
+    if (is_new_user):
+        logger.error("Nuovo utente crea Sondaggio azienda")
+        # nuovo utente
+        user.azienda = nuova_azienda
+        user.save()
+    elif is_admin:
+        logger.error("admin modifica Sondaggio azienda")
+        # un admin che fa modifiche
+        #ATTENZIONE SE SI CAMBIA con una post l'id del vecchio sondaggio esplode tutto
+        # non conosciamo l'identita dell'utene quindi dobbiamo leggerlo dalla POST
+        #per l'utente non lo facciamo salta la sicurezza
+        old_survey = Azienda.objects.get(pk=request.POST["id_survey"])
+        user = Account.objects.get(azienda=old_survey)
+        user.azienda = nuova_azienda
+        user.save()
+        old_survey.delete()
+    elif user.type==1:
+        logger.error("Azienda modifica Sondaggio azienda")
+        # cancello vecchio sondaggio
+        old_survey = Azienda.objects.get(pk=user.azienda_id)
+        # aggiorno utente
+        user.azienda = nuova_azienda
+        old_survey.delete()
+        user.save()
+    else:
+        # caso che non deve mai accadere
+        logger.error("Qualcuno di strano vuol modifcare azienda")
+
+     # Ora parliamo dei multi valore-------------------------------------------
+    valore_list = json.loads(request.POST["altra_sede"])
+    if len(valore_list) <= 0:
+        nuovo_valore_nullo = AltraSede(azienda=nuova_azienda)
+        nuovo_valore_nullo.citta = None
+        nuovo_valore_nullo.save()
+    else:
+        for v in valore_list:
+            if len(Citta.objects.filter(valore=v.capitalize())) > 0:
+                nuovo_valore_gia_esistente = AltraSede(azienda=nuova_azienda)
+                nuovo_valore_gia_esistente.citta = Citta.objects.filter(valore=v.capitalize())[0]
+                nuovo_valore_gia_esistente.save()
+            else:
+                nuova_valore_nuovo = Citta(valore=v)
+                nuova_valore_nuovo.save()
+                # ora essite nel db quel valore
+                nuovo_valore_gia_esistente = AltraSede(azienda=nuova_azienda)
+                nuovo_valore_gia_esistente.citta = nuova_valore_nuovo
+                nuovo_valore_gia_esistente.save()
+
+
+class ModifyAzienda(View):
+
+    # solo se autenticato come admin o utente
+    @method_decorator(login_required(login_url='log_in'))
+    def get(self, request, *args, **kwargs):
+
+        result={}
+        result = find_all_option_azienda()
 
         # per creare copie uso url GET
         copy = {}
@@ -803,137 +919,108 @@ class Aziende(View):
         copy['note'] = ""
         copy['nome_referente'] = ""
 
-        if 'id' in kwargs:
-            copy['id'] = kwargs['id']
-            azienda_copia = Azienda.objects.select_related().get(pk=kwargs['id'])
-            if azienda_copia.email != None:
-                copy['email'] = azienda_copia.email
-            if azienda_copia.note != None:
-                copy['note'] = azienda_copia.note
-            if azienda_copia.nome_referente != None:
-                copy['nome_referente'] = azienda_copia.nome_referente
+        logger.error("modifca Azienda ")
 
-            #esterno singolo
-            if azienda_copia.citta_sede != None:
-                copy['citta'] = azienda_copia.citta_sede.valore
+        # controllo se autenticato
+        if request.user.is_authenticated:
+            logger.error("Sono autenticato Azienda")
+            #controllo se passato id
+            if 'id' in kwargs:
+                #controllo se Utente e azienda(quindi tipo 1) con quell ID oppure amministratore BISOGNA IMPOSTARE SUPERUSER A 1
+                if (request.user.is_superuser==1) or (request.user.account.type==1 and int(request.user.account.azienda.id) == int(kwargs['id'])):
+                    logger.error("Posso modificare Azineda questionario")
+                    copy['id'] = kwargs['id']
+                    azienda_copia = Azienda.objects.select_related().get(pk=kwargs['id'])
+                    if azienda_copia.email != None:
+                        copy['email'] = azienda_copia.email
+                    if azienda_copia.note != None:
+                        copy['note'] = azienda_copia.note
+                    if azienda_copia.nome_referente != None:
+                        copy['nome_referente'] = azienda_copia.nome_referente
 
-            # esterno multiplo
-            copy['altra_sede'] = AltraSede.objects.select_related().filter(azienda_id=copy['id']).exclude(citta=None)
+                    #esterno singolo
+                    if azienda_copia.citta_sede != None:
+                        copy['citta'] = azienda_copia.citta_sede.valore
 
-            result["copy"] = copy
+                    # esterno multiplo
+                    copy['altra_sede'] = AltraSede.objects.select_related().filter(azienda_id=copy['id']).exclude(citta=None)
+
+                    result["copy"] = copy
+
+                else:
+                    logger.error("NON PUO MODIFICARE")
+        result["copy"] = copy
+
+        return render(request, "aziende.html", result)
+
+    # solo se autenticato come admin o utente Azienda
+    @method_decorator(login_required(login_url='log_in'))
+    def post(self, request, *args, **kwargs):
+
+    #si tratta di un utente corretto
+        if request.user.is_superuser == 1:
+            logger.error("Super user vuole modificare azienda accede al metodo")
+            create_modify_azienda_sondaggio_azienda_by_post(request, request.user, is_new_user=False, is_admin=True)
+        elif request.user.account.type == 1:
+            logger.error("Azienda vuole modifcare azienda accede al metodo")
+            create_modify_azienda_sondaggio_azienda_by_post(request, request.user.account, is_new_user=False, is_admin=False)
+        else:
+            logger.error("un altro tipo di utente!")
+        return render(request, 'index.html')
+
+
+class Aziende(View):
+
+    def get(self, request, *args, **kwargs):
+
+        # opzioni tag per azienda
+        result = {}
+        result = find_all_option_azienda()
+
+        # controllo errori per registrazione
+        error = None
+        if 'error' in kwargs:
+            error = kwargs['error']
+
+        result['error']=error
 
         return render(request, "aziende.html", result)
 
     def post(self, request, *args, **kwargs):
 
-
+        # parte creazione nuovo Accont
+        # nuovo sondaggio quindi creo account
         post = request.POST
-        #creo utente nuovo se non esiste
-        new_azienda_account = None
 
-        not_usr_authenticated = False
-        if not request.user.is_authenticated():
-            not_usr_authenticated = True # utente Anonimo
-            username = None
-            password = None
-            name = None
+        #creo utente nuovo
+        nuovo_user = None
+        username = None
+        password = None
+        name = None
 
-            #va controllata meglio la mail
-            if request.POST['email']== "":
-                return redirect('aziende', 'Non hai inserito una valida')
+        if request.POST['email']== "":
+            return redirect('aziende', 'Email non valida inserita')
 
-            # problema se la mail facoltativa
-            name = post['email']
-            username = post['email']
-            password = gen_password()
-            user_count = Account.objects.filter(username=username).count()
-            if user_count != 0:
-                return redirect('aziende', 'Email gia esistente')
-            new_azienda_account = Account(is_active=False, first_name=name, username=username, email=post['email'])
-            new_azienda_account.set_password(password)
-            new_azienda_account.activationCode = ''.join([random.choice(string.ascii_letters + string.digits) for n in range(32)])
-            new_azienda_account.save()
+        # problema se la mail facoltativa
+        name = post['email']
+        username = post['email']
+        password = gen_password()
+        user_count = Account.objects.filter(username=username).count()
+        if user_count != 0:
+            return redirect('aziende', 'Email gia esistente')
+        nuovo_user = Account(is_active=False, first_name=name, username=username, email=post['email'], type=1) # type 1 per azienda
+        nuovo_user.set_password(password)
+        nuovo_user.activationCode = ''.join([random.choice(string.ascii_letters + string.digits) for n in range(32)])
+        nuovo_user.save()
 
-            # invio mail
-            send_verification_email(request, new_azienda_account, False, password)
+        # invio mail
+        logger.error('invio mail azienda nuova')
+        send_verification_email(request, nuovo_user, True, password) # una Azienda Va true per messaggio diverso Mail
 
-        nuova_azienda = Azienda()
+        # inserisco dati sondiaggio AZIENDA in questo caso lo creo nuovo Stesso metodo per fare modificare vecchio sondaggio
+        create_modify_azienda_sondaggio_azienda_by_post(request, nuovo_user, True)
 
-        if request.POST['email'] == "":
-            nuova_azienda.email = None
-        else:
-            nuova_azienda.email = request.POST['email']
-
-        if request.POST['nome_referente'] == "":
-            nuova_azienda.nome_referente = None
-        else:
-            nuova_azienda.nome_referente = request.POST['nome_referente']
-
-        if request.POST['note'] == "":
-            nuova_azienda.note = None
-        else:
-            nuova_azienda.note = request.POST['note']
-
-        # Ora parliamo delle chiavi esterne-------------------------------------------
-        citta_sede_post = json.loads(request.POST["citta_sede"])
-        if len(citta_sede_post) <= 0:
-            nuova_azienda.citta_sede = None
-        elif len(Citta.objects.filter(valore=citta_sede_post[0].capitalize())) > 0:
-            nuova_azienda.citta_sede = Citta.objects.filter(valore=citta_sede_post[0].capitalize())[0]
-        else:
-            citta = Citta(valore=citta_sede_post[0].capitalize())
-            citta.save()
-            nuova_azienda.citta_sede = citta
-
-        nuova_azienda.save()
-
-        # dopo aver salvato il sondaggio aziendale, colleghiamo account a sondaggio vecchio o nuovo
-        # collego account al sondaggio
-        if not_usr_authenticated:
-            # nuovo utente
-            new_azienda_account.azienda = nuova_azienda
-            new_azienda_account.save()
-        elif request.user.account.type==1:
-            update_usr = Account.objects.get(pk=request.user.id)
-            # cancello vecchio sondaggio
-            old_survey = Azienda.objects.get(pk=update_usr.survey_id)
-            # aggiorno utente
-            update_usr.azienda = nuova_azienda
-            old_survey.delete()
-            update_usr.save()
-        else:
-            logger.error("admin modifica persona studente")
-            # un admin che fa modifiche
-            #ATTENZIONE SE SI CAMBIA con una post l'id del vecchio sondaggio esplode tutto
-            # non conosciamo l'identita dell'utene quindi dobbiamo leggerlo dalla POST
-            #per l'utente non lo facciamo salta la sicurezza
-            old_survey = Azienda.objects.get(pk=request.POST["id_survey"])
-            update_usr = Account.objects.get(azienda=old_survey)
-            update_usr.azienda = nuova_azienda
-            old_survey.delete()
-            update_usr.save()
-
-        # Ora parliamo dei multi valore-------------------------------------------
-        valore_list = json.loads(request.POST["altra_sede"])
-        if len(valore_list) <= 0:
-            nuovo_valore_nullo = AltraSede(azienda=nuova_azienda)
-            nuovo_valore_nullo.citta = None
-            nuovo_valore_nullo.save()
-        else:
-            for v in valore_list:
-                if len(Citta.objects.filter(valore=v.capitalize())) > 0:
-                    nuovo_valore_gia_esistente = AltraSede(azienda=nuova_azienda)
-                    nuovo_valore_gia_esistente.citta = Citta.objects.filter(valore=v.capitalize())[0]
-                    nuovo_valore_gia_esistente.save()
-                else:
-                    nuova_valore_nuovo = Citta(valore=v)
-                    nuova_valore_nuovo.save()
-                    # ora essite nel db quel valore
-                    nuovo_valore_gia_esistente = AltraSede(azienda=nuova_azienda)
-                    nuovo_valore_gia_esistente.citta = nuova_valore_nuovo
-                    nuovo_valore_gia_esistente.save()
-
-        return render(request, 'grazie.html', {"azienda": '1', "id": nuova_azienda.id})
+        return render(request, 'grazie.html',{"azienda":'1'})
 
 
 class Lavori(View):
