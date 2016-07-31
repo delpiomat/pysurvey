@@ -12,6 +12,8 @@
         <a class="btn btn-primary" href="{%  url 'studenti_modifica' user.account.survey.id  %}">Modifica sondaggio studente</a>
         {% elif user.account.type == 1%}
         <a class="btn btn-primary" href="{%  url 'azienda_modifica' user.account.azienda.id  %}">Modifica sondaggio azienda</a>
+        <a class="btn btn-primary" href="{%  url 'lavori' %}">Crea Offerte di Lavoro</a>
+        <a class="btn btn-primary" href="{%  url 'offerta_lavoro_azienda' user.account.azienda.id  %}">Proprie Offerte di Lavoro</a>
         {% endif %}
     {% else %}
     <h2>Sondaggi Creati</h2>

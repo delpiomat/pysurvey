@@ -5,6 +5,10 @@ from django.shortcuts import render, redirect, render_to_response, RequestContex
 from django.views.generic import View
 from createSurvey.models import *
 
+#per eccezioni
+from django.core.exceptions import ObjectDoesNotExist
+
+
 # for login
 from django.contrib.auth import authenticate, login, logout
 from django.http import JsonResponse
@@ -167,9 +171,12 @@ def create_modify_student_persona_survey_by_post(request,user,is_new_user,is_adm
         # non conosciamo l'identita dell'utene quindi dobbiamo leggerlo dalla POST
         #per l'utente non lo facciamo salta la sicurezza
         old_survey = Persona.objects.get(pk=request.POST["id_survey"])
-        user = Account.objects.get(survey=old_survey)
-        user.survey = nuova_persona
-        user.save()
+        try:
+            user = Account.objects.get(survey=old_survey)
+            user.survey = nuova_persona
+            user.save()
+        except ObjectDoesNotExist:
+            logger.error("accoutn non esiste quindi non aggiungiamo l'account ma lo eliminiamo comunque")
         old_survey.delete()
     elif user.account.type==0:
         # cancello vecchio sondaggio
@@ -863,10 +870,15 @@ def create_modify_azienda_sondaggio_azienda_by_post(request,user,is_new_user,is_
         #ATTENZIONE SE SI CAMBIA con una post l'id del vecchio sondaggio esplode tutto
         # non conosciamo l'identita dell'utene quindi dobbiamo leggerlo dalla POST
         #per l'utente non lo facciamo salta la sicurezza
-        old_survey = Azienda.objects.get(pk=request.POST["id_survey"])
-        user = Account.objects.get(azienda=old_survey)
-        user.azienda = nuova_azienda
-        user.save()
+
+        #se l'account non esiste (retrocompatibilita)
+        try:
+            old_survey = Azienda.objects.get(pk=request.POST["id_survey"])
+            user = Account.objects.get(azienda=old_survey)
+            user.azienda = nuova_azienda
+            user.save()
+        except ObjectDoesNotExist:
+            logger.error("account non esiste quindi non aggiungiamo l'account ma eliminiamo comunque sondaggio sulla azienda")
         old_survey.delete()
     elif user.type==1:
         logger.error("Azienda modifica Sondaggio azienda")
@@ -900,7 +912,7 @@ def create_modify_azienda_sondaggio_azienda_by_post(request,user,is_new_user,is_
                 nuovo_valore_gia_esistente.citta = nuova_valore_nuovo
                 nuovo_valore_gia_esistente.save()
 
-
+# modifica dati azienda
 class ModifyAzienda(View):
 
     # solo se autenticato come admin o utente
@@ -1022,19 +1034,195 @@ class Aziende(View):
 
         return render(request, 'grazie.html',{"azienda":'1'})
 
+# ----------------Offerte Lavoro ------------------------------------------------------------------
 
-class Lavori(View):
+# tutti i tag e possibilita per offerete di lavoro
+def find_all_option_lavoro():
+    # Cerco cose per offeerte di lavoro
+    result = {}
+    result['lingua'] = Lingua.objects.all()
+    result['campo_studi'] = CampoStudi.objects.all()
+    result['esame'] = Esame.objects.all()
+    result['livello_cariera'] = LivelloCariera.objects.all()
+    result['area_operativa'] = AreaOperativa.objects.all()
+    result['tipo_contratto'] = TipoContratto.objects.all()
+    result['citta'] = Citta.objects.all()
 
+    return result
+
+# serve ad inserire nuove offerte di lavoro o modificarle
+def create_modify_lavoro_sondaggio_by_post(request, account, is_new_survey, is_admin):
+
+    if "codice_azienda" in request.POST:
+        # creo nuova offerta di lavoro
+        nuovo_lavoro= Lavoro(azienda_id=request.POST["codice_azienda"])
+
+        # inserirsco valori singoli se presenti
+        if request.POST['email_lavoro']== "":
+            nuovo_lavoro.email_referente = None
+        else:
+            nuovo_lavoro.email_referente = request.POST['email_lavoro']
+
+        if request.POST['cerca_distanza']== "":
+            nuovo_lavoro.distanza_massima = None
+        else:
+            nuovo_lavoro.distanza_massima = request.POST['cerca_distanza']
+
+        if request.POST['note_lavoro']== "":
+            nuovo_lavoro.note_lavoro = None
+        else:
+            nuovo_lavoro.note_lavoro = request.POST['note_lavoro']
+
+        # inserisco nel db
+        nuovo_lavoro.save()
+        # Ora parliamo di Attributi multi valore-------------------------------------------
+
+        valore_list = json.loads(request.POST["citta_sede_lavoro"])
+        if len(valore_list) <= 0:
+            nuovo_valore_nullo = CercaCitta(lavoro=nuovo_lavoro)
+            nuovo_valore_nullo.citta = None
+            nuovo_valore_nullo.save()
+        else:
+            for v in valore_list:
+                if len(Citta.objects.filter(valore=v.capitalize())) > 0:
+                    nuovo_valore_gia_esistente = CercaCitta(lavoro=nuovo_lavoro)
+                    nuovo_valore_gia_esistente.citta = Citta.objects.filter(valore=v.capitalize())[0]
+                    nuovo_valore_gia_esistente.save()
+                else:
+                    nuova_valore_nuovo = Citta(valore=v)
+                    nuova_valore_nuovo.save()
+                    # ora essite nel db quel valore
+                    nuovo_valore_gia_esistente = CercaCitta(lavoro=nuovo_lavoro)
+                    nuovo_valore_gia_esistente.citta = nuova_valore_nuovo
+                    nuovo_valore_gia_esistente.save()
+
+        valore_list = json.loads(request.POST["cerca_lingua"])
+        if len(valore_list) <= 0:
+            nuovo_valore_nullo = CercaLingua(lavoro=nuovo_lavoro)
+            nuovo_valore_nullo.lingua = None
+            nuovo_valore_nullo.save()
+        else:
+            for v in valore_list:
+                if len(Lingua.objects.filter(valore=v.capitalize())) > 0:
+                    nuovo_valore_gia_esistente = CercaLingua(lavoro=nuovo_lavoro)
+                    nuovo_valore_gia_esistente.lingua = Lingua.objects.filter(valore=v.capitalize())[0]
+                    nuovo_valore_gia_esistente.save()
+                else:
+                    nuova_valore_nuovo = Lingua(valore=v)
+                    nuova_valore_nuovo.save()
+                    # ora essite nel db quel valore
+                    nuovo_valore_gia_esistente = CercaLingua(lavoro=nuovo_lavoro)
+                    nuovo_valore_gia_esistente.lingua = nuova_valore_nuovo
+                    nuovo_valore_gia_esistente.save()
+
+        valore_list = json.loads(request.POST["cerca_campo_studi"])
+        if len(valore_list) <= 0:
+            nuovo_valore_nullo = CercaCampoStudio(lavoro=nuovo_lavoro)
+            nuovo_valore_nullo.lingua = None
+            nuovo_valore_nullo.save()
+        else:
+            for v in valore_list:
+                if len(CampoStudi.objects.filter(valore=v.capitalize())) > 0:
+                    nuovo_valore_gia_esistente = CercaCampoStudio(lavoro=nuovo_lavoro)
+                    nuovo_valore_gia_esistente.campo_studio = CampoStudi.objects.filter(valore=v.capitalize())[0]
+                    nuovo_valore_gia_esistente.save()
+                else:
+                    nuova_valore_nuovo = CampoStudi(valore=v)
+                    nuova_valore_nuovo.save()
+                    # ora essite nel db quel valore
+                    nuovo_valore_gia_esistente = CercaCampoStudio(lavoro=nuovo_lavoro)
+                    nuovo_valore_gia_esistente.campo_studio = nuova_valore_nuovo
+                    nuovo_valore_gia_esistente.save()
+
+        valore_list = json.loads(request.POST["cerca_esame"])
+        if len(valore_list) <= 0:
+            nuovo_valore_nullo = CercaEsami(lavoro=nuovo_lavoro)
+            nuovo_valore_nullo.esame = None
+            nuovo_valore_nullo.save()
+        else:
+            for v in valore_list:
+                if len(Esame.objects.filter(valore=v.capitalize())) > 0:
+                    nuovo_valore_gia_esistente = CercaEsami(lavoro=nuovo_lavoro)
+                    nuovo_valore_gia_esistente.esame = Esame.objects.filter(valore=v.capitalize())[0]
+                    nuovo_valore_gia_esistente.save()
+                else:
+                    nuova_valore_nuovo = Esame(valore=v)
+                    nuova_valore_nuovo.save()
+                    # ora essite nel db quel valore
+                    nuovo_valore_gia_esistente = CercaEsami(lavoro=nuovo_lavoro)
+                    nuovo_valore_gia_esistente.esame = nuova_valore_nuovo
+                    nuovo_valore_gia_esistente.save()
+
+        valore_list = json.loads(request.POST["cerca_area_operativa"])
+        if len(valore_list) <= 0:
+            nuovo_valore_nullo = CercaAreaOperativa(lavoro=nuovo_lavoro)
+            nuovo_valore_nullo.area_operativa = None
+            nuovo_valore_nullo.save()
+        else:
+            for v in valore_list:
+                if len(AreaOperativa.objects.filter(valore=v.capitalize())) > 0:
+                    nuovo_valore_gia_esistente = CercaAreaOperativa(lavoro=nuovo_lavoro)
+                    nuovo_valore_gia_esistente.area_operativa = AreaOperativa.objects.filter(valore=v.capitalize())[0]
+                    nuovo_valore_gia_esistente.save()
+                else:
+                    nuova_valore_nuovo = AreaOperativa(valore=v)
+                    nuova_valore_nuovo.save()
+                    # ora essite nel db quel valore
+                    nuovo_valore_gia_esistente = CercaAreaOperativa(lavoro=nuovo_lavoro)
+                    nuovo_valore_gia_esistente.area_operativa = nuova_valore_nuovo
+                    nuovo_valore_gia_esistente.save()
+
+        valore_list = json.loads(request.POST["cerca_livello_cariera"])
+        if len(valore_list) <= 0:
+            nuovo_valore_nullo = CercaLivelloCariera(lavoro=nuovo_lavoro)
+            nuovo_valore_nullo.livello_cariera = None
+            nuovo_valore_nullo.save()
+        else:
+            for v in valore_list:
+                if len(LivelloCariera.objects.filter(valore=v.capitalize())) > 0:
+                    nuovo_valore_gia_esistente = CercaLivelloCariera(lavoro=nuovo_lavoro)
+                    nuovo_valore_gia_esistente.livello_cariera = LivelloCariera.objects.filter(valore=v.capitalize())[0]
+                    nuovo_valore_gia_esistente.save()
+                else:
+                    nuova_valore_nuovo = LivelloCariera(valore=v)
+                    nuova_valore_nuovo.save()
+                    # ora essite nel db quel valore
+                    nuovo_valore_gia_esistente = CercaLivelloCariera(lavoro=nuovo_lavoro)
+                    nuovo_valore_gia_esistente.livello_cariera = nuova_valore_nuovo
+                    nuovo_valore_gia_esistente.save()
+
+
+        valore_list = json.loads(request.POST["cerca_tipo_contratto"])
+        if len(valore_list) <= 0:
+            nuovo_valore_nullo = CercaTipoContratto(lavoro=nuovo_lavoro)
+            nuovo_valore_nullo.tipo_contratto = None
+            nuovo_valore_nullo.save()
+        else:
+            for v in valore_list:
+                if len(TipoContratto.objects.filter(valore=v.capitalize())) > 0:
+                    nuovo_valore_gia_esistente = CercaTipoContratto(lavoro=nuovo_lavoro)
+                    nuovo_valore_gia_esistente.tipo_contratto = TipoContratto.objects.filter(valore=v.capitalize())[0]
+                    nuovo_valore_gia_esistente.save()
+                else:
+                    nuova_valore_nuovo = TipoContratto(valore=v)
+                    nuova_valore_nuovo.save()
+                    # ora essite nel db quel valore
+                    nuovo_valore_gia_esistente = CercaTipoContratto(lavoro=nuovo_lavoro)
+                    nuovo_valore_gia_esistente.tipo_contratto = nuova_valore_nuovo
+                    nuovo_valore_gia_esistente.save()
+
+
+
+
+# modifica dati offerta di lavoro
+class ModifyLavoro(View):
+
+    # solo se autenticato come admin o utente
     @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
-        result = {}
-        result['lingua'] = Lingua.objects.all()
-        result['campo_studi'] = CampoStudi.objects.all()
-        result['esame'] = Esame.objects.all()
-        result['livello_cariera'] = LivelloCariera.objects.all()
-        result['area_operativa'] = AreaOperativa.objects.all()
-        result['tipo_contratto'] = TipoContratto.objects.all()
-        result['citta'] = Citta.objects.all()
+
+        result={}
+        result = find_all_option_lavoro()
 
         # per creare copie uso url GET
         copy = {}
@@ -1078,6 +1266,61 @@ class Lavori(View):
                 copy['tipo_contratto'] = CercaTipoContratto.objects.select_related().filter(lavoro_id=copy['id']).exclude(tipo_contratto=None)
 
             result["copy"] = copy
+
+        else:
+            logger.error("id offerta lavoro non valido")
+
+        # controllo se autenticato
+        if request.user.is_authenticated:
+            logger.error("Sono autenticato Azienda? per modificare offerta lavoro")
+            #controllo se passato id
+
+            #controllo se Utente e azienda(quindi tipo 1) con quell ID oppure amministratore BISOGNA IMPOSTARE SUPERUSER A 1
+            if (request.user.is_superuser==1) or (request.user.account.type==1 and int(request.user.account.azienda.id) == int(copy['codice_azienda'])):
+                logger.error("Posso modificare offerta lavoro questionario")
+                result["copy"] = copy
+
+            else:
+                logger.error("NON PUO MODIFICARE")
+                result['error'] += " utente non valido per modifcare oferrta di lavoro corrente"
+        else:
+           result['error'] += " non sei autenticato"
+
+
+        return render(request, "lavoro.html", result)
+
+    # solo se autenticato come admin o utente Azienda
+    @method_decorator(login_required(login_url='log_in'))
+    def post(self, request, *args, **kwargs):
+
+    #si tratta di un utente corretto
+        if request.user.is_superuser == 1:
+            logger.error("Super user vuole modificare sondaggio accede al metodo")
+            create_modify_lavoro_sondaggio_by_post(request, request.user, is_new_survey=False, is_admin=True)
+        elif request.user.account.type == 1:
+            logger.error("Azienda vuole modifcare sondaggio accede al metodo")
+            create_modify_lavoro_sondaggio_by_post(request, request.user.account, is_new_survey=False, is_admin=False)
+        else:
+            logger.error("un altro tipo di utente!")
+        return render(request, 'index.html')
+
+
+
+class Lavori(View):
+
+    @method_decorator(login_required(login_url='log_in'))
+    def get(self, request, *args, **kwargs):
+        result = {}
+        result = find_all_option_lavoro()
+
+        # imposto di default codice azienda
+        copy = {}
+        copy['codice_azienda']=""
+        if request.user.account.azienda_id:
+            copy['codice_azienda'] = request.user.account.azienda_id
+        else:
+            logger.error("qualcuno di sbagliato cerca di fare sondaggio offerte di lavoro")
+        result['copy']=copy
 
         return render(request, "lavoro.html", result)
 
@@ -1733,3 +1976,131 @@ class RisultatiStudenti(View):
                 content_type="application/json"
             )
 
+# la singola Azienda vuole vedere le sue offerte di lavoro
+class AziendaOffertaLavoro(View):
+    @method_decorator(login_required(login_url='log_in'))
+    def get(self, request, *args, **kwargs):
+
+        result={}
+
+        if request.user.account.azienda_id:
+            # lavori della azienda cercata
+            codice_id_azienda = request.user.account.azienda_id
+            list_lavori = Lavoro.objects.filter(azienda=codice_id_azienda).select_related()
+
+            logger.error("Vettore offerte lavoro lungo:"+str(len(list_lavori)) +" con id azienda"+ str(request.user.account.azienda_id))
+        else:
+            logger.error("errore id utente")
+                    # controllo errori per registrazione
+            return
+
+        for l in list_lavori:
+
+            result[l.id] = {"id": l.id, 'id_azienda': l.azienda_id,
+                            'note_azienda': l.azienda.note,"email_riferimento_azienda": l.azienda.email ,
+                            'email_riferimento_lavoro': l.email_referente, "citta_lavoro":  "", 'lingua': "",
+                            'campo_studi': "", 'esami': "", 'area_operativa': "", 'livello_cariera': "",
+                            'tipo_contratto': "", 'distanza': l.distanza_massima, 'note': l.note_lavoro,
+                            'data': l.pub_date}
+
+            #tutto dentro il ciclo for
+
+            # citta lavoro
+            list_citta_lavoro = CercaCitta.objects.filter(lavoro=l).select_related()
+            for lcs in list_citta_lavoro:
+                if lcs.citta != None:
+                    if result[lcs.lavoro.id]['citta_lavoro'] != "":
+                        result[lcs.lavoro.id]['citta_lavoro'] += ","+lcs.citta.valore
+                    else:
+                        result[lcs.lavoro.id]['citta_lavoro'] += lcs.citta.valore
+                else:
+                    result[lcs.lavoro.id]['citta_lavoro'] += "None"
+
+            # lingua cerca lavoro
+            list_lingua = CercaLingua.objects.filter(lavoro=l).select_related()
+            for ll in list_lingua:
+                if ll.lingua != None:
+                    if result[ll.lavoro.id]['lingua'] != "":
+                        result[ll.lavoro.id]['lingua'] += ","+ll.lingua.valore
+                    else:
+                        result[ll.lavoro.id]['lingua'] += ll.lingua.valore
+                else:
+                    result[ll.lavoro.id]['lingua'] += "None"
+
+            # campo studi cerca lavoro
+            list_campo_studi = CercaCampoStudio.objects.filter(lavoro=l).select_related()
+            for lcs in list_campo_studi:
+                if lcs.campo_studio != None:
+                    if result[lcs.lavoro.id]['campo_studi'] != "":
+                        result[lcs.lavoro.id]['campo_studi'] += ","+lcs.campo_studio.valore
+                    else:
+                        result[lcs.lavoro.id]['campo_studi'] += lcs.campo_studio.valore
+                else:
+                    result[lcs.lavoro.id]['campo_studi'] += "None"
+
+            # esami cerca lavoro
+            list_esami = CercaEsami.objects.filter(lavoro=l).select_related()
+            for le in list_esami:
+                if le.esame != None:
+                    if result[le.lavoro.id]['esami'] != "":
+                        result[le.lavoro.id]['esami'] += ","+le.esame.valore
+                    else:
+                        result[le.lavoro.id]['esami'] += le.esame.valore
+                else:
+                    result[le.lavoro.id]['esami'] += "None"
+
+            # area_operativa cerca lavoro
+            list_area_operativa = CercaAreaOperativa.objects.filter(lavoro=l).select_related()
+            for lao in list_area_operativa:
+                if lao.area_operativa != None:
+                    if result[lao.lavoro.id]['area_operativa'] != "":
+                        result[lao.lavoro.id]['area_operativa'] += ","+lao.area_operativa.valore
+                    else:
+                        result[lao.lavoro.id]['area_operativa'] += lao.area_operativa.valore
+                else:
+                    result[lao.lavoro.id]['area_operativa'] += "None"
+
+            # livello_cariera cerca lavoro
+            list_livello_cariera = CercaLivelloCariera.objects.filter(lavoro=l).select_related()
+            for llc in list_livello_cariera:
+                if llc.livello_cariera != None:
+                    if result[llc.lavoro.id]['livello_cariera'] != "":
+                        result[llc.lavoro.id]['livello_cariera'] += ","+llc.livello_cariera.valore
+                    else:
+                        result[llc.lavoro.id]['livello_cariera'] += llc.livello_cariera.valore
+                else:
+                    result[llc.lavoro.id]['livello_cariera'] += "None"
+
+            # tipo_contratto cerca lavoro
+            list_tipo_contratto = CercaTipoContratto.objects.filter(lavoro=l).select_related()
+            for ltc in list_tipo_contratto:
+                if ltc.tipo_contratto != None:
+                    if result[ltc.lavoro.id]['tipo_contratto'] != "":
+                        result[ltc.lavoro.id]['tipo_contratto'] += ","+ltc.tipo_contratto.valore
+                    else:
+                        result[ltc.lavoro.id]['tipo_contratto'] += ltc.tipo_contratto.valore
+                else:
+                    result[ltc.lavoro.id]['tipo_contratto'] += "None"
+
+        return render(request, "risultati.html", {"result": result, "type": 2})
+
+    @method_decorator(login_required(login_url='log_in'))
+    def post(self, request, *args, **kwargs):
+        if request.method == 'POST':
+            if "id" in request.POST:
+                lavoro = Lavoro.objects.get(pk=int(request.POST["id"]))
+                lavoro.delete()
+
+            response_data = {}
+
+            response_data['msg'] = 'Lavoro eliminato con id: ' + request.POST["id"]
+
+            return HttpResponse(
+                json.dumps(response_data),
+                content_type="application/json"
+            )
+        else:
+            return HttpResponse(
+                json.dumps({"nothing to see": "errore imprevisto"}),
+                content_type="application/json"
+            )
