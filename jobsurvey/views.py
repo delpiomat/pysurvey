@@ -874,30 +874,42 @@ def create_modify_azienda_sondaggio_azienda_by_post(request,user,is_new_user,is_
         # nuovo utente
         user.azienda = nuova_azienda
         user.save()
-    elif is_admin:
+    elif is_admin or user.type==1:
         logger.error("admin modifica Sondaggio azienda")
         # un admin che fa modifiche
         #ATTENZIONE SE SI CAMBIA con una post l'id del vecchio sondaggio esplode tutto
         # non conosciamo l'identita dell'utene quindi dobbiamo leggerlo dalla POST
         #per l'utente non lo facciamo salta la sicurezza
-
         #se l'account non esiste (retrocompatibilita)
         try:
-            old_survey = Azienda.objects.get(pk=request.POST["id_survey"])
-            user = Account.objects.get(azienda=old_survey)
-            user.azienda = nuova_azienda
-            user.save()
+            if is_admin:
+                logger.error("admin modifica Sondaggio azienda")
+                old_survey = Azienda.objects.get(pk=request.POST["id_survey"])
+                # cambio SIGNIFICATO di user!!! ATTENTO
+                user = Account.objects.get(azienda=old_survey)
+            else:
+                logger.error("Azienda modifica Sondaggio azienda")
+                old_survey = Azienda.objects.get(pk=user.azienda_id)
+            #problema della mail non modificabile
+            nuova_azienda.email = old_survey.email
+            nuova_azienda.save()
+            #problema di mantenere offerte di lavoro vecchie
+            job_offers = Lavoro.objects.filter(azienda=old_survey)
+            for job in job_offers:
+                job.azienda = nuova_azienda
+                job.save()
+                logger.error("Job riagganciato")
+            if is_admin:
+                logger.error("Admin salva azienda modificata")
+                user.azienda = nuova_azienda
+                user.save()
+            else:
+                logger.error("Utente Azienda salva azienda modificata")
+                user.azienda = nuova_azienda
+                user.save()
         except ObjectDoesNotExist:
-            logger.error("account non esiste quindi non aggiungiamo l'account ma eliminiamo comunque sondaggio sulla azienda")
+            logger.error("Account non esiste quindi non aggiungiamo l'account ma eliminiamo comunque sondaggio azienda")
         old_survey.delete()
-    elif user.type==1:
-        logger.error("Azienda modifica Sondaggio azienda")
-        # cancello vecchio sondaggio
-        old_survey = Azienda.objects.get(pk=user.azienda_id)
-        # aggiorno utente
-        user.azienda = nuova_azienda
-        old_survey.delete()
-        user.save()
     else:
         # caso che non deve mai accadere
         logger.error("Qualcuno di strano vuol modifcare azienda")
@@ -1233,6 +1245,7 @@ class ModifyLavoro(View):
 
         result={}
         result = find_all_option_lavoro()
+        result['error']=''
 
         # per creare copie uso url GET
         copy = {}
@@ -1279,6 +1292,8 @@ class ModifyLavoro(View):
 
         else:
             logger.error("id offerta lavoro non valido")
+            result = {}
+            result['error'] = "offerta di lavoro non valida"
 
         # controllo se autenticato
         if request.user.is_authenticated:
@@ -1292,10 +1307,12 @@ class ModifyLavoro(View):
 
             else:
                 logger.error("NON PUO MODIFICARE")
-                result['error'] += " utente non valido per modifcare oferrta di lavoro corrente"
-        else:
-           result['error'] += " non sei autenticato"
+                result = {}
+                result['error'] = "Utente non valido per modifcare offerta di lavoro corrente"
 
+        else:
+            result = {}
+            result['error'] = "Non sei autenticato"
 
         return render(request, "lavoro.html", result)
 

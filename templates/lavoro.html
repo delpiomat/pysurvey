@@ -35,6 +35,14 @@
 {% block topcontent %}
 <div class="container">{% csrf_token %}
 
+    {% if error %}
+    <div class="alert alert-danger" role="alert">
+      <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+      <span class="sr-only">Error:</span>
+      {{ error }}
+    </div>
+{% endif %}
+
 
 <form id="forminvio" data-toggle="validator" method="POST" role="form">{% csrf_token %}
 
@@ -43,7 +51,7 @@
 
     <div class="form-group">
         <label for="codice_azienda">Codice Azienda:</label>
-        <input type="text" name="codice_azienda" value="{{ copy.codice_azienda }}" id="codice_azienda" required class="form-control">
+        <input type="text" name="codice_azienda" value="{{ copy.codice_azienda }}" id="codice_azienda" required class="form-control" readonly>
 		<span class="help-block">Codice Aziendale obbligatorio rilasciato all'inizio</span>
     </div>
 
