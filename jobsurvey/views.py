@@ -1,6 +1,5 @@
 from django.http import HttpResponse
-from django.core.context_processors import csrf
-from django.shortcuts import render, redirect, render_to_response, RequestContext
+from django.shortcuts import render, redirect, render_to_response # RequestContext # non va
 
 from django.views.generic import View
 from createSurvey.models import *
@@ -62,8 +61,9 @@ def find_all_option_student():
     return result
 
 
-def create_modify_student_persona_survey_by_post(request,user,is_new_user,is_admin=False):
+def create_modify_student_persona_survey_by_post(request, user, is_new_user, is_admin=False):
     nuova_persona = Persona()
+
     if request.POST['cap']== "":
         nuova_persona.cap = None
     else:
@@ -129,7 +129,7 @@ def create_modify_student_persona_survey_by_post(request,user,is_new_user,is_adm
     livello_pc_post = json.loads(request.POST["livello_pc"])
     if len(livello_pc_post) <= 0:
         nuova_persona.livello_uso_computer = None
-    elif len( LivelloPC.objects.filter(valore=livello_pc_post[0].capitalize()) ) > 0 :
+    elif len( LivelloPC.objects.filter(valore=livello_pc_post[0].capitalize()) ) > 0:
         nuova_persona.livello_uso_computer = LivelloPC.objects.filter(valore=livello_pc_post[0].capitalize())[0]
     else:
         livello_pc = LivelloPC(valore=livello_pc_post[0].capitalize())
@@ -172,19 +172,29 @@ def create_modify_student_persona_survey_by_post(request,user,is_new_user,is_adm
         #per l'utente non lo facciamo salta la sicurezza
         old_survey = Persona.objects.get(pk=request.POST["id_survey"])
         try:
+            nuova_persona.email = old_survey.email
             user = Account.objects.get(survey=old_survey)
             user.survey = nuova_persona
             user.save()
+            nuova_persona.save()
+            #eccezione gestisci il vecchio modo senza controllo accessi e autenticazioni
         except ObjectDoesNotExist:
-            logger.error("accoutn non esiste quindi non aggiungiamo l'account ma lo eliminiamo comunque")
+            logger.error("account non esiste quindi non aggiungiamo l'account ma lo eliminiamo comunque ADMIN")
         old_survey.delete()
-    elif user.account.type==0:
-        # cancello vecchio sondaggio
-        old_survey = Persona.objects.get(pk=user.survey_id)
-        old_survey.delete()
-        # aggiorno utente
-        user.survey = nuova_persona
-        user.save()
+    elif user.type==0:
+        old_survey = Persona.objects.get(pk=user.account.survey_id)
+        try:
+            # assegno vecchia email
+            nuova_persona.email = old_survey.email
+            nuova_persona.save()
+            # aggiorno utente
+            logger.error("caro utente collego all account il nuovo sondaggio")
+            user.survey = nuova_persona
+            user.save()
+            # cancello vecchio sondaggio
+            old_survey.delete()
+        except ObjectDoesNotExist:
+            logger.error("account non esiste quindi non aggiungiamo l'account ma lo eliminiamo comunque NON ADMIN")
 
 
     # Ora la parte tosta i multivalore! buona fortuna-----------------------------------------------------------
@@ -635,7 +645,7 @@ class ModifyStudente(View):
         copy['possibilita_trasferirsi'] = False #si no
         copy['stipendio_futuro'] = ""
 
-        logger.error("modifca studente ")
+        logger.error("modifica studente ")
         # controllo se autenticato
         if request.user.is_authenticated:
             logger.error("Sono autenticato studente")
@@ -754,11 +764,11 @@ class ModifyStudente(View):
         #si tratta di un utente corretto
         if request.user.is_superuser==1:
             create_modify_student_persona_survey_by_post(request, request.user, False, True)
-        elif request.user.account==0:
-            create_modify_student_persona_survey_by_post(request, request.user, False, False)
-
-
-
+        elif request.user.account.type==0:
+            logger.error("Sei un utente con una post")
+            create_modify_student_persona_survey_by_post(request, request.user.account, False, False)
+        else:
+            logger.error("Non Sei nessuno! cosa volevi fare? una Post su studenti:")
         return render(request, 'index.html')
 
 

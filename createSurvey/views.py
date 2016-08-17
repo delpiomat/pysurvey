@@ -1,7 +1,10 @@
 from django.http import HttpResponse
-from django.core.context_processors import csrf
-from django.shortcuts import render, redirect, render_to_response, RequestContext
 
+#from django.core.context_processors import csrf #deprecato...
+from django.views.decorators.csrf import csrf_protect
+
+# from django.shortcuts import render, redirect, render_to_response, RequestContext # da errore Request Context
+from django.shortcuts import render, redirect, render_to_response
 from django.views.generic import View
 from .models import Column, Survey, Interview, Result, Account
 
@@ -34,10 +37,10 @@ import time
 
 # login
 class AuthLogin(View):
-
+    method_decorator(csrf_protect)
     def get(self, request):
         c = {}
-        c.update(csrf(request))
+       #c.update(csrf(request)) #deprecato
         return render(request, 'log_in.html', c)
 
     def post(self, request):
@@ -58,7 +61,7 @@ class AuthLogin(View):
 
 # signup
 class SignUp(View):
-
+    method_decorator(csrf_protect)
     def get(self, request):
         error = None
         if 'error' in request.GET:
@@ -67,7 +70,7 @@ class SignUp(View):
         if 'result' in request.GET:
             result = request.GET['result']
         c = {'error': error, 'result': result}
-        c.update(csrf(request))
+        #c.update(csrf(request)) #deprecato
         return render(request, 'sign_up.html', c)
 
     def post(self, request):
