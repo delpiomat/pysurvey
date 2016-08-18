@@ -2194,3 +2194,138 @@ def result_csv(request, *args, **kwargs):
 
     filename = filename.replace(" ", "_")
     return export_csv_SJA(survey, col_list, filename + ".csv")
+
+
+def infojob(id_job):
+
+    job={}
+    job['id'] = 'None'
+    job['id_azienda'] = 'None'
+    job['citta_sede'] = 'None'
+    job['citta_lavoro'] = ''
+    job['lingua'] = ''
+    job['campo_studi'] = ''
+    job['esami'] = ''
+    job['area_operativa'] = ''
+    job['tipo_contratto'] = ''
+    job['livello_cariera'] = ''
+    job['distanza'] = 'None'
+
+    try:# controllo che esista
+
+        job_obj = Lavoro.objects.get(pk=id_job)
+
+
+
+        if job_obj.id:
+            job['id'] = job_obj.id
+        if job_obj.azienda_id:
+            job['id_azienda'] = job_obj.azienda_id
+        if job_obj.azienda.citta_sede:
+            job['citta_sede'] = job_obj.azienda.citta_sede.valore
+        if job_obj.distanza_massima:
+            job['distanza'] = job_obj.distanza_massima
+
+        # attributi multivalore
+
+        # citta lavoro
+        list_citta_lavoro = CercaCitta.objects.filter(lavoro=id_job).select_related()
+        for lcs in list_citta_lavoro:
+            if lcs.citta is not None:
+                if job['citta_lavoro'] != "":
+                    job['citta_lavoro'] += "," + lcs.citta.valore
+                else:
+                    job['citta_lavoro'] += lcs.citta.valore
+            else:
+                job['citta_lavoro'] += "None"
+
+        # lingua cerca lavoro
+        list_lingua = CercaLingua.objects.filter(lavoro=id_job).select_related()
+        for ll in list_lingua:
+            if ll.lingua != None:
+                if job['lingua'] != "":
+                    job['lingua'] += "," + ll.lingua.valore
+                else:
+                    job['lingua'] += ll.lingua.valore
+            else:
+                job['lingua'] += "None"
+
+        # campo studi cerca lavoro
+        list_campo_studi = CercaCampoStudio.objects.filter(lavoro=id_job).select_related()
+        for lcs in list_campo_studi:
+            if lcs.campo_studio != None:
+                if job['campo_studi'] != "":
+                    job['campo_studi'] += "," + lcs.campo_studio.valore
+                else:
+                    job['campo_studi'] += lcs.campo_studio.valore
+            else:
+                job['campo_studi'] += "None"
+
+        # esami cerca lavoro
+        list_esami = CercaEsami.objects.filter(lavoro=id_job).select_related()
+        for le in list_esami:
+            if le.esame != None:
+                if job['esami'] != "":
+                    job['esami'] += "," + le.esame.valore
+                else:
+                    job['esami'] += le.esame.valore
+            else:
+                job['esami'] += "None"
+
+        # area_operativa cerca lavoro
+        list_area_operativa = CercaAreaOperativa.objects.filter(lavoro=id_job).select_related()
+        for lao in list_area_operativa:
+            if lao.area_operativa != None:
+                if job['area_operativa'] != "":
+                    job['area_operativa'] += "," + lao.area_operativa.valore
+                else:
+                    job['area_operativa'] += lao.area_operativa.valore
+            else:
+                job['area_operativa'] += "None"
+
+        # livello_cariera cerca lavoro
+        list_livello_cariera = CercaLivelloCariera.objects.filter(lavoro=id_job).select_related()
+        for llc in list_livello_cariera:
+            if llc.livello_cariera != None:
+                if job['livello_cariera'] != "":
+                    job['livello_cariera'] += "," + llc.livello_cariera.valore
+                else:
+                    job['livello_cariera'] += llc.livello_cariera.valore
+            else:
+                job['livello_cariera'] += "None"
+
+        # tipo_contratto cerca lavoro
+        list_tipo_contratto = CercaTipoContratto.objects.filter(lavoro=id_job).select_related()
+        for ltc in list_tipo_contratto:
+            if ltc.tipo_contratto != None:
+                if job['tipo_contratto'] != "":
+                    job['tipo_contratto'] += "," + ltc.tipo_contratto.valore
+                else:
+                    job['tipo_contratto'] += ltc.tipo_contratto.valore
+            else:
+                job['tipo_contratto'] += "None"
+
+    except ObjectDoesNotExist:
+        logger.error("Info non possibili il lavoro non esiste,ritorno None")
+        return None
+
+    return job
+
+# Parte di raccomandazione
+class RecomStudente(View):
+
+    # solo se autenticato come admin o utente
+    @method_decorator(login_required(login_url='log_in'))
+    def get(self, request, *args, **kwargs):
+
+        # carico i dati di ogni offerta di lavoro, ma solo alcune info per mantenere anonimato
+        # bisogna creare una funzione che passa i 5 valori necessari. La funzione deve dipendere dal Account collegato
+        result = {0: infojob(23), 1: infojob(13), 2: infojob(14), 4: infojob(15), 5: infojob(16)}
+
+        return render(request, "recommendation_student.html", {"result": result})
+
+    # solo se autenticato come admin o utente Azienda
+    @method_decorator(login_required(login_url='log_in'))
+    def post(self, request, *args, **kwargs):
+
+        return render(request, 'recommendation_student.html')

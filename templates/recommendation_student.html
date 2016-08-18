@@ -1,0 +1,48 @@
+{% extends "base_generic.html" %}
+{% load staticfiles %}
+
+{% block title %}Offerte di Lavoro consigliate{% endblock %}
+
+
+
+{% block topcontent %}
+
+<h2>Top 5 Offerta di Lavoro Consigliate</h2>
+        <form id="forminvio" data-toggle="validator" method="POST" role="form">{% csrf_token %}
+        <table id="tblRisultati" class="table">
+            <thead>
+                <tr>
+                    <th>id_lavoro</th>
+                    <th>id_azienda</th>
+                    <th>citta_sede</th>
+                    <th>citta_lavoro</th>
+                    <th>lingua</th>
+                    <th>campo_studi</th>
+                    <th>esami</th>
+                    <th>area_operativa</th>
+                    <th>tipo_contratto</th>
+                    <th>livello_cariera</th>
+                    <th>distanza</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for key,value in result.items %}
+                    <tr id="lavoro_{{ value.id }}">
+                        <td>{{ value.id }}</td>
+                        <td>{{ value.id_azienda }}</td>
+                        <td>{{ value.citta_sede }}</td>
+                        <td>{{ value.citta_lavoro }}</td>
+                        <td>{{ value.lingua }}</td>
+                        <td>{{ value.campo_studi }}</td>
+                        <td>{{ value.esami }}</td>
+                        <td>{{ value.area_operativa }}</td>
+                        <td>{{ value.tipo_contratto }}</td>
+                        <td>{{ value.livello_cariera }}</td>
+                        <td>{{ value.distanza }}</td>
+                   </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </form>
+
+{% endblock %}
