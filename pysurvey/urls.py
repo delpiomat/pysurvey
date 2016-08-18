@@ -32,6 +32,7 @@ urlpatterns = [
     url(r'^make_survey/(?P<id>[0-9]+)/$', createSurvey.views.MakeSurvey.as_view(), name="make_survey"),
     url(r'^result/(?P<id>[0-9]+)/$', createSurvey.views.ResultSurvey.as_view(), name="result"),
     url(r'^download/(?P<type>.*)/(?P<survey_id>[0-9]+)/$', createSurvey.views.result_download, name='result_download'),
+    url(r'^download/(?P<type>[0-9]+)/$', jobsurvey.views.result_csv, name='csv_survey_download'),
     url(r'^studenti/(?P<id>[0-9]+)/$', jobsurvey.views.ModifyStudente.as_view(), name='studenti_modifica'),
     url(r'^studenti/error/(?P<error>.*)/$', jobsurvey.views.Studenti.as_view(), name='studenti'),
     url(r'^studenti/$', jobsurvey.views.Studenti.as_view(), name='studenti'),

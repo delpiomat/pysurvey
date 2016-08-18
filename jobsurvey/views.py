@@ -1523,36 +1523,41 @@ class Grazie(View):
     def post(self, request, *args, **kwargs):
         return render(request, "grazie.html")
 
+def all_aziende():
+    result = {}
+
+    # aziende
+    list_aziende = Azienda.objects.all().select_related()
+
+    # altra sede
+    list_altra_sede = AltraSede.objects.all().select_related()
+
+    for a in list_aziende:
+        if a.citta_sede != None:
+            citta_sede = a.citta_sede.valore
+        else:
+            citta_sede = "None"
+        result[a.id] = {'id': a.id, 'note': a.note, 'citta_sede': citta_sede, 'email': a.email,
+                        "nome_referente": a.nome_referente, 'altra_sede': "", 'data': a.pub_date}
+
+    for las in list_altra_sede:
+        if las.citta != None:
+            if result[las.azienda.id]['altra_sede'] != "":
+                result[las.azienda.id]['altra_sede'] += "," + las.citta.valore
+            else:
+                result[las.azienda.id]['altra_sede'] += las.citta.valore
+        else:
+            result[las.azienda.id]['altra_sede'] += "None"
+
+    return result
 
 class RisultatiAziende(View):
 
     @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
 
-        result={}
-        # aziende
-        list_aziende = Azienda.objects.all().select_related()
-
-        # altra sede
-        list_altra_sede = AltraSede.objects.all().select_related()
-
-        for a in list_aziende:
-            if a.citta_sede != None:
-                citta_sede= a.citta_sede.valore
-            else:
-                citta_sede = "None"
-            result[a.id] = {'id': a.id, 'note': a.note, 'citta_sede': citta_sede, 'email': a.email,
-                            "nome_referente":  a.nome_referente, 'altra_sede': "", 'data': a.pub_date}
-
-        for las in list_altra_sede:
-            if las.citta != None:
-                if result[las.azienda.id]['altra_sede'] != "":
-                    result[las.azienda.id]['altra_sede'] += ","+las.citta.valore
-                else:
-                    result[las.azienda.id]['altra_sede'] += las.citta.valore
-            else:
-                result[las.azienda.id]['altra_sede'] += "None"
-
+        result = {}
+        result = all_aziende()
         return render(request, "risultati.html", {"result": result, "type": 1})
 
     @method_decorator(login_required(login_url='log_in'))
@@ -1576,99 +1581,104 @@ class RisultatiAziende(View):
                 content_type="application/json"
             )
 
+def all_job():
+    result = {}
+    # lavori
+    list_lavori = Lavoro.objects.all().select_related()
+
+    for l in list_lavori:
+        result[l.id] = {"id": l.id, 'id_azienda': l.azienda_id,
+                        'note_azienda': l.azienda.note, "email_riferimento_azienda": l.azienda.email,
+                        'email_riferimento_lavoro': l.email_referente, "citta_lavoro": "", 'lingua': "",
+                        'campo_studi': "", 'esami': "", 'area_operativa': "", 'livello_cariera': "",
+                        'tipo_contratto': "", 'distanza': l.distanza_massima, 'note': l.note_lavoro,
+                        'data': l.pub_date}
+
+    # citta lavoro
+    list_citta_lavoro = CercaCitta.objects.all().select_related()
+    for lcs in list_citta_lavoro:
+        if lcs.citta != None:
+            if result[lcs.lavoro.id]['citta_lavoro'] != "":
+                result[lcs.lavoro.id]['citta_lavoro'] += "," + lcs.citta.valore
+            else:
+                result[lcs.lavoro.id]['citta_lavoro'] += lcs.citta.valore
+        else:
+            result[lcs.lavoro.id]['citta_lavoro'] += "None"
+
+    # lingua cerca lavoro
+    list_lingua = CercaLingua.objects.all().select_related()
+    for ll in list_lingua:
+        if ll.lingua != None:
+            if result[ll.lavoro.id]['lingua'] != "":
+                result[ll.lavoro.id]['lingua'] += "," + ll.lingua.valore
+            else:
+                result[ll.lavoro.id]['lingua'] += ll.lingua.valore
+        else:
+            result[ll.lavoro.id]['lingua'] += "None"
+
+    # campo studi cerca lavoro
+    list_campo_studi = CercaCampoStudio.objects.all().select_related()
+    for lcs in list_campo_studi:
+        if lcs.campo_studio != None:
+            if result[lcs.lavoro.id]['campo_studi'] != "":
+                result[lcs.lavoro.id]['campo_studi'] += "," + lcs.campo_studio.valore
+            else:
+                result[lcs.lavoro.id]['campo_studi'] += lcs.campo_studio.valore
+        else:
+            result[lcs.lavoro.id]['campo_studi'] += "None"
+
+    # esami cerca lavoro
+    list_esami = CercaEsami.objects.all().select_related()
+    for le in list_esami:
+        if le.esame != None:
+            if result[le.lavoro.id]['esami'] != "":
+                result[le.lavoro.id]['esami'] += "," + le.esame.valore
+            else:
+                result[le.lavoro.id]['esami'] += le.esame.valore
+        else:
+            result[le.lavoro.id]['esami'] += "None"
+
+    # area_operativa cerca lavoro
+    list_area_operativa = CercaAreaOperativa.objects.all().select_related()
+    for lao in list_area_operativa:
+        if lao.area_operativa != None:
+            if result[lao.lavoro.id]['area_operativa'] != "":
+                result[lao.lavoro.id]['area_operativa'] += "," + lao.area_operativa.valore
+            else:
+                result[lao.lavoro.id]['area_operativa'] += lao.area_operativa.valore
+        else:
+            result[lao.lavoro.id]['area_operativa'] += "None"
+
+    # livello_cariera cerca lavoro
+    list_livello_cariera = CercaLivelloCariera.objects.all().select_related()
+    for llc in list_livello_cariera:
+        if llc.livello_cariera != None:
+            if result[llc.lavoro.id]['livello_cariera'] != "":
+                result[llc.lavoro.id]['livello_cariera'] += "," + llc.livello_cariera.valore
+            else:
+                result[llc.lavoro.id]['livello_cariera'] += llc.livello_cariera.valore
+        else:
+            result[llc.lavoro.id]['livello_cariera'] += "None"
+
+    # tipo_contratto cerca lavoro
+    list_tipo_contratto = CercaTipoContratto.objects.all().select_related()
+    for ltc in list_tipo_contratto:
+        if ltc.tipo_contratto != None:
+            if result[ltc.lavoro.id]['tipo_contratto'] != "":
+                result[ltc.lavoro.id]['tipo_contratto'] += "," + ltc.tipo_contratto.valore
+            else:
+                result[ltc.lavoro.id]['tipo_contratto'] += ltc.tipo_contratto.valore
+        else:
+            result[ltc.lavoro.id]['tipo_contratto'] += "None"
+
+    return result
+
 class RisultatiOffertaLavoro(View):
     @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
 
-        result={}
-        # lavori
-        list_lavori = Lavoro.objects.all().select_related()
-
-        for l in list_lavori:
-
-            result[l.id] = {"id": l.id, 'id_azienda': l.azienda_id,
-                            'note_azienda': l.azienda.note,"email_riferimento_azienda": l.azienda.email ,
-                            'email_riferimento_lavoro': l.email_referente, "citta_lavoro":  "", 'lingua': "",
-                            'campo_studi': "", 'esami': "", 'area_operativa': "", 'livello_cariera': "",
-                            'tipo_contratto': "", 'distanza': l.distanza_massima, 'note': l.note_lavoro,
-                            'data': l.pub_date}
-
-        # citta lavoro
-        list_citta_lavoro = CercaCitta.objects.all().select_related()
-        for lcs in list_citta_lavoro:
-            if lcs.citta != None:
-                if result[lcs.lavoro.id]['citta_lavoro'] != "":
-                    result[lcs.lavoro.id]['citta_lavoro'] += ","+lcs.citta.valore
-                else:
-                    result[lcs.lavoro.id]['citta_lavoro'] += lcs.citta.valore
-            else:
-                result[lcs.lavoro.id]['citta_lavoro'] += "None"
-
-        # lingua cerca lavoro
-        list_lingua = CercaLingua.objects.all().select_related()
-        for ll in list_lingua:
-            if ll.lingua != None:
-                if result[ll.lavoro.id]['lingua'] != "":
-                    result[ll.lavoro.id]['lingua'] += ","+ll.lingua.valore
-                else:
-                    result[ll.lavoro.id]['lingua'] += ll.lingua.valore
-            else:
-                result[ll.lavoro.id]['lingua'] += "None"
-
-        # campo studi cerca lavoro
-        list_campo_studi = CercaCampoStudio.objects.all().select_related()
-        for lcs in list_campo_studi:
-            if lcs.campo_studio != None:
-                if result[lcs.lavoro.id]['campo_studi'] != "":
-                    result[lcs.lavoro.id]['campo_studi'] += ","+lcs.campo_studio.valore
-                else:
-                    result[lcs.lavoro.id]['campo_studi'] += lcs.campo_studio.valore
-            else:
-                result[lcs.lavoro.id]['campo_studi'] += "None"
-
-        # esami cerca lavoro
-        list_esami = CercaEsami.objects.all().select_related()
-        for le in list_esami:
-            if le.esame != None:
-                if result[le.lavoro.id]['esami'] != "":
-                    result[le.lavoro.id]['esami'] += ","+le.esame.valore
-                else:
-                    result[le.lavoro.id]['esami'] += le.esame.valore
-            else:
-                result[le.lavoro.id]['esami'] += "None"
-
-        # area_operativa cerca lavoro
-        list_area_operativa = CercaAreaOperativa.objects.all().select_related()
-        for lao in list_area_operativa:
-            if lao.area_operativa != None:
-                if result[lao.lavoro.id]['area_operativa'] != "":
-                    result[lao.lavoro.id]['area_operativa'] += ","+lao.area_operativa.valore
-                else:
-                    result[lao.lavoro.id]['area_operativa'] += lao.area_operativa.valore
-            else:
-                result[lao.lavoro.id]['area_operativa'] += "None"
-
-        # livello_cariera cerca lavoro
-        list_livello_cariera = CercaLivelloCariera.objects.all().select_related()
-        for llc in list_livello_cariera:
-            if llc.livello_cariera != None:
-                if result[llc.lavoro.id]['livello_cariera'] != "":
-                    result[llc.lavoro.id]['livello_cariera'] += ","+llc.livello_cariera.valore
-                else:
-                    result[llc.lavoro.id]['livello_cariera'] += llc.livello_cariera.valore
-            else:
-                result[llc.lavoro.id]['livello_cariera'] += "None"
-
-        # tipo_contratto cerca lavoro
-        list_tipo_contratto = CercaTipoContratto.objects.all().select_related()
-        for ltc in list_tipo_contratto:
-            if ltc.tipo_contratto != None:
-                if result[ltc.lavoro.id]['tipo_contratto'] != "":
-                    result[ltc.lavoro.id]['tipo_contratto'] += ","+ltc.tipo_contratto.valore
-                else:
-                    result[ltc.lavoro.id]['tipo_contratto'] += ltc.tipo_contratto.valore
-            else:
-                result[ltc.lavoro.id]['tipo_contratto'] += "None"
+        result = {}
+        result = all_job()
 
         return render(request, "risultati.html", {"result": result, "type": 2})
 
@@ -1693,292 +1703,297 @@ class RisultatiOffertaLavoro(View):
                 content_type="application/json"
             )
 
+# mette in una lista/dizionario tutti gli studenti inseriti
+def all_student():
+    result = {}
+    # studenti
+    list_studenti = Persona.objects.all().select_related()
+
+    # chiavi esterne
+    # Zona
+    list_zona = Zona.objects.all().select_related()
+    # Zona
+    list_conoscenza_pc = LivelloPC.objects.all().select_related()
+
+    for s in list_studenti:
+
+        zona_tmp = "None"
+        if s.zona != None:
+            zona_tmp = s.zona.valore
+        grado_studi_tmp = "None"
+        if s.grado_studi != None:
+            grado_studi_tmp = s.grado_studi.valore
+        livello_uso_computer_tmp = "None"
+        if s.livello_uso_computer != None:
+            livello_uso_computer_tmp = s.livello_uso_computer.valore
+
+        result[s.id] = {"id": s.id, 'cap': s.cap,
+                        'email': s.email, "anno": s.anno_nascita, 'citta': s.citta, "zona": zona_tmp,
+                        'grado_studi': grado_studi_tmp, 'voto': s.voto_finale, 'esami': "", 'campo_studi': "",
+                        'livello_pc': livello_uso_computer_tmp, 'lingua': "", 'conoscenza_specifica': "",
+                        'stato': "", 'note': s.note, 'mansione_attuale': "", 'livello_cariera_attuale': "",
+                        'ruolo_attuale': "", 'area_operativa_attuale': "",
+                        'tipo_contratto_attuale': "", 'lavoro_passato': s.esperienze_pregresse,
+                        'numero_attivita_svolte': s.numero_attivita_svolte,
+                        'mesi_attivita_svolte': s.numero_mesi_attivita_svolte,
+                        'descrizione_esperienza_pregressa': s.desc_esperienze_pregresse, 'mansione_pregressa': "",
+                        'livello_cariera_pregressa': "", 'ruolo_pregressa': "", 'area_operativa_pregressa': "",
+                        'tipo_contratto_pregressa': "", 'mansione_futura': "", 'livello_cariera_futura': "",
+                        'ruolo_futura': "", 'area_operativa_futura': "", 'tipo_contratto_futura': "", 'benefit': "",
+                        'stipendio': s.stipendio_futuro, 'interesse': "",
+                        'possibilita_trasferirsi': s.possibilita_trasferirsi,
+                        'data': s.pub_date}
+
+    # esami
+    list_esami = EsameAttuale.objects.all().select_related()
+    for le in list_esami:
+        if le.esame != None:
+            if result[le.persona.id]['esami'] != "":
+                result[le.persona.id]['esami'] += "," + le.esame.valore
+            else:
+                result[le.persona.id]['esami'] += le.esame.valore
+        else:
+            result[le.persona.id]['esami'] += "None"
+
+            # lingua
+    list_lingua = LinguaAttuale.objects.all().select_related()
+    for ll in list_lingua:
+        if ll.lingua != None:
+            if result[ll.persona.id]['lingua'] != "":
+                result[ll.persona.id]['lingua'] += "," + ll.lingua.valore
+            else:
+                result[ll.persona.id]['lingua'] += ll.lingua.valore
+        else:
+            result[ll.persona.id]['lingua'] += "None"
+
+    # campo studi
+    list_campo_studi = CampoStudiAttuale.objects.all().select_related()
+    for lcs in list_campo_studi:
+        if lcs.campo_studi != None:
+            if result[lcs.persona.id]['campo_studi'] != "":
+                result[lcs.persona.id]['campo_studi'] += "," + lcs.campo_studi.valore
+            else:
+                result[lcs.persona.id]['campo_studi'] += lcs.campo_studi.valore
+        else:
+            result[lcs.persona.id]['campo_studi'] += "None"
+
+    # conoscenza_specifica
+    list_conoscenza_specifica = ConoscenzaSpecificaAttuale.objects.all().select_related()
+    for lcs in list_conoscenza_specifica:
+        if lcs.conoscenza_specifica != None:
+            if result[lcs.persona.id]['conoscenza_specifica'] != "":
+                result[lcs.persona.id]['conoscenza_specifica'] += "," + lcs.conoscenza_specifica.valore
+            else:
+                result[lcs.persona.id]['conoscenza_specifica'] += lcs.conoscenza_specifica.valore
+        else:
+            result[lcs.persona.id]['conoscenza_specifica'] += "None"
+
+    # stato
+    list_stato = StatoAttuale.objects.all().select_related()
+    for ls in list_stato:
+        if ls.stato != None:
+            if result[ls.persona.id]['stato'] != "":
+                result[ls.persona.id]['stato'] += "," + ls.stato.valore
+            else:
+                result[ls.persona.id]['stato'] += ls.stato.valore
+        else:
+            result[ls.persona.id]['stato'] += "None"
+
+    # mansione attuale
+    list_mansione_attuale = MansioneAttuale.objects.all().select_related()
+    for lma in list_mansione_attuale:
+        if lma.mansione != None:
+            if result[lma.persona.id]['mansione_attuale'] != "":
+                result[lma.persona.id]['mansione_attuale'] += "," + lma.mansione.valore
+            else:
+                result[lma.persona.id]['mansione_attuale'] += lma.mansione.valore
+        else:
+            result[lma.persona.id]['mansione_attuale'] += "None"
+    # mansione pregressa
+    list_mansione_pregressa = MansionePregresso.objects.all().select_related()
+    for lmp in list_mansione_pregressa:
+        if lmp.mansione != None:
+            if result[lmp.persona.id]['mansione_pregressa'] != "":
+                result[lmp.persona.id]['mansione_pregressa'] += "," + lmp.mansione.valore
+            else:
+                result[lmp.persona.id]['mansione_pregressa'] += lmp.mansione.valore
+        else:
+            result[lmp.persona.id]['mansione_pregressa'] += "None"
+    # mansione futura
+    list_mansione_futura = MansioneFuturo.objects.all().select_related()
+    for lmf in list_mansione_futura:
+        if lmf.mansione != None:
+            if result[lmf.persona.id]['mansione_futura'] != "":
+                result[lmf.persona.id]['mansione_futura'] += "," + lmf.mansione.valore
+            else:
+                result[lmf.persona.id]['mansione_futura'] += lmf.mansione.valore
+        else:
+            result[lmf.persona.id]['mansione_futura'] += "None"
+
+    # livello_cariera attuale
+    list_livello_cariera_attuale = LivelloCarieraAttuale.objects.all().select_related()
+    for llca in list_livello_cariera_attuale:
+        if llca.livello_cariera != None:
+            if result[llca.persona.id]['livello_cariera_attuale'] != "":
+                result[llca.persona.id]['livello_cariera_attuale'] += "," + llca.livello_cariera.valore
+            else:
+                result[llca.persona.id]['livello_cariera_attuale'] += llca.livello_cariera.valore
+        else:
+            result[llca.persona.id]['livello_cariera_attuale'] += "None"
+
+    # livello_cariera pregressa
+    list_livello_cariera_pregressa = LivelloCarieraPregresso.objects.all().select_related()
+    for llcp in list_livello_cariera_pregressa:
+        if llcp.livello_cariera != None:
+            if result[llcp.persona.id]['livello_cariera_pregressa'] != "":
+                result[llcp.persona.id]['livello_cariera_pregressa'] += "," + llcp.livello_cariera.valore
+            else:
+                result[llcp.persona.id]['livello_cariera_pregressa'] += llcp.livello_cariera.valore
+        else:
+            result[llcp.persona.id]['livello_cariera_pregressa'] += "None"
+
+    # livello_cariera futura
+    list_livello_cariera_futura = LivelloCarieraFuturo.objects.all().select_related()
+    for llcf in list_livello_cariera_futura:
+        if llcf.livello_cariera != None:
+            if result[llcf.persona.id]['livello_cariera_futura'] != "":
+                result[llcf.persona.id]['livello_cariera_futura'] += "," + llcf.livello_cariera.valore
+            else:
+                result[llcf.persona.id]['livello_cariera_futura'] += llcf.livello_cariera.valore
+        else:
+            result[llcf.persona.id]['livello_cariera_futura'] += "None"
+
+    # ruolo_attuale
+    list_ruolo_attuale = RuoloAttuale.objects.all().select_related()
+    for lra in list_ruolo_attuale:
+        if lra.ruolo != None:
+            if result[lra.persona.id]['ruolo_attuale'] != "":
+                result[lra.persona.id]['ruolo_attuale'] += "," + lra.ruolo.valore
+            else:
+                result[lra.persona.id]['ruolo_attuale'] += lra.ruolo.valore
+        else:
+            result[lra.persona.id]['ruolo_attuale'] += "None"
+
+    # ruolo pregressa
+    list_ruolo_pregressa = RuoloPregresso.objects.all().select_related()
+    for lrp in list_ruolo_pregressa:
+        if lrp.ruolo != None:
+            if result[lrp.persona.id]['ruolo_pregressa'] != "":
+                result[lrp.persona.id]['ruolo_pregressa'] += "," + lrp.ruolo.valore
+            else:
+                result[lrp.persona.id]['ruolo_pregressa'] += lrp.ruolo.valore
+        else:
+            result[lrp.persona.id]['ruolo_pregressa'] += "None"
+
+    # ruolo futura
+    list_ruolo_futura = RuoloFuturo.objects.all().select_related()
+    for lrf in list_ruolo_futura:
+        if lrf.ruolo != None:
+            if result[lrf.persona.id]['ruolo_futura'] != "":
+                result[lrf.persona.id]['ruolo_futura'] += "," + lrf.ruolo.valore
+            else:
+                result[lrf.persona.id]['ruolo_futura'] += lrf.ruolo.valore
+        else:
+            result[lrf.persona.id]['ruolo_futura'] += "None"
+
+    # area_operativa attuale
+    list_area_operativa_attuale = AreaOperativaAttuale.objects.all().select_related()
+    for laoa in list_area_operativa_attuale:
+        if laoa.area_operativa != None:
+            if result[laoa.persona.id]['area_operativa_attuale'] != "":
+                result[laoa.persona.id]['area_operativa_attuale'] += "," + laoa.area_operativa.valore
+            else:
+                result[laoa.persona.id]['area_operativa_attuale'] += laoa.area_operativa.valore
+        else:
+            result[laoa.persona.id]['area_operativa_attuale'] += "None"
+
+    # area_operativa pregressa
+    list_area_operativa_pregressa = AreaOperativaPregresso.objects.all().select_related()
+    for laop in list_area_operativa_pregressa:
+        if laop.area_operativa != None:
+            if result[laop.persona.id]['area_operativa_pregressa'] != "":
+                result[laop.persona.id]['area_operativa_pregressa'] += "," + laop.area_operativa.valore
+            else:
+                result[laop.persona.id]['area_operativa_pregressa'] += laop.area_operativa.valore
+        else:
+            result[laop.persona.id]['area_operativa_pregressa'] += "None"
+
+    # area_operativa futura
+    list_area_operativa_futura = AreaOperativaFuturo.objects.all().select_related()
+    for laof in list_area_operativa_futura:
+        if laof.area_operativa != None:
+            if result[laof.persona.id]['area_operativa_futura'] != "":
+                result[laof.persona.id]['area_operativa_futura'] += "," + laof.area_operativa.valore
+            else:
+                result[laof.persona.id]['area_operativa_futura'] += laof.area_operativa.valore
+        else:
+            result[laof.persona.id]['area_operativa_futura'] += "None"
+
+    # tipo_contratto attuale
+    list_tipo_contratto_attuale = TipoContrattoAttuale.objects.all().select_related()
+    for ltca in list_tipo_contratto_attuale:
+        if ltca.tipo_contratto != None:
+            if result[ltca.persona.id]['tipo_contratto_attuale'] != "":
+                result[ltca.persona.id]['tipo_contratto_attuale'] += "," + ltca.tipo_contratto.valore
+            else:
+                result[ltca.persona.id]['tipo_contratto_attuale'] += ltca.tipo_contratto.valore
+        else:
+            result[ltca.persona.id]['tipo_contratto_attuale'] += "None"
+
+    # tipo_contratto prgresso
+    list_tipo_contratto_pregresso = TipoContrattoPregesso.objects.all().select_related()
+    for ltcp in list_tipo_contratto_pregresso:
+        if ltcp.tipo_contratto != None:
+            if result[ltcp.persona.id]['tipo_contratto_pregressa'] != "":
+                result[ltcp.persona.id]['tipo_contratto_pregressa'] += "," + ltcp.tipo_contratto.valore
+            else:
+                result[ltcp.persona.id]['tipo_contratto_pregressa'] += ltcp.tipo_contratto.valore
+        else:
+            result[ltcp.persona.id]['tipo_contratto_pregressa'] += "None"
+
+    # tipo_contratto futura
+    list_tipo_contratto_futura = TipoContrattoFuturo.objects.all().select_related()
+    for ltcf in list_tipo_contratto_futura:
+        if ltcf.tipo_contratto != None:
+            if result[ltcf.persona.id]['tipo_contratto_futura'] != "":
+                result[ltcf.persona.id]['tipo_contratto_futura'] += "," + ltcf.tipo_contratto.valore
+            else:
+                result[ltcf.persona.id]['tipo_contratto_futura'] += ltcf.tipo_contratto.valore
+        else:
+            result[ltcf.persona.id]['tipo_contratto_futura'] += "None"
+
+    # benefit
+    list_benefit = BenefitFuturo.objects.all().select_related()
+    for lb in list_benefit:
+        if lb.benefit != None:
+            if result[lb.persona.id]['benefit'] != "":
+                result[lb.persona.id]['benefit'] += "," + lb.benefit.valore
+            else:
+                result[lb.persona.id]['benefit'] += lb.benefit.valore
+        else:
+            result[lb.persona.id]['benefit'] += "None"
+
+    # interesse
+    list_interesse_futuro = InteresseFuturo.objects.all().select_related()
+    for lif in list_interesse_futuro:
+        if lif.interesse != None:
+            if result[lif.persona.id]['interesse'] != "":
+                result[lif.persona.id]['interesse'] += "," + lif.interesse.valore
+            else:
+                result[lif.persona.id]['interesse'] += lif.interesse.valore
+        else:
+            result[lif.persona.id]['interesse'] += "None"
+
+    return result
+
 
 class RisultatiStudenti(View):
 
     @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
 
-        result={}
-        # studenti
-        list_studenti = Persona.objects.all().select_related()
-
-        # chiavi esterne
-        # Zona
-        list_zona = Zona.objects.all().select_related()
-        # Zona
-        list_conoscenza_pc = LivelloPC.objects.all().select_related()
-
-        for s in list_studenti:
-
-            zona_tmp="None"
-            if s.zona != None:
-                zona_tmp = s.zona.valore
-            grado_studi_tmp="None"
-            if s.grado_studi != None:
-                grado_studi_tmp = s.grado_studi.valore
-            livello_uso_computer_tmp="None"
-            if s.livello_uso_computer != None:
-                livello_uso_computer_tmp = s.livello_uso_computer.valore
-
-            result[s.id] = {"id": s.id, 'cap': s.cap,
-                            'email': s.email, "anno": s.anno_nascita, 'citta': s.citta, "zona":  zona_tmp,
-                            'grado_studi': grado_studi_tmp, 'voto': s.voto_finale, 'esami': "", 'campo_studi': "",
-                            'livello_pc': livello_uso_computer_tmp, 'lingua': "", 'conoscenza_specifica': "",
-                            'stato': "", 'note': s.note, 'mansione_attuale': "", 'livello_cariera_attuale': "",
-                            'ruolo_attuale': "", 'area_operativa_attuale': "",
-                            'tipo_contratto_attuale': "", 'lavoro_passato': s.esperienze_pregresse,
-                            'numero_attivita_svolte': s.numero_attivita_svolte,
-                            'mesi_attivita_svolte': s.numero_mesi_attivita_svolte,
-                            'descrizione_esperienza_pregressa': s.desc_esperienze_pregresse, 'mansione_pregressa': "",
-                            'livello_cariera_pregressa': "", 'ruolo_pregressa': "", 'area_operativa_pregressa': "",
-                            'tipo_contratto_pregressa': "", 'mansione_futura': "", 'livello_cariera_futura': "",
-                            'ruolo_futura': "", 'area_operativa_futura': "", 'tipo_contratto_futura': "", 'benefit': "",
-                            'stipendio': s.stipendio_futuro, 'interesse': "",'possibilita_trasferirsi': s.possibilita_trasferirsi,
-                            'data': s.pub_date}
-
-        # esami
-        list_esami = EsameAttuale.objects.all().select_related()
-        for le in list_esami:
-            if le.esame != None:
-                if result[le.persona.id]['esami'] != "":
-                    result[le.persona.id]['esami'] += ","+le.esame.valore
-                else:
-                    result[le.persona.id]['esami'] += le.esame.valore
-            else:
-                result[le.persona.id]['esami'] += "None"
-
-       # lingua
-        list_lingua = LinguaAttuale.objects.all().select_related()
-        for ll in list_lingua:
-            if ll.lingua != None:
-                if result[ll.persona.id]['lingua'] != "":
-                    result[ll.persona.id]['lingua'] += ","+ll.lingua.valore
-                else:
-                    result[ll.persona.id]['lingua'] += ll.lingua.valore
-            else:
-                result[ll.persona.id]['lingua'] += "None"
-
-        # campo studi
-        list_campo_studi = CampoStudiAttuale.objects.all().select_related()
-        for lcs in list_campo_studi:
-            if lcs.campo_studi != None:
-                if result[lcs.persona.id]['campo_studi'] != "":
-                    result[lcs.persona.id]['campo_studi'] += ","+lcs.campo_studi.valore
-                else:
-                    result[lcs.persona.id]['campo_studi'] += lcs.campo_studi.valore
-            else:
-                result[lcs.persona.id]['campo_studi'] += "None"
-
-        # conoscenza_specifica
-        list_conoscenza_specifica = ConoscenzaSpecificaAttuale.objects.all().select_related()
-        for lcs in list_conoscenza_specifica:
-            if lcs.conoscenza_specifica != None:
-                if result[lcs.persona.id]['conoscenza_specifica'] != "":
-                    result[lcs.persona.id]['conoscenza_specifica'] += ","+lcs.conoscenza_specifica.valore
-                else:
-                    result[lcs.persona.id]['conoscenza_specifica'] += lcs.conoscenza_specifica.valore
-            else:
-                result[lcs.persona.id]['conoscenza_specifica'] += "None"
-
-
-        # stato
-        list_stato = StatoAttuale.objects.all().select_related()
-        for ls in list_stato:
-            if ls.stato != None:
-                if result[ls.persona.id]['stato'] != "":
-                    result[ls.persona.id]['stato'] += ","+ls.stato.valore
-                else:
-                    result[ls.persona.id]['stato'] += ls.stato.valore
-            else:
-                result[ls.persona.id]['stato'] += "None"
-
-
-        # mansione attuale
-        list_mansione_attuale = MansioneAttuale.objects.all().select_related()
-        for lma in list_mansione_attuale:
-            if lma.mansione != None:
-                if result[lma.persona.id]['mansione_attuale'] != "":
-                    result[lma.persona.id]['mansione_attuale'] += ","+lma.mansione.valore
-                else:
-                    result[lma.persona.id]['mansione_attuale'] += lma.mansione.valore
-            else:
-                result[lma.persona.id]['mansione_attuale'] += "None"
-        # mansione pregressa
-        list_mansione_pregressa = MansionePregresso.objects.all().select_related()
-        for lmp in list_mansione_pregressa:
-            if lmp.mansione != None:
-                if result[lmp.persona.id]['mansione_pregressa'] != "":
-                    result[lmp.persona.id]['mansione_pregressa'] += ","+lmp.mansione.valore
-                else:
-                    result[lmp.persona.id]['mansione_pregressa'] += lmp.mansione.valore
-            else:
-                result[lmp.persona.id]['mansione_pregressa'] += "None"
-        # mansione futura
-        list_mansione_futura = MansioneFuturo.objects.all().select_related()
-        for lmf in list_mansione_futura:
-            if lmf.mansione != None:
-                if result[lmf.persona.id]['mansione_futura'] != "":
-                    result[lmf.persona.id]['mansione_futura'] += ","+lmf.mansione.valore
-                else:
-                    result[lmf.persona.id]['mansione_futura'] += lmf.mansione.valore
-            else:
-                result[lmf.persona.id]['mansione_futura'] += "None"
-
-
-        # livello_cariera attuale
-        list_livello_cariera_attuale = LivelloCarieraAttuale.objects.all().select_related()
-        for llca in list_livello_cariera_attuale:
-            if llca.livello_cariera != None:
-                if result[llca.persona.id]['livello_cariera_attuale'] != "":
-                    result[llca.persona.id]['livello_cariera_attuale'] += ","+llca.livello_cariera.valore
-                else:
-                    result[llca.persona.id]['livello_cariera_attuale'] += llca.livello_cariera.valore
-            else:
-                result[llca.persona.id]['livello_cariera_attuale'] += "None"
-
-        # livello_cariera pregressa
-        list_livello_cariera_pregressa = LivelloCarieraPregresso.objects.all().select_related()
-        for llcp in list_livello_cariera_pregressa:
-            if llcp.livello_cariera != None:
-                if result[llcp.persona.id]['livello_cariera_pregressa'] != "":
-                    result[llcp.persona.id]['livello_cariera_pregressa'] += ","+llcp.livello_cariera.valore
-                else:
-                    result[llcp.persona.id]['livello_cariera_pregressa'] += llcp.livello_cariera.valore
-            else:
-                result[llcp.persona.id]['livello_cariera_pregressa'] += "None"
-
-        # livello_cariera futura
-        list_livello_cariera_futura = LivelloCarieraFuturo.objects.all().select_related()
-        for llcf in list_livello_cariera_futura:
-            if llcf.livello_cariera != None:
-                if result[llcf.persona.id]['livello_cariera_futura'] != "":
-                    result[llcf.persona.id]['livello_cariera_futura'] += ","+llcf.livello_cariera.valore
-                else:
-                    result[llcf.persona.id]['livello_cariera_futura'] += llcf.livello_cariera.valore
-            else:
-                result[llcf.persona.id]['livello_cariera_futura'] += "None"
-
-        # ruolo_attuale
-        list_ruolo_attuale = RuoloAttuale.objects.all().select_related()
-        for lra in list_ruolo_attuale:
-            if lra.ruolo != None:
-                if result[lra.persona.id]['ruolo_attuale'] != "":
-                    result[lra.persona.id]['ruolo_attuale'] += ","+lra.ruolo.valore
-                else:
-                    result[lra.persona.id]['ruolo_attuale'] += lra.ruolo.valore
-            else:
-                result[lra.persona.id]['ruolo_attuale'] += "None"
-
-        # ruolo pregressa
-        list_ruolo_pregressa = RuoloPregresso.objects.all().select_related()
-        for lrp in list_ruolo_pregressa:
-            if lrp.ruolo != None:
-                if result[lrp.persona.id]['ruolo_pregressa'] != "":
-                    result[lrp.persona.id]['ruolo_pregressa'] += ","+lrp.ruolo.valore
-                else:
-                    result[lrp.persona.id]['ruolo_pregressa'] += lrp.ruolo.valore
-            else:
-                result[lrp.persona.id]['ruolo_pregressa'] += "None"
-
-        # ruolo futura
-        list_ruolo_futura = RuoloFuturo.objects.all().select_related()
-        for lrf in list_ruolo_futura:
-            if lrf.ruolo != None:
-                if result[lrf.persona.id]['ruolo_futura'] != "":
-                    result[lrf.persona.id]['ruolo_futura'] += ","+lrf.ruolo.valore
-                else:
-                    result[lrf.persona.id]['ruolo_futura'] += lrf.ruolo.valore
-            else:
-                result[lrf.persona.id]['ruolo_futura'] += "None"
-
-        # area_operativa attuale
-        list_area_operativa_attuale = AreaOperativaAttuale.objects.all().select_related()
-        for laoa in list_area_operativa_attuale:
-            if laoa.area_operativa != None:
-                if result[laoa.persona.id]['area_operativa_attuale'] != "":
-                    result[laoa.persona.id]['area_operativa_attuale'] += ","+laoa.area_operativa.valore
-                else:
-                    result[laoa.persona.id]['area_operativa_attuale'] += laoa.area_operativa.valore
-            else:
-                result[laoa.persona.id]['area_operativa_attuale'] += "None"
-
-        # area_operativa pregressa
-        list_area_operativa_pregressa = AreaOperativaPregresso.objects.all().select_related()
-        for laop in list_area_operativa_pregressa:
-            if laop.area_operativa != None:
-                if result[laop.persona.id]['area_operativa_pregressa'] != "":
-                    result[laop.persona.id]['area_operativa_pregressa'] += ","+laop.area_operativa.valore
-                else:
-                    result[laop.persona.id]['area_operativa_pregressa'] += laop.area_operativa.valore
-            else:
-                result[laop.persona.id]['area_operativa_pregressa'] += "None"
-
-        # area_operativa futura
-        list_area_operativa_futura = AreaOperativaFuturo.objects.all().select_related()
-        for laof in list_area_operativa_futura:
-            if laof.area_operativa != None:
-                if result[laof.persona.id]['area_operativa_futura'] != "":
-                    result[laof.persona.id]['area_operativa_futura'] += ","+laof.area_operativa.valore
-                else:
-                    result[laof.persona.id]['area_operativa_futura'] += laof.area_operativa.valore
-            else:
-                result[laof.persona.id]['area_operativa_futura'] += "None"
-
-        # tipo_contratto attuale
-        list_tipo_contratto_attuale = TipoContrattoAttuale.objects.all().select_related()
-        for ltca in list_tipo_contratto_attuale:
-            if ltca.tipo_contratto != None:
-                if result[ltca.persona.id]['tipo_contratto_attuale'] != "":
-                    result[ltca.persona.id]['tipo_contratto_attuale'] += ","+ltca.tipo_contratto.valore
-                else:
-                    result[ltca.persona.id]['tipo_contratto_attuale'] += ltca.tipo_contratto.valore
-            else:
-                result[ltca.persona.id]['tipo_contratto_attuale'] += "None"
-
-        # tipo_contratto prgresso
-        list_tipo_contratto_pregresso = TipoContrattoPregesso.objects.all().select_related()
-        for ltcp in list_tipo_contratto_pregresso:
-            if ltcp.tipo_contratto != None:
-                if result[ltcp.persona.id]['tipo_contratto_pregressa'] != "":
-                    result[ltcp.persona.id]['tipo_contratto_pregressa'] += ","+ltcp.tipo_contratto.valore
-                else:
-                    result[ltcp.persona.id]['tipo_contratto_pregressa'] += ltcp.tipo_contratto.valore
-            else:
-                result[ltcp.persona.id]['tipo_contratto_pregressa'] += "None"
-
-        # tipo_contratto futura
-        list_tipo_contratto_futura = TipoContrattoFuturo.objects.all().select_related()
-        for ltcf in list_tipo_contratto_futura:
-            if ltcf.tipo_contratto != None:
-                if result[ltcf.persona.id]['tipo_contratto_futura'] != "":
-                    result[ltcf.persona.id]['tipo_contratto_futura'] += ","+ltcf.tipo_contratto.valore
-                else:
-                    result[ltcf.persona.id]['tipo_contratto_futura'] += ltcf.tipo_contratto.valore
-            else:
-                result[ltcf.persona.id]['tipo_contratto_futura'] += "None"
-
-        # benefit
-        list_benefit = BenefitFuturo.objects.all().select_related()
-        for lb in list_benefit:
-            if lb.benefit != None:
-                if result[lb.persona.id]['benefit'] != "":
-                    result[lb.persona.id]['benefit'] += ","+lb.benefit.valore
-                else:
-                    result[lb.persona.id]['benefit'] += lb.benefit.valore
-            else:
-                result[lb.persona.id]['benefit'] += "None"
-
-        # interesse
-        list_interesse_futuro = InteresseFuturo.objects.all().select_related()
-        for lif in list_interesse_futuro:
-            if lif.interesse != None:
-                if result[lif.persona.id]['interesse'] != "":
-                    result[lif.persona.id]['interesse'] += ","+lif.interesse.valore
-                else:
-                    result[lif.persona.id]['interesse'] += lif.interesse.valore
-            else:
-                result[lif.persona.id]['interesse'] += "None"
+        result = {}
+        result = all_student()
 
         return render(request, "risultati.html", {"result": result, "type": 0})
 
@@ -2131,3 +2146,51 @@ class AziendaOffertaLavoro(View):
                 json.dumps({"nothing to see": "errore imprevisto"}),
                 content_type="application/json"
             )
+
+
+# type puo essere 0 studente, 1 azienda, 2 lavoro
+def result_csv(request, *args, **kwargs):
+    try:
+        if int(kwargs['type']) == 0:
+            survey = all_student()
+            # nomi dei campi
+            col_list = ['id', 'cap', 'email', 'anno', 'citta', 'zona','grado_studi', 'voto', 'esami', 'campo_studi',
+                        'livello_pc', 'lingua'"", 'conoscenza_specifica', 'stato', 'note', 'mansione_attuale',
+                        'livello_cariera_attuale', 'ruolo_attuale', 'area_operativa_attuale', 'tipo_contratto_attuale',
+                        'lavoro_passato', 'numero_attivita_svolte', 'mesi_attivita_svolte',
+                        'descrizione_esperienza_pregressa', 'mansione_pregressa', 'livello_cariera_pregressa',
+                        'ruolo_pregressa', 'area_operativa_pregressa', 'tipo_contratto_pregressa', 'mansione_futura',
+                        'livello_cariera_futura', 'ruolo_futura', 'area_operativa_futura', 'tipo_contratto_futura',
+                        'benefit', 'stipendio', 'interesse', 'possibilita_trasferirsi', 'data']
+            filename ='studenti_risultati'
+
+        elif int(kwargs['type']) == 1:
+            survey = all_aziende()
+            # nomi dei campi
+            col_list = ['id', 'note', 'citta_sede', 'email', 'nome_referente', 'altra_sede', 'data']
+
+            filename = 'aziende_risultati'
+
+        elif int(kwargs['type']) == 2:
+            survey = all_job()
+            # nomi dei campi
+            col_list = ['id', 'id_azienda', 'note_azienda', 'email_riferimento_azienda', 'email_riferimento_lavoro',
+                        'citta_lavoro', 'lingua', 'campo_studi', 'esami', 'area_operativa', 'livello_cariera',
+                        'tipo_contratto', 'distanza', 'note', 'data']
+
+            filename = 'offerte_lavoro_risultati'
+
+        else:
+            logger.error("CSV vuoto, con kwargs vale:")
+            logger.error(kwargs['type'])
+            return redirect('index')
+
+        # valori dei campi
+        logger.error("CSV Inserisco liste vuote")
+
+    except:
+        logger.error("Problema nel CSV")
+
+
+    filename = filename.replace(" ", "_")
+    return export_csv_SJA(survey, col_list, filename + ".csv")

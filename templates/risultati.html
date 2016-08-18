@@ -100,14 +100,7 @@ function deleteLavoro(id){
     }
 }
 {% endif %}
-function tableToCsv(){
 
-    var csv = $("#tblRisultati").table2CSV({
-        delivery: 'value'
-    });
-    window.location.href = 'data:text/csv;charset=UTF-8,' + encodeURIComponent(csv);
-
-}
 
 </script>
 
@@ -117,9 +110,9 @@ function tableToCsv(){
 
 
 {% block topcontent %}
-        <a type="buttom" id="esporta"  onclick="tableToCsv();" class="btn btn-primary">Esporta CSV</a>
         <div id="msg" style="display: none;" class="alert alert-success" role="alert"></div>
 {% if type == 1 %}
+    <a type="buttom" id="esporta"  href="{%  url 'csv_survey_download' 1 %}" class="btn btn-primary">SCARICA CSV</a>
     <div class="container">
         <h2>Anagrafica Aziende</h2>
         <form id="forminvio" data-toggle="validator" method="POST" role="form">{% csrf_token %}
@@ -160,6 +153,7 @@ function tableToCsv(){
 
 
 {% if type == 2 %}
+            <a type="buttom" id="esporta"  href="{%  url 'csv_survey_download' 2 %}" class="btn btn-primary">SCARICA CSV</a>
         <h2>Offerta di Lavoro</h2>
         <form id="forminvio" data-toggle="validator" method="POST" role="form">{% csrf_token %}
         <table id="tblRisultati" class="table">
@@ -213,7 +207,10 @@ function tableToCsv(){
     </form>
 {% endif %}
     {% if type == 0 %}
+                <a type="buttom" id="esporta"  href="{%  url 'csv_survey_download' 0 %}" class="btn btn-primary">SCARICA CSV</a>
+
         <h2>Studenti</h2>
+
         <form id="forminvio" data-toggle="validator" method="POST" role="form">{% csrf_token %}
 
         <table id="tblRisultati" class="table table-bordered table-striped">

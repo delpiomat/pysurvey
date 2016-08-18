@@ -68,7 +68,7 @@ def json_form_in_html(survey):
     return form
 
 
-# Export data
+# Export data old method
 def export_csv(survey, col_list, final_list, filename):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename=' + filename
@@ -85,6 +85,35 @@ def export_csv(survey, col_list, final_list, filename):
         writer.writerow(row)
         row = []
     return response
+
+
+# Export data for Student, Job and Aziende
+def export_csv_SJA(survey, col_list, filename):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename=' + filename
+    writer = csv.writer(response, csv.excel)
+    response.write(u'\ufeff'.encode('utf8')) # BOM (optional...Excel needs it to open UTF-8 file properly)
+    numfields = len(col_list)
+    writer.writerow(col_list)
+    row = []
+    for key in survey:
+        for label in col_list:
+            # controllo i nulli
+            if(key == 44):
+                logger.error(survey[key][label])
+                logger.error(label)
+                logger.error(type(survey[key][label]))
+            if (survey[key][label] != '') and (survey[key][label] != ' ') and (survey[key][label] is not None):
+                row.append(survey[key][label])
+                logger.error('tutto ok')
+            else:
+                row.append("None")
+                logger.error('Scrivo None')
+        writer.writerow(row)
+        row = []
+    return response
+
+
 
 import random
 import string
