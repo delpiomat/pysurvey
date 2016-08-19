@@ -2306,7 +2306,7 @@ def infojob(id_job):
                 job['tipo_contratto'] += "None"
 
     except ObjectDoesNotExist:
-        logger.error("Info non possibili il lavoro non esiste,ritorno None")
+        logger.error("Info non possibili il lavoro non esiste, ritorno None")
         return None
 
     return job

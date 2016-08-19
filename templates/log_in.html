@@ -21,18 +21,92 @@
         }
 </script>
 {% endblock %}
-{% block topcontent %}
-<form id="formLoginId" class="form col-md-12 center-block" action="{% url 'log_in' %}" method="post">{% csrf_token %}
-    <div class="form-group">
-        <input type="text" class="form-control input-lg" placeholder="username" id="usernamePost" onkeypress="if (event.keyCode == 13) $('#loginbuttonlogin').click();">
-    </div>
-    <div class="form-group">
-        <input type="password" class="form-control input-lg" placeholder="password" id="passwordPost" onkeypress="if (event.keyCode == 13) $('#loginbuttonlogin').click();">
-    </div>
-    <div class="form-group">
-        <a id="loginbuttonlogin" class="btn btn-primary btn-lg btn-block" onclick="sendPostLogin($('#usernamePost').val(), $('#passwordPost').val(), $('[name=csrfmiddlewaretoken]').val());">Accedi</a>
-        <div id="msgLogin"></div>
+
+{% block header %}
+    <header class="header-image" >
+    <div class="row" style="padding-bottom: 64px;">
+        <div class="container">
+            <div class="headline">
+                <div class="col-md-8">
+                    <h1>Job Recomandation</h1>
+                    <h2>Quale lavoro fa per te?</h2>
+                </div>
+                <div class="col-md-4">
+                    <form id="formLoginId" class="form col-md-12 center-block" action="{% url 'log_in' %}" method="post" style="padding-top: 64px">{% csrf_token %}
+                        <div class="form-group">
+                            <input type="text" class="form-control input-lg" placeholder="username" id="usernamePost" onkeypress="if (event.keyCode == 13) $('#loginbuttonlogin').click();">
+                        </div>
+                        <div class="form-group">
+                            <input type="password" class="form-control input-lg" placeholder="password" id="passwordPost" onkeypress="if (event.keyCode == 13) $('#loginbuttonlogin').click();">
+                        </div>
+                        <div class="form-group">
+                            <a id="loginbuttonlogin" class="btn btn-primary btn-lg btn-block" onclick="sendPostLogin($('#usernamePost').val(), $('#passwordPost').val(), $('[name=csrfmiddlewaretoken]').val());">Accedi</a>
+                            <div id="msgLogin"></div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 
-</form>
+    </header>
+{% endblock %}
+
+{% block content %}
+    <hr class="featurette-divider">
+
+        <!-- First Featurette -->
+        <div class="featurette" id="about">
+            <img class="featurette-image img-circle img-responsive pull-right" src="{% static 'image/logo_unipd.png' %}">
+            <h2 class="featurette-heading">Chi
+                <span class="text-muted">Siamo</span>
+            </h2>
+            <p class="lead">Siamo un gruppo di studenti magistrali. Tesisti del professore Fabio Aiolli.</p>
+        </div>
+
+        <hr class="featurette-divider">
+
+        <!-- Second Featurette -->
+        <div class="featurette" id="services">
+            <img class="featurette-image img-circle img-responsive pull-left" src="{% static 'image/lavorone.png' %}">
+            <h2 class="featurette-heading">Cosa
+                <span class="text-muted">Facciamo</span>
+            </h2>
+            <p class="lead">Il nostro progetto e' basato sulla JOB RECOMMENDATION. Suggeriamo agli studenti la migliore azienda per un lavoro futuro e proponiamo alle aziende il candidato ideale</p>
+        </div>
+
+        <hr class="featurette-divider">
+
+        <!-- Third Featurette -->
+        <div class="featurette" id="contact">
+            <img class="featurette-image img-circle img-responsive pull-right" src="{% static 'image/userbased.png' %}">
+            <h2 class="featurette-heading">Come lo
+                <span class="text-muted">Facciamo</span>
+            </h2>
+            <p class="lead">Per fare questo useremo tecniche di apprendimento automatico e sistemi di raccomandazione. </p>
+        </div>
+
+        <hr class="featurette-divider">
+
+        <!-- Quarto Featurette -->
+        <div class="featurette" id="contact">
+            <img class="featurette-image img-circle img-responsive pull-left" src="{% static 'image/hand.png' %}">
+            <h2 class="featurette-heading">Perche' lo
+                <span class="text-muted">Facciamo</span>
+            </h2>
+            <p class="lead">Abbiamo bisogno di dati reali per migliorare e testare i nostri applicativi.</p>
+        </div>
+
+        <hr class="featurette-divider">
+
+        <!-- Footer -->
+        <footer>
+            <div class="row">
+                <div class="col-lg-12">
+                    <p>Matteo Del Pioluogo for Unipd 2016</p>
+                </div>
+            </div>
+        </footer>
+
+
 {% endblock %}

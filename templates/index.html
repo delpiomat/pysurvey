@@ -4,8 +4,7 @@
 {% block title %}Questionari{% endblock %}
 
 
-{% block topcontent %}
-<div class="container">
+{% block content %}
     {% if user.account %}
         <h2>Menu</h2>
         {% if user.account.type == 0 %}
@@ -86,5 +85,4 @@
         </span>
     </div>
     {% endif %}
-</div>
 {% endblock %}
