@@ -1,7 +1,7 @@
 {% extends "base_generic.html" %}
 {% load staticfiles %}
 
-{% block title %}Accedi{% endblock %}
+{% block title %}Job Recommendation Unipd{% endblock %}
 {% block scripts %}
 <script type="application/javascript">
 
@@ -24,15 +24,14 @@
 
 {% block header %}
     <header class="header-image" >
-    <div class="row" style="padding-bottom: 64px;">
         <div class="container">
             <div class="headline">
                 <div class="col-md-8">
-                    <h1>Job Recomandation</h1>
+                    <h1 >Job Recommendation</h1>
                     <h2>Quale lavoro fa per te?</h2>
                 </div>
                 <div class="col-md-4">
-                    <form id="formLoginId" class="form col-md-12 center-block" action="{% url 'log_in' %}" method="post" style="padding-top: 64px">{% csrf_token %}
+                    <form id="formLoginId" class="form col-md-12 center-block" action="{% url 'log_in' %}" method="post" >{% csrf_token %}
                         <div class="form-group">
                             <input type="text" class="form-control input-lg" placeholder="username" id="usernamePost" onkeypress="if (event.keyCode == 13) $('#loginbuttonlogin').click();">
                         </div>
@@ -46,7 +45,6 @@
                     </form>
                 </div>
             </div>
-        </div>
     </div>
 
     </header>

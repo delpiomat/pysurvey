@@ -4,9 +4,13 @@ from django.shortcuts import render, redirect, render_to_response # RequestConte
 from django.views.generic import View
 from createSurvey.models import *
 
-#per eccezioni
+# per eccezioni
 from django.core.exceptions import ObjectDoesNotExist
 
+# eccezioni per pagina 404
+from django.http import Http404
+
+from django.db import DataError
 
 # for login
 from django.contrib.auth import authenticate, login, logout
@@ -157,45 +161,48 @@ def create_modify_student_persona_survey_by_post(request, user, is_new_user, is_
         grado_studi.save()
         nuova_persona.grado_studi = grado_studi
 
-    # bisogna salverlo qua
-    nuova_persona.save()
-    #collego account al sondaggio
-    if (is_new_user):
-        # nuovo utente
-        user.survey = nuova_persona
-        user.save()
-    elif is_admin:
-        logger.error("admin modifica persona studente")
-        # un admin che fa modifiche
-        #ATTENZIONE SE SI CAMBIA con una post l'id del vecchio sondaggio esplode tutto
-        # non conosciamo l'identita dell'utene quindi dobbiamo leggerlo dalla POST
-        #per l'utente non lo facciamo salta la sicurezza
-        old_survey = Persona.objects.get(pk=request.POST["id_survey"])
-        try:
-            nuova_persona.email = old_survey.email
-            user = Account.objects.get(survey=old_survey)
+    # controllo EXCEPTION db
+    try:
+        # bisogna salverlo qua
+        nuova_persona.save()
+        #collego account al sondaggio
+        if (is_new_user):
+            # nuovo utente
             user.survey = nuova_persona
             user.save()
-            nuova_persona.save()
-            #eccezione gestisci il vecchio modo senza controllo accessi e autenticazioni
-        except ObjectDoesNotExist:
-            logger.error("account non esiste quindi non aggiungiamo l'account ma lo eliminiamo comunque ADMIN")
-        old_survey.delete()
-    elif user.type==0:
-        old_survey = Persona.objects.get(pk=user.account.survey_id)
-        try:
-            # assegno vecchia email
-            nuova_persona.email = old_survey.email
-            nuova_persona.save()
-            # aggiorno utente
-            logger.error("caro utente collego all account il nuovo sondaggio")
-            user.survey = nuova_persona
-            user.save()
-            # cancello vecchio sondaggio
+        elif is_admin:
+            logger.error("admin modifica persona studente")
+            # un admin che fa modifiche
+            #ATTENZIONE SE SI CAMBIA con una post l'id del vecchio sondaggio esplode tutto
+            # non conosciamo l'identita dell'utene quindi dobbiamo leggerlo dalla POST
+            #per l'utente non lo facciamo salta la sicurezza
+            old_survey = Persona.objects.get(pk=request.POST["id_survey"])
+            try:
+                nuova_persona.email = old_survey.email
+                user = Account.objects.get(survey=old_survey)
+                user.survey = nuova_persona
+                user.save()
+                nuova_persona.save()
+                #eccezione gestisci il vecchio modo senza controllo accessi e autenticazioni
+            except ObjectDoesNotExist:
+                logger.error("account non esiste quindi non aggiungiamo l'account ma lo eliminiamo comunque ADMIN")
             old_survey.delete()
-        except ObjectDoesNotExist:
-            logger.error("account non esiste quindi non aggiungiamo l'account ma lo eliminiamo comunque NON ADMIN")
-
+        elif user.type==0:
+            old_survey = Persona.objects.get(pk=user.account.survey_id)
+            try:
+                # assegno vecchia email
+                nuova_persona.email = old_survey.email
+                nuova_persona.save()
+                # aggiorno utente
+                logger.error("caro utente collego all account il nuovo sondaggio")
+                user.survey = nuova_persona
+                user.save()
+                # cancello vecchio sondaggio
+                old_survey.delete()
+            except ObjectDoesNotExist:
+                logger.error("account non esiste quindi non aggiungiamo l'account ma lo eliminiamo comunque NON ADMIN")
+    except DataError:
+        logger.error("Dati inseriti male")
 
     # Ora la parte tosta i multivalore! buona fortuna-----------------------------------------------------------
     lingua_list = json.loads(request.POST["lingua"])
@@ -1555,13 +1562,18 @@ class RisultatiAziende(View):
 
     @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
-
         result = {}
+        # se non admin pagina non trovata
+        if request.user.is_superuser != 1:
+            raise Http404("Solo un admin puo vedere questa pagina")
         result = all_aziende()
         return render(request, "risultati.html", {"result": result, "type": 1})
 
     @method_decorator(login_required(login_url='log_in'))
     def post(self, request, *args, **kwargs):
+        # se non admin pagina non trovata
+        if request.user.is_superuser != 1:
+            raise Http404("Solo un admin puo effettuare questa richiesta")
         if request.method == 'POST':
             if "id" in request.POST:
                 azienda = Azienda.objects.get(pk=int(request.POST["id"]))
@@ -1676,14 +1688,18 @@ def all_job():
 class RisultatiOffertaLavoro(View):
     @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
-
         result = {}
+        # se non admin pagina non trovata
+        if request.user.is_superuser != 1:
+            raise Http404("Solo un admin puo vedere questa pagina")
         result = all_job()
 
         return render(request, "risultati.html", {"result": result, "type": 2})
 
     @method_decorator(login_required(login_url='log_in'))
     def post(self, request, *args, **kwargs):
+        if request.user.is_superuser != 1:
+            raise Http404("Solo un admin puo effettuare questa richiesta")
         if request.method == 'POST':
             if "id" in request.POST:
                 lavoro = Lavoro.objects.get(pk=int(request.POST["id"]))
@@ -1991,14 +2007,18 @@ class RisultatiStudenti(View):
 
     @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
-
         result = {}
+        # se non admin pagina non trovata
+        if request.user.is_superuser != 1:
+            raise Http404("Solo un admin puo vedere questa pagina")
         result = all_student()
 
         return render(request, "risultati.html", {"result": result, "type": 0})
 
     @method_decorator(login_required(login_url='log_in'))
     def post(self, request, *args, **kwargs):
+        if request.user.is_superuser != 1:
+            raise Http404("Solo un admin puo effettuare questa richiesta")
         if request.method == 'POST':
             if "id" in request.POST:
                 studente = Persona.objects.get(pk=int(request.POST["id"]))
@@ -2150,6 +2170,9 @@ class AziendaOffertaLavoro(View):
 
 # type puo essere 0 studente, 1 azienda, 2 lavoro
 def result_csv(request, *args, **kwargs):
+    # bisogna essere admin per i csv
+    if request.user.is_superuser != 1:
+        raise Http404("Solo un admin puo vedere questa pagina")
     try:
         if int(kwargs['type']) == 0:
             survey = all_student()

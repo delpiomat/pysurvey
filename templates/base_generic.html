@@ -11,7 +11,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>One Page Wonder - Start Bootstrap Template</title>
+    <title>{% block title %}{% endblock %}</title>
 
 
     <!-- jQuery -->
@@ -58,13 +58,10 @@
                 <ul class="nav navbar-nav">
                         {% if user.is_authenticated %}
                             {% if not user.account  %}
-                        <li>
-                            <a href="{% url 'index' %}">Questionari</a>
-                        </li>
-                        <li>
-                            <a href="{% url 'new_survey' %}">Crea Questionario</a>
-                        </li>
-                            {% endif %}
+                            <li>
+                                <a href="{% url 'index' %}">Questionari</a>
+                            </li>
+                        {% endif %}
                         <li><a href="#">Hai effettuato l'accesso con, {{ user.username }}</a></li>
                         <li>
                             <a  href="{% url 'log_out' %}"><i class="glyphicon glyphicon-lock"></i> Logout</a>

@@ -6,10 +6,6 @@
 
 {% block scripts %}
 
-
-    <link rel="stylesheet" href="{% static 'bootstrap-3.3.6/css/bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'bootstrap-3.3.6/css/bootstrap-theme.min.css' %}">
-
         <link rel="stylesheet" href="{% static 'textext/src/css/textext.core.css'%}" type="text/css" />
 		<link rel="stylesheet" href="{% static 'textext/src/css/textext.plugin.tags.css'%}" type="text/css" />
 		<link rel="stylesheet" href="{% static 'textext/src/css/textext.plugin.autocomplete.css'%}" type="text/css" />
@@ -17,8 +13,6 @@
 		<link rel="stylesheet" href="{% static 'textext/src/css/textext.plugin.prompt.css'%}" type="text/css" />
 		<link rel="stylesheet" href="{% static 'textext/src/css/textext.plugin.arrow.css'%}" type="text/css" />
 
-
-        <script src="{% static 'bootstrap-3.3.6/js/bootstrap.min.js'%}"></script>
 		<script src="{% static 'textext/src/js/textext.core.js'%}" type="text/javascript" charset="utf-8"></script>
 		<script src="{% static 'textext/src/js/textext.plugin.tags.js'%}" type="text/javascript" charset="utf-8"></script>
 		<script src="{% static 'textext/src/js/textext.plugin.autocomplete.js'%}" type="text/javascript" charset="utf-8"></script>
@@ -55,14 +49,14 @@
 
     <div class="form-group">
         <label for="cap">Cap:</label>
-        <input type="text" name="cap" value="{{ copy.cap }}" id="cap" class="form-control">
+        <input type="text" name="cap" value="{{ copy.cap }}" id="cap" class="form-control" maxlength="10">
 		<span class="help-block">CAP della città di residenza (5 cifre)</span>
     </div>
 
     {% if user.is_authenticated %}
     <div class="form-group">
             <label for="email">Email:</label>
-            <input type="text" value="{{ copy.email }}" name="email" id="email" class="form-control" readonly>
+            <input type="text" value="{{ copy.email }}" name="email" id="email" class="form-control" maxlength="20" readonly>
 		<span class="help-block">email per riferimento dello studente</span>
     </div>
 
@@ -70,7 +64,7 @@
 
         <div class="form-group">
             <label for="email">Email:</label>
-            <input type="text" value="{{ copy.email }}" name="email" id="email" class="form-control">
+            <input type="text" value="{{ copy.email }}" name="email" id="email" maxlength="32" class="form-control">
 		    <span class="help-block">email per riferimento dello studente</span>
         </div>
 
@@ -80,7 +74,7 @@
 
     <div class="form-group">
         <label for="anno">Anno:</label>
-        <input type="text" value="{{ copy.anno_nascita }}" name="anno" id="anno" class="form-control">
+        <input type="text" value="{{ copy.anno_nascita }}" name="anno" id="anno" class="form-control" maxlength="4">
 		<span class="help-block">anno di nascita dello studente</span>
     </div>
 
@@ -104,7 +98,7 @@
 
     <div class="form-group">
         <label for="voto">Voto:</label>
-        <input type="text" value="{{ copy.voto_finale }}"  name="voto" id="voto" class="form-control">
+        <input type="text" value="{{ copy.voto_finale }}"  name="voto" id="voto" class="form-control" maxlength="16">
         <span class="help-block">Riferito al grado di studi acquisito o una stima di quello che si sta per acquisire</span>
     </div>
 
@@ -149,7 +143,7 @@
 
     <div class="form-group">
         <label for="note">Note</label>
-        <input type="text" value="{{ copy.note }}" name="note" id="note" class="form-control">
+        <input type="text" value="{{ copy.note }}" name="note" id="note" class="form-control" maxlength="64">
     </div>
 
     <hr>
@@ -218,19 +212,19 @@
 
     <div class="form-group">
         <label for="numero_attivita_svolte">Numero Attivita Svolte:</label>
-        <input type="text" value="{{ copy.numero_attivita_svolte }}" name="numero_attivita_svolte" id="numero_attivita_svolte" class="form-control">
+        <input type="text" value="{{ copy.numero_attivita_svolte }}" name="numero_attivita_svolte" id="numero_attivita_svolte" class="form-control" maxlength="10">
 		<span class="help-block">Inserire il numero complessivo di attività svolte nel passato</span>
     </div>
 
     <div class="form-group">
         <label for="numero_mesi_attivita_svolte">Mesi Attivita Svolte:</label>
-        <input type="text" value="{{ copy.numero_mesi_attivita_svolte }}" name="numero_mesi_attivita_svolte" id="numero_mesi_attivita_svolte" class="form-control">
+        <input type="text" value="{{ copy.numero_mesi_attivita_svolte }}" name="numero_mesi_attivita_svolte" id="numero_mesi_attivita_svolte" class="form-control" maxlength="10">
 		<span class="help-block">Inserire il numero complessivo di mesi lavorativi di tutte le attività svolte nel passato</span>
     </div>
 
     <div class="form-group">
         <label for="desc_esperienze_pregresse">descrizione Esperienze Pregresse:</label>
-        <input type="text" value="{{ copy.desc_esperienze_pregresse }}" name="desc_esperienze_pregresso" id="desc_esperienze_pregresso" class="form-control">
+        <input type="text" value="{{ copy.desc_esperienze_pregresse }}" name="desc_esperienze_pregresso" id="desc_esperienze_pregresso" class="form-control" maxlength="64">
 		<span class="help-block">Inserire alcune parole per descrivere le attività svolte in passato</span>
     </div>
 
@@ -313,7 +307,7 @@
 
     <div class="form-group">
         <label for="stipendio_futuro">Stipendio Futuro:</label>
-        <input type="text" value="{{ copy.stipendio_futuro }}" name="stipendio_futuro" id="stipendio_futuro" class="form-control">
+        <input type="text" value="{{ copy.stipendio_futuro }}" name="stipendio_futuro" id="stipendio_futuro" class="form-control" maxlength="10">
         <span class="help-block">Una stima sullo stipendio netto al mese</span>
     </div>
 

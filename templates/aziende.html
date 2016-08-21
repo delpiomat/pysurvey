@@ -7,8 +7,6 @@
 {% block scripts %}
 
 
-    <link rel="stylesheet" href="{% static 'bootstrap-3.3.6/css/bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'bootstrap-3.3.6/css/bootstrap-theme.min.css' %}">
 
         <link rel="stylesheet" href="{% static 'textext/src/css/textext.core.css'%}" type="text/css" />
 		<link rel="stylesheet" href="{% static 'textext/src/css/textext.plugin.tags.css'%}" type="text/css" />
@@ -18,7 +16,6 @@
 		<link rel="stylesheet" href="{% static 'textext/src/css/textext.plugin.arrow.css'%}" type="text/css" />
 
 
-        <script src="{% static 'bootstrap-3.3.6/js/bootstrap.min.js'%}"></script>
 		<script src="{% static 'textext/src/js/textext.core.js'%}" type="text/javascript" charset="utf-8"></script>
 		<script src="{% static 'textext/src/js/textext.plugin.tags.js'%}" type="text/javascript" charset="utf-8"></script>
 		<script src="{% static 'textext/src/js/textext.plugin.autocomplete.js'%}" type="text/javascript" charset="utf-8"></script>
@@ -81,13 +78,13 @@
 
     <div class="form-group">
         <label for="nome_referente">Nome referente:</label>
-        <input type="text" value="{{ copy.nome_referente }}" name="nome_referente" id="nome_referente" class="form-control">
+        <input type="text" value="{{ copy.nome_referente }}" name="nome_referente" id="nome_referente" class="form-control" maxlength="100">
 		<span class="help-block">nome del referente</span>
     </div>
 
     <div class="form-group">
         <label for="note">Note:</label>
-        <input type="text" value="{{ copy.note }}" name="note" id="note" class="form-control">
+        <input type="text" value="{{ copy.note }}" name="note" id="note" class="form-control" maxlength="100">
 		<span class="help-block">descrizione dell'azienda</span>
     </div>
 
