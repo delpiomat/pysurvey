@@ -37,6 +37,12 @@ from django.http import QueryDict
 import random
 import string
 
+# per query django piu complesse
+from django.db.models import Q
+
+# pergestire parte di racomandazione e corelazioni
+from jobsurvey.recommendation import *
+
 # import the logging library #per debug scrive nella Console
 import logging
 # Get an instance of a logger
@@ -2219,6 +2225,341 @@ def result_csv(request, *args, **kwargs):
     return export_csv_SJA(survey, col_list, filename + ".csv")
 
 
+# da alcune info su un studente in maniera anonima
+def infostd(id_student):
+    student = {}
+
+    try:# controllo che esista
+
+        student_obj = Persona.objects.get(pk=id_student)
+        # attributo singolo
+        student["id"] = 'None'
+        student['cap'] = 'None'
+        student["anno"] = 'None'
+        student['citta'] = 'None'
+        student['voto'] = 'None'
+        student['note'] = 'None'
+        student['numero_attivita_svolte'] = 'None'
+        student['mesi_attivita_svolte'] = 'None'
+        student['descrizione_esperienza_pregressa'] = 'None'
+        student['possibilita_trasferirsi'] = 'None'
+        student['stipendio'] = 'None'
+
+        #attributo singolo da chiave esterna
+        student["zona"] = ''
+        student['grado_studi'] =''
+        student['livello_pc'] = ''
+
+        # valori multipli da chiavi esterne
+        student['esami'] = ''
+        student['campo_studi'] = ''
+        student['lingua'] = ''
+        student['conoscenza_specifica'] = ''
+        student['stato'] = ''
+        student['mansione_attuale'] = ''
+        student['livello_cariera_attuale'] = ''
+        student['ruolo_attuale' ] = ''
+        student['area_operativa_attuale'] = ''
+        student['tipo_contratto_attuale'] = ''
+        student['lavoro_passato'] = ''
+        student['mansione_pregressa'] = ''
+        student['livello_cariera_pregressa'] = ''
+        student['ruolo_pregressa'] = ''
+        student['area_operativa_pregressa'] = ''
+        student['tipo_contratto_pregressa'] = ''
+        student['mansione_futura'] = 'None'
+        student['livello_cariera_futura'] = ''
+        student['ruolo_futura'] = 'None'
+        student['area_operativa_futura'] = ''
+        student['tipo_contratto_futura'] = ''
+        student['benefit'] = ''
+        student['interesse'] = ''
+
+        # valoriaziamo la lista
+        if student_obj.id:
+            student["id"] = student_obj.id
+        if student_obj.cap:
+            student['cap'] = student_obj.cap
+        if student_obj.anno_nascita:
+            student["anno"] = student_obj.anno_nascita
+        if student_obj.citta:
+            student['citta'] = student_obj.citta
+        if student_obj.voto_finale:
+            student['voto'] = student_obj.voto_finale
+        if student_obj.note:
+            student['note'] = student_obj.note
+        if student_obj.numero_attivita_svolte:
+            student['numero_attivita_svolte'] = student_obj.numero_attivita_svolte
+        if student_obj.numero_mesi_attivita_svolte:
+            student['mesi_attivita_svolte'] = student_obj.numero_mesi_attivita_svolte
+        if student_obj.desc_esperienze_pregresse:
+            student['descrizione_esperienza_pregressa'] = student_obj.desc_esperienze_pregresse
+        if student_obj.possibilita_trasferirsi:
+            student['possibilita_trasferirsi'] = student_obj.possibilita_trasferirsi
+        if student_obj.stipendio_futuro:
+            student['stipendio'] = student_obj.stipendio_futuro
+
+        # chiavi esterne
+        if student_obj.zona:
+            student["zona"] = student_obj.zona.valore
+        if student_obj.grado_studi:
+            student['grado_studi'] = student_obj.grado_studi.valore
+        if student_obj.livello_uso_computer:
+            student['livello_pc'] = student_obj.livello_uso_computer.valore
+
+
+        #valore attributi multi valore
+        # esami
+        list_esami = EsameAttuale.objects.filter(persona=id_student).select_related()
+        for le in list_esami:
+            if le.esame != None:
+                if student['esami'] != "":
+                    student['esami'] += "," + le.esame.valore
+                else:
+                    student['esami'] += le.esame.valore
+            else:
+                student['esami'] += "None"
+
+        # lingua
+        list_lingua = LinguaAttuale.objects.filter(persona=id_student).select_related()
+        for ll in list_lingua:
+            if ll.lingua != None:
+                if student['lingua'] != "":
+                    student['lingua'] += "," + ll.lingua.valore
+                else:
+                    student['lingua'] += ll.lingua.valore
+            else:
+                student['lingua'] += "None"
+
+        # campo studi
+        list_campo_studi = CampoStudiAttuale.objects.filter(persona=id_student).select_related()
+        for lcs in list_campo_studi:
+            if lcs.campo_studi != None:
+                if student['campo_studi'] != "":
+                    student['campo_studi'] += "," + lcs.campo_studi.valore
+                else:
+                    student['campo_studi'] += lcs.campo_studi.valore
+            else:
+                student['campo_studi'] += "None"
+
+        # conoscenza_specifica
+        list_conoscenza_specifica = ConoscenzaSpecificaAttuale.objects.filter(persona=id_student).select_related()
+        for lcs in list_conoscenza_specifica:
+            if lcs.conoscenza_specifica != None:
+                if student['conoscenza_specifica'] != "":
+                    student['conoscenza_specifica'] += "," + lcs.conoscenza_specifica.valore
+                else:
+                    student['conoscenza_specifica'] += lcs.conoscenza_specifica.valore
+            else:
+                student['conoscenza_specifica'] += "None"
+
+        # stato
+        list_stato = StatoAttuale.objects.filter(persona=id_student).select_related()
+        for ls in list_stato:
+            if ls.stato != None:
+                if student['stato'] != "":
+                    student['stato'] += "," + ls.stato.valore
+                else:
+                    student['stato'] += ls.stato.valore
+            else:
+                student['stato'] += "None"
+
+        # mansione attuale
+        list_mansione_attuale = MansioneAttuale.objects.filter(persona=id_student).select_related()
+        for lma in list_mansione_attuale:
+            if lma.mansione != None:
+                if student['mansione_attuale'] != "":
+                    student['mansione_attuale'] += "," + lma.mansione.valore
+                else:
+                    student['mansione_attuale'] += lma.mansione.valore
+            else:
+                student['mansione_attuale'] += "None"
+
+        # mansione pregressa
+        list_mansione_pregressa = MansionePregresso.objects.filter(persona=id_student).select_related()
+        for lmp in list_mansione_pregressa:
+            if lmp.mansione != None:
+                if student['mansione_pregressa'] != "":
+                    student['mansione_pregressa'] += "," + lmp.mansione.valore
+                else:
+                    student['mansione_pregressa'] += lmp.mansione.valore
+            else:
+                student['mansione_pregressa'] += "None"
+
+        # mansione futura
+        list_mansione_futura = MansioneFuturo.objects.filter(persona=id_student).select_related()
+        for lmf in list_mansione_futura:
+            if lmf.mansione != None:
+                if student['mansione_futura'] != "":
+                    student['mansione_futura'] += "," + lmf.mansione.valore
+                else:
+                    student['mansione_futura'] += lmf.mansione.valore
+            else:
+                student['mansione_futura'] += "None"
+
+        # livello_cariera attuale
+        list_livello_cariera_attuale = LivelloCarieraAttuale.objects.filter(persona=id_student).select_related()
+        for llca in list_livello_cariera_attuale:
+            if llca.livello_cariera != None:
+                if student['livello_cariera_attuale'] != "":
+                    student['livello_cariera_attuale'] += "," + llca.livello_cariera.valore
+                else:
+                    student['livello_cariera_attuale'] += llca.livello_cariera.valore
+            else:
+                student['livello_cariera_attuale'] += "None"
+
+        # livello_cariera pregressa
+        list_livello_cariera_pregressa = LivelloCarieraPregresso.objects.filter(persona=id_student).select_related()
+        for llcp in list_livello_cariera_pregressa:
+            if llcp.livello_cariera != None:
+                if student['livello_cariera_pregressa'] != "":
+                    student['livello_cariera_pregressa'] += "," + llcp.livello_cariera.valore
+                else:
+                    student['livello_cariera_pregressa'] += llcp.livello_cariera.valore
+            else:
+                student['livello_cariera_pregressa'] += "None"
+
+        # livello_cariera futura
+        list_livello_cariera_futura = LivelloCarieraFuturo.objects.filter(persona=id_student).select_related()
+        for llcf in list_livello_cariera_futura:
+            if llcf.livello_cariera != None:
+                if student['livello_cariera_futura'] != "":
+                    student['livello_cariera_futura'] += "," + llcf.livello_cariera.valore
+                else:
+                    student['livello_cariera_futura'] += llcf.livello_cariera.valore
+            else:
+                student['livello_cariera_futura'] += "None"
+
+        # ruolo_attuale
+        list_ruolo_attuale = RuoloAttuale.objects.filter(persona=id_student).select_related()
+        for lra in list_ruolo_attuale:
+            if lra.ruolo != None:
+                if student['ruolo_attuale'] != "":
+                    student['ruolo_attuale'] += "," + lra.ruolo.valore
+                else:
+                    student['ruolo_attuale'] += lra.ruolo.valore
+            else:
+                student['ruolo_attuale'] += "None"
+
+        # ruolo pregressa
+        list_ruolo_pregressa = RuoloPregresso.objects.filter(persona=id_student).select_related()
+        for lrp in list_ruolo_pregressa:
+            if lrp.ruolo != None:
+                if student['ruolo_pregressa'] != "":
+                    student['ruolo_pregressa'] += "," + lrp.ruolo.valore
+                else:
+                    student['ruolo_pregressa'] += lrp.ruolo.valore
+            else:
+                student['ruolo_pregressa'] += "None"
+
+        # ruolo futura
+        list_ruolo_futura = RuoloFuturo.objects.filter(persona=id_student).select_related()
+        for lrf in list_ruolo_futura:
+            if lrf.ruolo != None:
+                if student['ruolo_futura'] != "":
+                    student['ruolo_futura'] += "," + lrf.ruolo.valore
+                else:
+                    student['ruolo_futura'] += lrf.ruolo.valore
+            else:
+                student['ruolo_futura'] += "None"
+
+        # area_operativa attuale
+        list_area_operativa_attuale = AreaOperativaAttuale.objects.filter(persona=id_student).select_related()
+        for laoa in list_area_operativa_attuale:
+            if laoa.area_operativa != None:
+                if student['area_operativa_attuale'] != "":
+                    student['area_operativa_attuale'] += "," + laoa.area_operativa.valore
+                else:
+                    student['area_operativa_attuale'] += laoa.area_operativa.valore
+            else:
+                student['area_operativa_attuale'] += "None"
+
+        # area_operativa pregressa
+        list_area_operativa_pregressa = AreaOperativaPregresso.objects.filter(persona=id_student).select_related()
+        for laop in list_area_operativa_pregressa:
+            if laop.area_operativa != None:
+                if student['area_operativa_pregressa'] != "":
+                    student['area_operativa_pregressa'] += "," + laop.area_operativa.valore
+                else:
+                    student['area_operativa_pregressa'] += laop.area_operativa.valore
+            else:
+                student['area_operativa_pregressa'] += "None"
+
+        # area_operativa futura
+        list_area_operativa_futura = AreaOperativaFuturo.objects.filter(persona=id_student).select_related()
+        for laof in list_area_operativa_futura:
+            if laof.area_operativa != None:
+                if student['area_operativa_futura'] != "":
+                    student['area_operativa_futura'] += "," + laof.area_operativa.valore
+                else:
+                    student['area_operativa_futura'] += laof.area_operativa.valore
+            else:
+                student['area_operativa_futura'] += "None"
+
+        # tipo_contratto attuale
+        list_tipo_contratto_attuale = TipoContrattoAttuale.objects.filter(persona=id_student).select_related()
+        for ltca in list_tipo_contratto_attuale:
+            if ltca.tipo_contratto != None:
+                if student['tipo_contratto_attuale'] != "":
+                    student['tipo_contratto_attuale'] += "," + ltca.tipo_contratto.valore
+                else:
+                    student['tipo_contratto_attuale'] += ltca.tipo_contratto.valore
+            else:
+                student['tipo_contratto_attuale'] += "None"
+
+        # tipo_contratto prgresso
+        list_tipo_contratto_pregresso = TipoContrattoPregesso.objects.filter(persona=id_student).select_related()
+        for ltcp in list_tipo_contratto_pregresso:
+            if ltcp.tipo_contratto != None:
+                if student['tipo_contratto_pregressa'] != "":
+                    student['tipo_contratto_pregressa'] += "," + ltcp.tipo_contratto.valore
+                else:
+                    student['tipo_contratto_pregressa'] += ltcp.tipo_contratto.valore
+            else:
+                student['tipo_contratto_pregressa'] += "None"
+
+        # tipo_contratto futura
+        list_tipo_contratto_futura = TipoContrattoFuturo.objects.filter(persona=id_student).select_related()
+        for ltcf in list_tipo_contratto_futura:
+            if ltcf.tipo_contratto != None:
+                if student['tipo_contratto_futura'] != "":
+                    student['tipo_contratto_futura'] += "," + ltcf.tipo_contratto.valore
+                else:
+                    student['tipo_contratto_futura'] += ltcf.tipo_contratto.valore
+            else:
+                student['tipo_contratto_futura'] += "None"
+
+        # benefit
+        list_benefit = BenefitFuturo.objects.filter(persona=id_student).select_related()
+        for lb in list_benefit:
+            if lb.benefit != None:
+                if student['benefit'] != "":
+                    student['benefit'] += "," + lb.benefit.valore
+                else:
+                    student['benefit'] += lb.benefit.valore
+            else:
+                student['benefit'] += "None"
+
+        # interesse
+        list_interesse_futuro = InteresseFuturo.objects.filter(persona=id_student).select_related()
+        for lif in list_interesse_futuro:
+            if lif.interesse != None:
+                if student['interesse'] != "":
+                    student['interesse'] += "," + lif.interesse.valore
+                else:
+                    student['interesse'] += lif.interesse.valore
+            else:
+                student['interesse'] += "None"
+
+    except ObjectDoesNotExist:
+        logger.error("Info non possibili il Studente non esiste, ritorno None")
+        return None
+
+    return student
+
+
+
+# da alcune info su un certo lavoro
 def infojob(id_job):
 
     job={}
@@ -2237,8 +2578,6 @@ def infojob(id_job):
     try:# controllo che esista
 
         job_obj = Lavoro.objects.get(pk=id_job)
-
-
 
         if job_obj.id:
             job['id'] = job_obj.id
@@ -2352,3 +2691,31 @@ class RecomStudente(View):
     def post(self, request, *args, **kwargs):
 
         return render(request, 'recommendation_student.html')
+
+# Parte di Correlazione
+class CorrelationStudente(View):
+
+    # solo se autenticato come admin o utente
+    @method_decorator(login_required(login_url='log_in'))
+    def get(self, request, *args, **kwargs):
+        # passato un id da request restituisco l'utente piu correlato con il prodotto scalare
+        students={}
+        #tutti gli studenti tranne quello interessato
+        students = Persona.objects.filter(~Q(id=kwargs['id']))
+        score = -1
+        tmp = 0
+        similar_std_id = kwargs['id']
+        for s in students:
+            tmp = stud_prodotto_scalare(kwargs['id'], s.id)
+            if(tmp>score):
+                score = tmp
+                similar_std_id = s.id
+        result = {0: infostd(similar_std_id)}
+
+        return render(request, "similar_student.html", {"result": result})
+
+    # solo se autenticato come admin o utente Azienda
+    @method_decorator(login_required(login_url='log_in'))
+    def post(self, request, *args, **kwargs):
+
+        return render(request, 'similar_student.html')
