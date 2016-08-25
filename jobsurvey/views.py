@@ -2242,13 +2242,14 @@ def infostd(id_student):
         student['numero_attivita_svolte'] = 'None'
         student['mesi_attivita_svolte'] = 'None'
         student['descrizione_esperienza_pregressa'] = 'None'
-        student['possibilita_trasferirsi'] = 'None'
+        student['possibilita_trasferirsi'] = 'False'
         student['stipendio'] = 'None'
+        student['lavoro_passato'] = 'False'
 
         #attributo singolo da chiave esterna
-        student["zona"] = ''
-        student['grado_studi'] =''
-        student['livello_pc'] = ''
+        student["zona"] = 'None'
+        student['grado_studi'] ='None'
+        student['livello_pc'] = 'None'
 
         # valori multipli da chiavi esterne
         student['esami'] = ''
@@ -2261,7 +2262,6 @@ def infostd(id_student):
         student['ruolo_attuale' ] = ''
         student['area_operativa_attuale'] = ''
         student['tipo_contratto_attuale'] = ''
-        student['lavoro_passato'] = ''
         student['mansione_pregressa'] = ''
         student['livello_cariera_pregressa'] = ''
         student['ruolo_pregressa'] = ''
@@ -2288,6 +2288,8 @@ def infostd(id_student):
             student['voto'] = student_obj.voto_finale
         if student_obj.note:
             student['note'] = student_obj.note
+        if student_obj.esperienze_pregresse:
+            student['lavoro_passato'] = student_obj.esperienze_pregresse
         if student_obj.numero_attivita_svolte:
             student['numero_attivita_svolte'] = student_obj.numero_attivita_svolte
         if student_obj.numero_mesi_attivita_svolte:
@@ -2710,9 +2712,9 @@ class CorrelationStudente(View):
             if(tmp>score):
                 score = tmp
                 similar_std_id = s.id
-        result = {0: infostd(similar_std_id)}
+        result = {0: infostd(kwargs['id']), 1: infostd(similar_std_id)}
 
-        return render(request, "similar_student.html", {"result": result})
+        return render(request, "similar_student.html", {"result": result,"score": score})
 
     # solo se autenticato come admin o utente Azienda
     @method_decorator(login_required(login_url='log_in'))

@@ -9,6 +9,7 @@
 
 <h2>Top 5 Offerta di Lavoro Consigliate</h2>
         <form id="forminvio" data-toggle="validator" method="POST" role="form">{% csrf_token %}
+        <label class="alert-info">Punteggio Prodotto Cartesiano: {{ score }}</label>
         <table id="tblRisultati" class="table">
             <thead>
                 <tr>
