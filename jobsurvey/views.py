@@ -2700,6 +2700,8 @@ class CorrelationStudente(View):
     # solo se autenticato come admin o utente
     @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
+        if request.user.is_superuser != 1:
+            raise Http404("Solo un admin puo effettuare questa richiesta")
         # passato un id da request restituisco l'utente piu correlato con il prodotto scalare
         students={}
         #tutti gli studenti tranne quello interessato
@@ -2707,17 +2709,38 @@ class CorrelationStudente(View):
         score = -1
         tmp = 0
         similar_std_id = kwargs['id']
-        for s in students:
-            tmp = stud_prodotto_scalare(kwargs['id'], s.id)
-            if(tmp>score):
-                score = tmp
-                similar_std_id = s.id
+        # prodotto scalare
+        if int(kwargs['type']) == 0:
+            for s in students:
+                tmp = stud_prodotto_scalare(kwargs['id'], s.id)
+                if(tmp>score):
+                    score = tmp
+                    similar_std_id = s.id
+        # Dice
+        elif int(kwargs['type']) == 1:
+            for s in students:
+                tmp = stud_dice(kwargs['id'], s.id)
+                if(tmp>score):
+                    score = tmp
+                    similar_std_id = s.id
+        # Jaccard
+        elif int(kwargs['type']) == 2:
+            for s in students:
+                tmp = stud_jaccard(kwargs['id'], s.id)
+                if (tmp > score):
+                    score = tmp
+                    similar_std_id = s.id
+        else:
+            raise Http404("Il tipo di misura non esiste")
+
         result = {0: infostd(kwargs['id']), 1: infostd(similar_std_id)}
 
-        return render(request, "similar_student.html", {"result": result,"score": score})
+        return render(request, "similar_student.html", {"result": result, "score": score, "type": int(kwargs['type'])})
 
     # solo se autenticato come admin o utente Azienda
     @method_decorator(login_required(login_url='log_in'))
     def post(self, request, *args, **kwargs):
+        if request.user.is_superuser != 1:
+            raise Http404("Solo un admin puo effettuare questa richiesta")
 
         return render(request, 'similar_student.html')

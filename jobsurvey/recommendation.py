@@ -192,3 +192,164 @@ def stud_prodotto_scalare(st1_id, st2_id):
                 score += 1
 
     return score
+
+def stud_cardinality (st_id):
+    dim = 0
+    s = Persona.objects.get(pk=st_id)
+    #cardinalita di A
+    if s.anno_nascita:
+        dim += 1
+    if s.cap:
+        dim += 1
+    # per 5 voti sono uguali
+    if s.voto_finale:
+        dim += 1
+    if s.esperienze_pregresse:
+        dim += 1
+    if s.numero_attivita_svolte:
+        dim += 1
+    if s.numero_mesi_attivita_svolte:
+        dim += 1
+    if s.possibilita_trasferirsi:
+        dim += 1
+    if s.stipendio_futuro:
+        dim += 1
+    if s.grado_studi_id :
+        dim += 1
+    if s.livello_uso_computer_id:
+        dim += 1
+    if s.zona_id:
+        dim += 1
+
+    # Mansione
+    s_att= MansionePregresso.objects.filter(persona=s).select_related()
+    for m in s_att:
+        if m.mansione_id:
+            dim += 1
+
+    s_att = MansioneAttuale.objects.filter(persona=s).select_related()
+    for m in s_att:
+        if m.mansione_id:
+            dim += 1
+
+    s_att = MansioneFuturo.objects.filter(persona=s).select_related()
+    for m in s_att:
+        if m.mansione_id:
+            dim += 1
+
+    # Ruolo
+    s_att = RuoloPregresso.objects.filter(persona=s).select_related()
+    for m in s_att:
+        if m.ruolo_id:
+            dim += 1
+
+    s_att = RuoloAttuale.objects.filter(persona=s).select_related()
+    for m in s_att:
+        if m.ruolo_id == m.ruolo_id and m.ruolo_id and m.ruolo_id:
+            dim += 1
+
+    s1_att = RuoloFuturo.objects.filter(persona=s).select_related()
+    for m in s_att:
+        if m.ruolo_id == m.ruolo_id and m.ruolo_id and m.ruolo_id:
+            dim += 1
+
+    # Area Operativa
+    s_att = AreaOperativaPregresso.objects.filter(persona=s).select_related()
+    for m in s_att:
+        if m.area_operativa_id:
+            dim += 1
+
+    s_att = AreaOperativaAttuale.objects.filter(persona=s).select_related()
+    for m in s_att:
+        if m.area_operativa_id:
+            dim += 1
+
+    s_att = AreaOperativaFuturo.objects.filter(persona=s).select_related()
+    for m in s_att:
+        if m.area_operativa_id:
+            dim += 1
+
+    # Livello Cariera
+    s_att = LivelloCarieraPregresso.objects.filter(persona=s).select_related()
+    for m in s_att:
+        if m.livello_cariera_id:
+            dim += 1
+
+    s_att = LivelloCarieraAttuale.objects.filter(persona=s).select_related()
+    for m in s_att:
+        if m.livello_cariera_id:
+            dim += 1
+
+    s_att = LivelloCarieraFuturo.objects.filter(persona=s).select_related()
+    for m in s_att:
+        if m.livello_cariera_id:
+            dim += 1
+
+    # Tipo Contratto
+    s_att = TipoContrattoPregesso.objects.filter(persona=s).select_related()
+    for m in s_att:
+        if m.tipo_contratto_id:
+            dim += 1
+
+    s_att = TipoContrattoAttuale.objects.filter(persona=s).select_related()
+    for m in s_att:
+        if m.tipo_contratto_id:
+            dim += 1
+
+    s_att = TipoContrattoFuturo.objects.filter(persona=s).select_related()
+    for m in s_att:
+        if m.tipo_contratto_id:
+            dim += 1
+
+    # Esame
+    s_att = EsameAttuale.objects.filter(persona=s).select_related()
+    for m in s_att:
+        if m.esame_id:
+            dim += 1
+
+    # Conoscenza
+    s_att = ConoscenzaSpecificaAttuale.objects.filter(persona=s).select_related()
+    for m in s_att:
+        if m.conoscenza_specifica_id:
+            dim += 1
+
+    # Interesse
+    s_att = InteresseFuturo.objects.filter(persona=s).select_related()
+    for m in s_att:
+        if m.interesse_id:
+            dim += 1
+
+    # Benefit
+    s_att = BenefitFuturo.objects.filter(persona=s).select_related()
+    for m in s_att:
+        if m.benefit_id:
+            dim += 1
+
+    # Campo di Studi
+    s_att = CampoStudiAttuale.objects.filter(persona=s).select_related()
+    for m in s_att:
+        if m.campo_studi_id:
+            dim += 1
+
+    # Lingua
+    s_att = LinguaAttuale.objects.filter(persona=s).select_related()
+    for m in s_att:
+        if m.lingua_id:
+            dim += 1
+
+    return dim
+
+
+# Misura Dice
+# 2*|A intersezione B| / |A|+|B|
+def stud_dice(st1_id, st2_id):
+    intersection = stud_prodotto_scalare(st1_id, st2_id)
+    union = stud_cardinality(st1_id) + stud_cardinality(st2_id)
+    return (2*intersection)/union
+
+
+# Misura dice Jaccard  ( |A intersecato B| / |A unione B| )
+# Jaccard = Dice/(2-Dice) e Dice = 2Jaccard / (1+Jaccard)
+def stud_jaccard(st1_id, st2_id):
+    score_dice = stud_dice(st1_id, st2_id)
+    return score_dice/(2-score_dice)
