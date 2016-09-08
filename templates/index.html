@@ -10,6 +10,7 @@
         {% if user.account.type == 0 %}
         <a class="btn btn-primary" href="{%  url 'studenti_modifica' user.account.survey.id  %}">Modifica sondaggio studente</a>
         <a class="btn btn-primary" href="{%  url 'reco_per_studente' %}">Offerte lavoro consigliate </a>
+        <a class="btn btn-primary" href="{%  url 'studente_vota_lavoro' %}">Offerte lavoro consigliate </a>
         {% elif user.account.type == 1%}
         <a class="btn btn-primary" href="{%  url 'azienda_modifica' user.account.azienda.id  %}">Modifica sondaggio azienda</a>
         <a class="btn btn-primary" href="{%  url 'lavori' %}">Crea Offerte di Lavoro</a>

@@ -49,4 +49,5 @@ urlpatterns = [
     url(r'^offerte/lavoro/(?P<id_azienda>[0-9]+)/$', jobsurvey.views.AziendaOffertaLavoro.as_view(), name='offerta_lavoro_azienda'),
     url(r'^racomandazione/lavoro/$', jobsurvey.views.RecomStudente.as_view(), name='reco_per_studente'),
     url(r'^simile/studente/(?P<id>[0-9]+)/(?P<type>[0-9]+)/$', jobsurvey.views.CorrelationStudente.as_view(), name='corelazione_studente'),
+    url(r'^vota/lavoro/$', jobsurvey.views.StudenteVotaLavoro.as_view(), name='studente_vota_lavoro'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -2744,3 +2744,16 @@ class CorrelationStudente(View):
             raise Http404("Solo un admin puo effettuare questa richiesta")
 
         return render(request, 'similar_student.html')
+
+# Uno studente e portato dare preferenze su alcuni job
+class StudenteVotaLavoro(View):
+
+    # solo se autenticato Utente
+    @method_decorator(login_required(login_url='log_in'))
+    def get(self, request, *args, **kwargs):
+        return render(request, "rate.html")
+
+    # solo se autenticato come admin o utente Azienda
+    @method_decorator(login_required(login_url='log_in'))
+    def post(self, request, *args, **kwargs):
+        return render(request, 'rate.html')

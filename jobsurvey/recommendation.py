@@ -353,3 +353,12 @@ def stud_dice(st1_id, st2_id):
 def stud_jaccard(st1_id, st2_id):
     score_dice = stud_dice(st1_id, st2_id)
     return score_dice/(2-score_dice)
+
+
+#-------------------------------Aziende--------------------------------------------------------------------------------
+# prodotto scalare tra due utenti Azienda per la distanza (cardinalita intersezione 2 insiemi)
+# se un termine Nullo il punteggio per quel dato vale ZERO (parte di And negli if)
+
+def azieda_scalare(az1_id, az2_id):
+    score=0
+    return score
