@@ -7,6 +7,7 @@ from createSurvey.models import *
 # per eccezioni
 from django.core.exceptions import ObjectDoesNotExist
 
+
 # eccezioni per pagina 404
 from django.http import Http404
 
@@ -71,6 +72,18 @@ def find_all_option_student():
     return result
 
 
+# ritorna N job random e differenti
+def random_jobs(num):
+    jobs_vet = []
+    all_jobs = Lavoro.objects.all()
+    temp = None
+    for n in range(num):
+        temp = random.choice(all_jobs)
+        if temp not in jobs_vet:
+            jobs_vet.append(temp)
+    return jobs_vet
+
+# crea o modifica il profilo di uno Studente
 def create_modify_student_persona_survey_by_post(request, user, is_new_user, is_admin=False):
     nuova_persona = Persona()
 
@@ -169,13 +182,22 @@ def create_modify_student_persona_survey_by_post(request, user, is_new_user, is_
 
     # controllo EXCEPTION db
     try:
-        # bisogna salverlo qua
+        # bisogna salvarlo qua
         nuova_persona.save()
         #collego account al sondaggio
         if (is_new_user):
             # nuovo utente
             user.survey = nuova_persona
             user.save()
+
+            #cerco tre lavori random e li assegno allo studente cosi puo dare la sua opinione.
+            vet_jobs = random_jobs(3)
+            mat = MatricePunteggio(persona=nuova_persona, lavoro=vet_jobs[0])
+            mat.save()
+            mat = MatricePunteggio(persona=nuova_persona, lavoro=vet_jobs[1])
+            mat.save()
+            mat = MatricePunteggio(persona=nuova_persona, lavoro=vet_jobs[2])
+            mat.save()
         elif is_admin:
             logger.error("admin modifica persona studente")
             # un admin che fa modifiche
@@ -2751,9 +2773,22 @@ class StudenteVotaLavoro(View):
     # solo se autenticato Utente
     @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
-        return render(request, "rate.html")
+        vet_jobs = MatricePunteggio.objects.filter(persona=request.user.account.survey)
+        result = []
+        stars =[]
+        for job in vet_jobs:
+            result.append(infojob(job.lavoro.id))
+            stars.append(job.punteggio_dato_da_persona)
+        return render(request, "rate.html", {"result": result, "stars": stars})
 
     # solo se autenticato come admin o utente Azienda
     @method_decorator(login_required(login_url='log_in'))
     def post(self, request, *args, **kwargs):
-        return render(request, 'rate.html')
+        vet_jobs = MatricePunteggio.objects.filter(persona=request.user.account.survey)
+
+        for job in vet_jobs:
+            if request.POST['lavoro_'+str(job.lavoro.id)]:
+                job.punteggio_dato_da_persona = request.POST.get('lavoro_'+str(job.lavoro.id), 0)
+                job.save()
+
+        return render(request, 'index.html')

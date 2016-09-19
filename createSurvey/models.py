@@ -339,7 +339,7 @@ class Account(User):
 
 class MatricePunteggio(models.Model):
     persona = models.ForeignKey(Persona, null=True, on_delete=models.CASCADE)
-    lavoro = models.ForeignKey(Azienda, null=True, on_delete=models.CASCADE)
+    lavoro = models.ForeignKey(Lavoro, null=True, on_delete=models.CASCADE)
     punteggio_dato_da_persona = models.IntegerField(null=True)
     punteggio_dato_da_lavoro = models.IntegerField(null=True)
     note_da_persona = models.CharField(max_length=512, null=True)

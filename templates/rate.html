@@ -4,80 +4,66 @@
 {% block title %}Test Job{% endblock %}
 
 {% block scripts %}
-<link rel="stylesheet" href="{% static 'star_rating/star_rating.css'%}" type="text/css" />
+<script src="{% static 'star_rating/bootstrap-rating-master/bootstrap-rating.min.js'%}" type="text/javascript" charset="utf-8"></script>
+<link rel="stylesheet" href="{% static 'star_rating/bootstrap-rating-master/bootstrap-rating.css'%}" type="text/css" />
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+
 {% endblock %}
 
 
-{% block topcontent %}
-<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+{% block content %}
 
-<!-- RATING - Form -->
-<form class="rating-form" action="#" method="post" name="rating-movie">
-  <fieldset class="form-group">
+    <h2>Cosa Potrebbe piacerti tra questi Lavori?</h2>
 
-    <legend class="form-legend"></legend>
+    <form id="forminvio" data-toggle="validator" method="POST" role="form">{% csrf_token %}
 
-    <div class="form-item">
 
-      <input id="rating-5" name="rating" type="radio" value="5" />
-      <label for="rating-5" data-value="5">
-        <span class="rating-star">
-          <i class="fa fa-star-o"></i>
-          <i class="fa fa-star"></i>
-        </span>
-        <span class="ir">5</span>
-      </label>
-      <input id="rating-4" name="rating" type="radio" value="4" />
-      <label for="rating-4" data-value="4">
-        <span class="rating-star">
-          <i class="fa fa-star-o"></i>
-          <i class="fa fa-star"></i>
-        </span>
-        <span class="ir">4</span>
-      </label>
-      <input id="rating-3" name="rating" type="radio" value="3" />
-      <label for="rating-3" data-value="3">
-        <span class="rating-star">
-          <i class="fa fa-star-o"></i>
-          <i class="fa fa-star"></i>
-        </span>
-        <span class="ir">3</span>
-      </label>
-      <input id="rating-2" name="rating" type="radio" value="2" />
-      <label for="rating-2" data-value="2">
-        <span class="rating-star">
-          <i class="fa fa-star-o"></i>
-          <i class="fa fa-star"></i>
-        </span>
-        <span class="ir">2</span>
-      </label>
-      <input id="rating-1" name="rating" type="radio" value="1" />
-      <label for="rating-1" data-value="1">
-        <span class="rating-star">
-          <i class="fa fa-star-o"></i>
-          <i class="fa fa-star"></i>
-        </span>
-        <span class="ir">1</span>
-      </label>
+        <button type="submit" id="salava_pref_job" class="btn btn-primary">Salva</button>
 
-      <div class="form-action">
-        <input class="btn-reset" type="reset" value="Reset" />
+
+    <div class="row">
+{% for value in result %}
+  <div class="col-sm-6 col-md-4">
+    <div class="thumbnail" id=lavoro_{{ value.id }}">
+    <input type="hidden" class="rating" data-filled="fa fa-star fa-3x" data-empty="fa fa-star-o fa-3x" data-fractions="1" id="lavoro_{{ value.id }}" name="lavoro_{{ value.id }}">
+      <div class="caption">
+        <h3>Voto</h3>
+
+                  <ul>
+                    <li>id_lavoro: {{ value.id }}</li>
+                    <li>citta_lavoro: {{ value.citta_lavoro }}</li>
+                    <li>lingua: {{ value.lingua }}</li>
+                    <li>campo_studi: {{ value.campo_studi }}</li>
+                    <li>esami: {{ value.esami }}</li>
+                    <li>area_operativa: {{ value.area_operativa }}</li>
+                    <li>tipo_contratto: {{ value.tipo_contratto }}</li>
+                    <li>livello_cariera: {{ value.livello_cariera }}</li>
+                    <li>distanza: {{ value.distanza }}</li>
+         </ul>
       </div>
-
-      <div class="form-output">
-        ? / 5
-      </div>
-
     </div>
+  </div>
+    {% endfor %}
+</div>
 
-  </fieldset>
 </form>
 
 {% endblock %}
 
-{% block bottom %}
-<script type="text/javascript">
 
-</script>
+{% block bottom %}
+    <script type="text/javascript">
+    var star_vet= [
+        {% for s in stars %}
+            {{s}},
+
+        {% endfor %}
+        ];
+    {% for value in result %}
+
+        $('#lavoro_{{ value.id }}').val(star_vet[ {{ forloop.counter}} - 1 ]);
+
+    {% endfor %}
+    </script>
 
 {% endblock %}
