@@ -40,6 +40,7 @@
                         </div>
                         <div class="form-group">
                             <a id="loginbuttonlogin" class="btn btn-primary btn-lg btn-block" onclick="sendPostLogin($('#usernamePost').val(), $('#passwordPost').val(), $('[name=csrfmiddlewaretoken]').val());">Accedi</a>
+                            <span><a href="{% url 'lost_password' %}">Password dimenticata?</a></span>
                             <div id="msgLogin"></div>
                         </div>
                     </form>

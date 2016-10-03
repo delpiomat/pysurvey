@@ -20,6 +20,13 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 # for list of items in a page
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
+# for timezone ed il resto
+from datetime import date
+import datetime
+import time
+from django.utils import timezone, dateparse
+
+
 # for Json format
 import json
 
@@ -267,3 +274,104 @@ def result_download(request, type, survey_id):
     filename = survey.name
     filename = filename.replace(" ", "_")
     return export_csv(survey, col_list, final_list, filename + ".csv")
+
+
+
+# Pagina per richiedere una nuova password
+class Lost_password(View):
+
+    def get(self, request, *args, **kwargs):
+        error = None
+        if 'error' in request.GET:
+            error = request.GET['error']
+        result = None
+        if 'result' in request.GET:
+            result = request.GET['result']
+
+        return render(request, 'lost_password.html', {'error': error, 'result': result})
+
+    def post(self, request, *args, **kwargs):
+        if 'mailReset' in request.POST:
+            account = None
+            try:
+                account = Account.objects.get(email=request.POST["mailReset"])
+            except:
+                return custom_redirect('lost_password', error='mail non valida')
+            if account:
+                account.activationCode = ''.join([random.choice(string.ascii_letters + string.digits) for n in range(32)])
+                account.timeCode = datetime.datetime.now(tz=timezone.get_default_timezone()) + datetime.timedelta(hours=1)
+                account.save()
+                # send verification email
+                send_reset_pass_email(request, account)
+                return custom_redirect('lost_password', result='Reset inviato sulla mail hai tempo una sola ora per cambiare')
+        return custom_redirect('lost_password', error='mail non valida')
+
+
+# reset passowrd dimenticata dopo link di verifica
+class Reset_password(View):
+
+    def get(self, request, *args, **kwargs):
+        return render(request, 'reset_password.html', {"code": kwargs['str'], "id": kwargs['id']})
+
+# usare date time
+    def post(self, request, *args, **kwargs):
+        if 'id' in request.POST:
+            u = User.objects.get(id=request.POST['id'])
+            account = Account.objects.get(user_ptr_id=request.POST['id'])
+            if account.timeCode > datetime.datetime.now(tz=timezone.get_default_timezone()):
+                if 'newPassword' in request.POST:
+                    account.timeCode = datetime.datetime.now(tz=timezone.get_default_timezone())
+                    u.set_password(request.POST['newPassword'])
+                    u.save()
+                else:
+                    return custom_redirect('reset_password', error='Nuova password non valida')
+            else:
+                 return custom_redirect('reset_password', error='Tempo Scaduto')
+        else:
+            return custom_redirect('change_password', error='Id non valido')
+        user = authenticate(username=u, password=request.POST['newPassword'])
+        if user:
+            login(request, user)
+            return custom_redirect('change_password', result='Password cambiata')
+        else:
+            return redirect('index')
+        return redirect('reset_password')
+
+
+class Change_password(View):
+
+    @method_decorator(login_required(login_url='login'))
+    def get(self, request, *args, **kwargs):
+        error = None
+        if 'error' in request.GET:
+            error = request.GET['error']
+        result = None
+        if 'result' in request.GET:
+            result = request.GET['result']
+        code = None
+        if 'code' in request.GET:
+            code = request.GET['code']
+        return render(request, 'change_password.html', {'code': code, 'error': error, 'result': result})
+
+    @method_decorator(login_required(login_url='login'))
+    def post(self, request, *args, **kwargs):
+        if 'oldPassword' in request.POST:
+            u = User.objects.get(id=request.user.id)
+            email = request.user.email
+            if u.check_password(request.POST['oldPassword']):
+                if 'newPassword' in request.POST:
+                    u.set_password(request.POST['newPassword'])
+                    u.save()
+                else:
+                    return custom_redirect('change_password', error='Nuova password non valida')
+            else:
+                return custom_redirect('change_password', error='Vecchia password errata')
+        else:
+            return custom_redirect('change_password', error='Vecchia password non presente')
+
+        user = authenticate(username=email, password=request.POST['newPassword'])
+        if user:
+            login(request, user)
+            return custom_redirect('change_password', result='Password cambiata')
+        else:
+            return redirect('index')

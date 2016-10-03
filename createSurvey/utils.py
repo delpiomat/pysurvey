@@ -1,5 +1,11 @@
 from .models import Column, Survey
 
+# per custom redirect
+import urllib
+import requests
+from django.http import HttpResponseRedirect
+
+
 # for Json format
 import json
 
@@ -105,10 +111,10 @@ def export_csv_SJA(survey, col_list, filename):
                 logger.error(type(survey[key][label]))
             if (survey[key][label] != '') and (survey[key][label] != ' ') and (survey[key][label] is not None):
                 row.append(survey[key][label])
-                logger.error('tutto ok')
+                #logger.error('tutto ok')
             else:
                 row.append("None")
-                logger.error('Scrivo None')
+                #logger.error('Scrivo None')
         writer.writerow(row)
         row = []
     return response
@@ -148,3 +154,21 @@ def send_verification_email(request, user, isAzienda,password):
     logger.error("la password" + password)
     logger.error(" ")
     return send_mail('Verifica account', text_content, "jobunipd@gmail.com", mittenti, fail_silently=False, html_message=html_content)
+
+
+# per un redirect customizzato lo uso su reset password
+def custom_redirect(url_name, *args, **kwargs):
+    if args:
+        url = reverse(url_name, args=args)
+    else:
+        url = reverse(url_name)
+    params = urllib.parse.urlencode(kwargs)
+    return HttpResponseRedirect(url + "?%s" % params)
+
+
+def send_reset_pass_email(request, user):
+    #link url server
+    link = request.build_absolute_uri(reverse('reset_password', args=[user.id, user.account.activationCode]))
+    text_content = "Job UNIPD\nApri il link per resettare la password dell'account\n" + link
+    html_content = "<h2>JOB UNIPD</h2><br>Apri il link per resettare l'account\n<br><a href='" + link + "'>link</a>"
+    return send_mail('Reset password', text_content, "jobunipd@gmail.com", [user.email], fail_silently=False, html_message=html_content)
