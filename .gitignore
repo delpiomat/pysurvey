@@ -1,3 +1,10 @@
 *.pyc
-pysurvey/settings.py
 migrations/*
+.idea/vcs.xml
+.idea/workspace.xml
+createSurvey/__pycache__/
+createSurvey/migrations/0001_initial.py
+createSurvey/migrations/__pycache__/
+jobsurvey/__pycache__/
+pysurvey/__pycache__/
+pysurvey/settings.py
