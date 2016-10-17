@@ -1538,44 +1538,44 @@ class Lavori(View):
                         nuovo_valore_gia_esistente.area_operativa = nuova_valore_nuovo
                         nuovo_valore_gia_esistente.save()
 
-                        # valore_list = json.loads(request.POST["cerca_livello_cariera"])
-                        # if len(valore_list) <= 0:
-                        #    nuovo_valore_nullo = CercaLivelloCariera(lavoro=nuovo_lavoro)
-                        #   nuovo_valore_nullo.livello_cariera = None
-                        #  nuovo_valore_nullo.save()
-                        # else:
-                        #    for v in valore_list:
-                        #       if len(LivelloCariera.objects.filter(valore=v.capitalize())) > 0:
-                        #         nuovo_valore_gia_esistente = CercaLivelloCariera(lavoro=nuovo_lavoro)
-                        #         nuovo_valore_gia_esistente.livello_cariera = LivelloCariera.objects.filter(valore=v.capitalize())[0]
-                        nuovo_valore_gia_esistente.save()
-                        #   else:
-                        #        nuova_valore_nuovo = LivelloCariera(valore=v)
-                        #        nuova_valore_nuovo.save()
-                        #        # ora essite nel db quel valore
-                        #       nuovo_valore_gia_esistente = CercaLivelloCariera(lavoro=nuovo_lavoro)
-                        #       nuovo_valore_gia_esistente.livello_cariera = nuova_valore_nuovo
-                        #      nuovo_valore_gia_esistente.save()
+            # valore_list = json.loads(request.POST["cerca_livello_cariera"])
+            # if len(valore_list) <= 0:
+            #    nuovo_valore_nullo = CercaLivelloCariera(lavoro=nuovo_lavoro)
+            #   nuovo_valore_nullo.livello_cariera = None
+            #  nuovo_valore_nullo.save()
+            # else:
+            #    for v in valore_list:
+            #       if len(LivelloCariera.objects.filter(valore=v.capitalize())) > 0:
+            #         nuovo_valore_gia_esistente = CercaLivelloCariera(lavoro=nuovo_lavoro)
+            #         nuovo_valore_gia_esistente.livello_cariera = LivelloCariera.objects.filter(valore=v.capitalize())[0]
+            #nuovo_valore_gia_esistente.save()
+            #   else:
+            #        nuova_valore_nuovo = LivelloCariera(valore=v)
+            #        nuova_valore_nuovo.save()
+            #        # ora essite nel db quel valore
+            #       nuovo_valore_gia_esistente = CercaLivelloCariera(lavoro=nuovo_lavoro)
+            #       nuovo_valore_gia_esistente.livello_cariera = nuova_valore_nuovo
+            #      nuovo_valore_gia_esistente.save()
 
-            valore_list = json.loads(request.POST["cerca_tipo_contratto"])
-            if len(valore_list) <= 0:
+            v_post = ''
+            v_post = request.POST["cerca_tipo_contratto"]
+            if v_post == '' or v_post is None:
                 nuovo_valore_nullo = CercaTipoContratto(lavoro=nuovo_lavoro)
                 nuovo_valore_nullo.tipo_contratto = None
                 nuovo_valore_nullo.save()
             else:
-                for v in valore_list:
-                    if len(TipoContratto.objects.filter(valore=v.capitalize())) > 0:
-                        nuovo_valore_gia_esistente = CercaTipoContratto(lavoro=nuovo_lavoro)
-                        nuovo_valore_gia_esistente.tipo_contratto = TipoContratto.objects.filter(valore=v.capitalize())[
-                            0]
-                        nuovo_valore_gia_esistente.save()
-                    else:
-                        nuova_valore_nuovo = TipoContratto(valore=v)
-                        nuova_valore_nuovo.save()
-                        # ora essite nel db quel valore
-                        nuovo_valore_gia_esistente = CercaTipoContratto(lavoro=nuovo_lavoro)
-                        nuovo_valore_gia_esistente.tipo_contratto = nuova_valore_nuovo
-                        nuovo_valore_gia_esistente.save()
+
+                if len(TipoContratto.objects.filter(valore=v_post.capitalize())) > 0:
+                    nuovo_valore_gia_esistente = CercaTipoContratto(lavoro=nuovo_lavoro)
+                    nuovo_valore_gia_esistente.tipo_contratto = TipoContratto.objects.filter(valore=v_post.capitalize())[0]
+                    nuovo_valore_gia_esistente.save()
+                else:
+                    nuova_valore_nuovo = TipoContratto(valore=v_post)
+                    nuova_valore_nuovo.save()
+                    # ora essite nel db quel valore
+                    nuovo_valore_gia_esistente = CercaTipoContratto(lavoro=nuovo_lavoro)
+                    nuovo_valore_gia_esistente.tipo_contratto = nuova_valore_nuovo
+                    nuovo_valore_gia_esistente.save()
         else:
             return render(request, 'grazie.html', {"azienda": '3', "errore": "no codice Azienda"})
 
