@@ -1,12 +1,11 @@
 from django.http import HttpResponse
-from django.shortcuts import render, redirect, render_to_response # RequestContext # non va
+from django.shortcuts import render, redirect, render_to_response  # RequestContext # non va
 
 from django.views.generic import View
 from createSurvey.models import *
 
 # per eccezioni
 from django.core.exceptions import ObjectDoesNotExist
-
 
 # eccezioni per pagina 404
 from django.http import Http404
@@ -46,11 +45,12 @@ from jobsurvey.recommendation import *
 
 # import the logging library #per debug scrive nella Console
 import logging
+
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
 
-#Per ogni campo del questionario studente restituisce possibili valori
+# Per ogni campo del questionario studente restituisce possibili valori
 def find_all_option_student():
     # inizio questionario
     result = {}
@@ -83,82 +83,81 @@ def random_jobs(num):
             jobs_vet.append(temp)
     return jobs_vet
 
+
 # crea o modifica il profilo di uno Studente
 def create_modify_student_persona_survey_by_post(request, user, is_new_user, is_admin=False):
     nuova_persona = Persona()
 
-    if request.POST['cap']== "":
+    if request.POST['cap'] == "":
         nuova_persona.cap = None
     else:
         nuova_persona.cap = request.POST['cap']
 
-    if request.POST['anno']== "":
+    if request.POST['anno'] == "":
         nuova_persona.anno_nascita = None
     else:
         nuova_persona.anno_nascita = request.POST['anno']
 
-    if request.POST['citta']== "":
+    if request.POST['citta'] == "":
         nuova_persona.citta = None
     else:
         nuova_persona.citta = request.POST['citta']
 
-    if request.POST['email']== "":
+    if request.POST['email'] == "":
         nuova_persona.email = None
     else:
         nuova_persona.email = request.POST['email']
 
-    if request.POST['voto']== "":
+    if request.POST['voto'] == "":
         nuova_persona.voto_finale = None
     else:
         nuova_persona.voto_finale = request.POST['voto']
 
-    if request.POST['note']== "":
+    if request.POST['note'] == "":
         nuova_persona.note = None
     else:
         nuova_persona.note = request.POST['note']
 
-    if request.POST['optionsRadios']== "true":
+    if request.POST['optionsRadios'] == "true":
         nuova_persona.esperienze_pregresse = True
     else:
         nuova_persona.esperienze_pregresse = False
 
-    if request.POST['numero_attivita_svolte']== "":
+    if request.POST['numero_attivita_svolte'] == "":
         nuova_persona.numero_attivita_svolte = None
     else:
         nuova_persona.numero_attivita_svolte = request.POST['numero_attivita_svolte']
 
-    if request.POST['numero_mesi_attivita_svolte']== "":
+    if request.POST['numero_mesi_attivita_svolte'] == "":
         nuova_persona.numero_mesi_attivita_svolte = None
     else:
         nuova_persona.numero_mesi_attivita_svolte = request.POST['numero_mesi_attivita_svolte']
 
-    if request.POST['desc_esperienze_pregresso']== "":
+    if request.POST['desc_esperienze_pregresso'] == "":
         nuova_persona.desc_esperienze_pregresse = None
     else:
         nuova_persona.desc_esperienze_pregresse = request.POST['desc_esperienze_pregresso']
 
-    if request.POST['stipendio_futuro']== "":
+    if request.POST['stipendio_futuro'] == "":
         nuova_persona.stipendio_futuro = None
     else:
         nuova_persona.stipendio_futuro = request.POST['stipendio_futuro']
 
-    if request.POST['possibilita_trasferirsi_option']== "true":
+    if request.POST['possibilita_trasferirsi_option'] == "true":
         nuova_persona.possibilita_trasferirsi = True
     else:
         nuova_persona.possibilita_trasferirsi = False
-
 
     # Ora parliamo delle chiavi esterne con solo un valore Possibile-------------------------
     livello_pc_post = json.loads(request.POST["livello_pc"])
     if len(livello_pc_post) <= 0:
         nuova_persona.livello_uso_computer = None
-    elif len( LivelloPC.objects.filter(valore=livello_pc_post[0].capitalize()) ) > 0:
+    elif len(LivelloPC.objects.filter(valore=livello_pc_post[0].capitalize())) > 0:
         nuova_persona.livello_uso_computer = LivelloPC.objects.filter(valore=livello_pc_post[0].capitalize())[0]
     else:
         livello_pc = LivelloPC(valore=livello_pc_post[0].capitalize())
         livello_pc.save()
         nuova_persona.livello_uso_computer = livello_pc
-
 
     zona_post = json.loads(request.POST["zona"])
     if len(zona_post) <= 0:
@@ -184,13 +183,13 @@ def create_modify_student_persona_survey_by_post(request, user, is_new_user, is_
     try:
         # bisogna salvarlo qua
         nuova_persona.save()
-        #collego account al sondaggio
+        # collego account al sondaggio
         if (is_new_user):
             # nuovo utente
             user.survey = nuova_persona
             user.save()
 
-            #cerco tre lavori random e li assegno allo studente cosi puo dare la sua opinione.
+            # cerco tre lavori random e li assegno allo studente cosi puo dare la sua opinione.
             vet_jobs = random_jobs(3)
             mat = MatricePunteggio(persona=nuova_persona, lavoro=vet_jobs[0])
             mat.save()
@@ -201,9 +200,9 @@ def create_modify_student_persona_survey_by_post(request, user, is_new_user, is_
         elif is_admin:
             logger.error("admin modifica persona studente")
             # un admin che fa modifiche
-            #ATTENZIONE SE SI CAMBIA con una post l'id del vecchio sondaggio esplode tutto
+            # ATTENZIONE SE SI CAMBIA con una post l'id del vecchio sondaggio esplode tutto
             # non conosciamo l'identita dell'utene quindi dobbiamo leggerlo dalla POST
-            #per l'utente non lo facciamo salta la sicurezza
+            # per l'utente non lo facciamo salta la sicurezza
             old_survey = Persona.objects.get(pk=request.POST["id_survey"])
             try:
                 nuova_persona.email = old_survey.email
@@ -211,11 +210,11 @@ def create_modify_student_persona_survey_by_post(request, user, is_new_user, is_
                 user.survey = nuova_persona
                 user.save()
                 nuova_persona.save()
-                #eccezione gestisci il vecchio modo senza controllo accessi e autenticazioni
+                # eccezione gestisci il vecchio modo senza controllo accessi e autenticazioni
             except ObjectDoesNotExist:
                 logger.error("account non esiste quindi non aggiungiamo l'account ma lo eliminiamo comunque ADMIN")
             old_survey.delete()
-        elif user.type==0:
+        elif user.type == 0:
             old_survey = Persona.objects.get(pk=user.account.survey_id)
             try:
                 # assegno vecchia email
@@ -262,7 +261,8 @@ def create_modify_student_persona_survey_by_post(request, user, is_new_user, is_
         for v in valore_list:
             if len(ConoscenzaSpecifica.objects.filter(valore=v.capitalize())) > 0:
                 nuovo_valore_gia_esistente = ConoscenzaSpecificaAttuale(persona=nuova_persona)
-                nuovo_valore_gia_esistente.conoscenza_specifica = ConoscenzaSpecifica.objects.filter(valore=v.capitalize())[0]
+                nuovo_valore_gia_esistente.conoscenza_specifica = \
+                    ConoscenzaSpecifica.objects.filter(valore=v.capitalize())[0]
                 nuovo_valore_gia_esistente.save()
             else:
                 nuova_valore_nuovo = ConoscenzaSpecifica(valore=v)
@@ -654,12 +654,11 @@ def create_modify_student_persona_survey_by_post(request, user, is_new_user, is_
 
 
 class ModifyStudente(View):
-
     # solo se autenticato come admin o utente
     @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
 
-        result={}
+        result = {}
         result = find_all_option_student()
 
         # per creare copie uso url GET
@@ -672,25 +671,27 @@ class ModifyStudente(View):
         copy['note'] = ""
         copy['voto_finale'] = ""
 
-        copy['esperienze_pregresse'] = False #si no
+        copy['esperienze_pregresse'] = False  # si no
         copy['desc_esperienze_pregresse'] = ""
         copy['numero_attivita_svolte'] = ""
         copy['numero_mesi_attivita_svolte'] = ""
 
-        copy['possibilita_trasferirsi'] = False #si no
+        copy['possibilita_trasferirsi'] = False  # si no
         copy['stipendio_futuro'] = ""
 
         logger.error("modifica studente ")
         # controllo se autenticato
         if request.user.is_authenticated:
             logger.error("Sono autenticato studente")
-            #controllo se passato id
+            # controllo se passato id
             if 'id' in kwargs:
-                #controllo se utente con quell ide oppure amministratore BISOGNA IMPOSTARE SUPERUSER A 1
-                if (request.user.is_superuser==1) or (request.user.account.type==0 and int(request.user.account.survey.id) == int(kwargs['id'])):
+                # controllo se utente con quell ide oppure amministratore BISOGNA IMPOSTARE SUPERUSER A 1
+                if (request.user.is_superuser == 1) or (
+                                request.user.account.type == 0 and int(request.user.account.survey.id) == int(
+                            kwargs['id'])):
                     logger.error("Posso modificare!")
                     copy['id'] = kwargs['id']
-                    studente_copia=Persona.objects.select_related().get(pk=kwargs['id'])
+                    studente_copia = Persona.objects.select_related().get(pk=kwargs['id'])
                     if studente_copia.cap != None:
                         copy['cap'] = studente_copia.cap
                     if studente_copia.email != None:
@@ -716,7 +717,7 @@ class ModifyStudente(View):
                     if studente_copia.stipendio_futuro != None:
                         copy['stipendio_futuro'] = studente_copia.stipendio_futuro
 
-                    #chiavi esterne
+                    # chiavi esterne
                     copy['zona'] = ""
                     copy['grado_studi'] = ""
                     copy['livello_pc'] = ""
@@ -736,56 +737,75 @@ class ModifyStudente(View):
                     copy['benefit_fututo'] = ""
                     copy['interesse_futuro'] = ""
 
-                    copy['esame'] = EsameAttuale.objects.select_related().filter(persona_id=copy['id']).exclude(esame=None)
-                    copy['campo_studi'] = CampoStudiAttuale.objects.select_related().filter(persona_id=copy['id']).exclude(campo_studi=None)
-                    copy['lingua'] = LinguaAttuale.objects.select_related().filter(persona_id=copy['id']).exclude(lingua=None)
-                    copy['conoscenza_specifica'] = ConoscenzaSpecificaAttuale.objects.select_related().filter(persona_id=copy['id']).exclude(conoscenza_specifica=None)
-                    copy['stato'] = StatoAttuale.objects.select_related().filter(persona_id=copy['id']).exclude(stato=None)
-                    copy['benefit_futuro'] = BenefitFuturo.objects.select_related().filter(persona_id=copy['id']).exclude(benefit=None)
-                    copy['interesse_futuro'] = InteresseFuturo.objects.select_related().filter(persona_id=copy['id']).exclude(interesse=None)
+                    copy['esame'] = EsameAttuale.objects.select_related().filter(persona_id=copy['id']).exclude(
+                        esame=None)
+                    copy['campo_studi'] = CampoStudiAttuale.objects.select_related().filter(
+                        persona_id=copy['id']).exclude(campo_studi=None)
+                    copy['lingua'] = LinguaAttuale.objects.select_related().filter(persona_id=copy['id']).exclude(
+                        lingua=None)
+                    copy['conoscenza_specifica'] = ConoscenzaSpecificaAttuale.objects.select_related().filter(
+                        persona_id=copy['id']).exclude(conoscenza_specifica=None)
+                    copy['stato'] = StatoAttuale.objects.select_related().filter(persona_id=copy['id']).exclude(
+                        stato=None)
+                    copy['benefit_futuro'] = BenefitFuturo.objects.select_related().filter(
+                        persona_id=copy['id']).exclude(benefit=None)
+                    copy['interesse_futuro'] = InteresseFuturo.objects.select_related().filter(
+                        persona_id=copy['id']).exclude(interesse=None)
 
                     copy['mansione_attuale'] = ""
                     copy['mansione_pregressa'] = ""
                     copy['mansione_futura'] = ""
 
-                    copy['mansione_attuale'] = MansioneAttuale.objects.select_related().filter(persona_id=copy['id']).exclude(mansione=None)
-                    copy['mansione_pregressa'] = MansionePregresso.objects.select_related().filter(persona_id=copy['id']).exclude(mansione=None)
-                    copy['mansione_futura'] = MansioneFuturo.objects.select_related().filter(persona_id=copy['id']).exclude(mansione=None)
-
+                    copy['mansione_attuale'] = MansioneAttuale.objects.select_related().filter(
+                        persona_id=copy['id']).exclude(mansione=None)
+                    copy['mansione_pregressa'] = MansionePregresso.objects.select_related().filter(
+                        persona_id=copy['id']).exclude(mansione=None)
+                    copy['mansione_futura'] = MansioneFuturo.objects.select_related().filter(
+                        persona_id=copy['id']).exclude(mansione=None)
 
                     copy['livello_cariera_attuale'] = ""
                     copy['livello_cariera_pregressa'] = ""
                     copy['livello_cariera_futura'] = ""
 
-                    copy['livello_cariera_attuale'] = LivelloCarieraAttuale.objects.select_related().filter(persona_id=copy['id']).exclude(livello_cariera=None)
-                    copy['livello_cariera_pregressa'] = LivelloCarieraPregresso.objects.select_related().filter(persona_id=copy['id']).exclude(livello_cariera=None)
-                    copy['livello_cariera_futura'] = LivelloCarieraFuturo.objects.select_related().filter(persona_id=copy['id']).exclude(livello_cariera=None)
-
+                    copy['livello_cariera_attuale'] = LivelloCarieraAttuale.objects.select_related().filter(
+                        persona_id=copy['id']).exclude(livello_cariera=None)
+                    copy['livello_cariera_pregressa'] = LivelloCarieraPregresso.objects.select_related().filter(
+                        persona_id=copy['id']).exclude(livello_cariera=None)
+                    copy['livello_cariera_futura'] = LivelloCarieraFuturo.objects.select_related().filter(
+                        persona_id=copy['id']).exclude(livello_cariera=None)
 
                     copy['ruolo_attuale'] = ""
                     copy['ruolo_pregressa'] = ""
                     copy['ruolo_futura'] = ""
 
-                    copy['ruolo_attuale'] = RuoloAttuale.objects.select_related().filter(persona_id=copy['id']).exclude(ruolo=None)
-                    copy['ruolo_pregressa'] = RuoloPregresso.objects.select_related().filter(persona_id=copy['id']).exclude(ruolo=None)
-                    copy['ruolo_futura'] = RuoloFuturo.objects.select_related().filter(persona_id=copy['id']).exclude(ruolo=None)
-
+                    copy['ruolo_attuale'] = RuoloAttuale.objects.select_related().filter(persona_id=copy['id']).exclude(
+                        ruolo=None)
+                    copy['ruolo_pregressa'] = RuoloPregresso.objects.select_related().filter(
+                        persona_id=copy['id']).exclude(ruolo=None)
+                    copy['ruolo_futura'] = RuoloFuturo.objects.select_related().filter(persona_id=copy['id']).exclude(
+                        ruolo=None)
 
                     copy['area_operativa_attuale'] = ""
                     copy['area_operativa_pregressa'] = ""
                     copy['area_operativa_futura'] = ""
 
-                    copy['area_operativa_attuale'] = AreaOperativaAttuale.objects.select_related().filter(persona_id=copy['id']).exclude(area_operativa=None)
-                    copy['area_operativa_pregressa'] = AreaOperativaPregresso.objects.select_related().filter(persona_id=copy['id']).exclude(area_operativa=None)
-                    copy['area_operativa_futura'] = AreaOperativaFuturo.objects.select_related().filter(persona_id=copy['id']).exclude(area_operativa=None)
+                    copy['area_operativa_attuale'] = AreaOperativaAttuale.objects.select_related().filter(
+                        persona_id=copy['id']).exclude(area_operativa=None)
+                    copy['area_operativa_pregressa'] = AreaOperativaPregresso.objects.select_related().filter(
+                        persona_id=copy['id']).exclude(area_operativa=None)
+                    copy['area_operativa_futura'] = AreaOperativaFuturo.objects.select_related().filter(
+                        persona_id=copy['id']).exclude(area_operativa=None)
 
                     copy['tipo_contratto_attuale'] = ""
                     copy['tipo_contratto_pregressa'] = ""
                     copy['tipo_contratto_futura'] = ""
 
-                    copy['tipo_contratto_attuale'] = TipoContrattoAttuale.objects.select_related().filter(persona_id=copy['id']).exclude(tipo_contratto=None)
-                    copy['tipo_contratto_pregressa'] = TipoContrattoPregesso.objects.select_related().filter(persona_id=copy['id']).exclude(tipo_contratto=None)
-                    copy['tipo_contratto_futura'] = TipoContrattoFuturo.objects.select_related().filter(persona_id=copy['id']).exclude(tipo_contratto=None)
+                    copy['tipo_contratto_attuale'] = TipoContrattoAttuale.objects.select_related().filter(
+                        persona_id=copy['id']).exclude(tipo_contratto=None)
+                    copy['tipo_contratto_pregressa'] = TipoContrattoPregesso.objects.select_related().filter(
+                        persona_id=copy['id']).exclude(tipo_contratto=None)
+                    copy['tipo_contratto_futura'] = TipoContrattoFuturo.objects.select_related().filter(
+                        persona_id=copy['id']).exclude(tipo_contratto=None)
                 else:
                     logger.error("NON PUO MODIFICARE")
         result["copy"] = copy
@@ -796,10 +816,10 @@ class ModifyStudente(View):
     @method_decorator(login_required(login_url='log_in'))
     def post(self, request, *args, **kwargs):
 
-        #si tratta di un utente corretto
-        if request.user.is_superuser==1:
+        # si tratta di un utente corretto
+        if request.user.is_superuser == 1:
             create_modify_student_persona_survey_by_post(request, request.user, False, True)
-        elif request.user.account.type==0:
+        elif request.user.account.type == 0:
             logger.error("Sei un utente con una post")
             create_modify_student_persona_survey_by_post(request, request.user.account, False, False)
         else:
@@ -807,10 +827,8 @@ class ModifyStudente(View):
         return render(request, 'index.html')
 
 
-
 # per sondaggio
 class Studenti(View):
-
     # non deve essere autenticato
     def get(self, request, *args, **kwargs):
 
@@ -833,13 +851,13 @@ class Studenti(View):
         # nuovo sondaggio quindi creo account
         post = request.POST
 
-        #creo utente nuovo
+        # creo utente nuovo
         nuovo_user = None
         username = None
         password = None
         name = None
 
-        if request.POST['email']== "":
+        if request.POST['email'] == "":
             return redirect('studenti', 'Email non valida inserita')
 
         # problema se la mail facoltativa
@@ -860,7 +878,7 @@ class Studenti(View):
         # inserisco dati sondiaggio in questo caso lo creo nuovo
         create_modify_student_persona_survey_by_post(request, nuovo_user, True)
 
-        return render(request, 'grazie.html',{"azienda":'0'})
+        return render(request, 'grazie.html', {"azienda": '0'})
 
 
 # tutti i tag e possibilita per azienda
@@ -871,7 +889,7 @@ def find_all_option_azienda():
     return result
 
 
-def create_modify_azienda_sondaggio_azienda_by_post(request,user,is_new_user,is_admin=False):
+def create_modify_azienda_sondaggio_azienda_by_post(request, user, is_new_user, is_admin=False):
     nuova_azienda = Azienda()
 
     if request.POST['email'] == "":
@@ -903,19 +921,19 @@ def create_modify_azienda_sondaggio_azienda_by_post(request,user,is_new_user,is_
     # salvo oggetto nuovo sondaggio
     nuova_azienda.save()
 
-    #collego account al sondaggio
+    # collego account al sondaggio
     if (is_new_user):
         logger.error("Nuovo utente crea Sondaggio azienda")
         # nuovo utente
         user.azienda = nuova_azienda
         user.save()
-    elif is_admin or user.type==1:
+    elif is_admin or user.type == 1:
         logger.error("admin modifica Sondaggio azienda")
         # un admin che fa modifiche
-        #ATTENZIONE SE SI CAMBIA con una post l'id del vecchio sondaggio esplode tutto
+        # ATTENZIONE SE SI CAMBIA con una post l'id del vecchio sondaggio esplode tutto
         # non conosciamo l'identita dell'utene quindi dobbiamo leggerlo dalla POST
-        #per l'utente non lo facciamo salta la sicurezza
-        #se l'account non esiste (retrocompatibilita)
+        # per l'utente non lo facciamo salta la sicurezza
+        # se l'account non esiste (retrocompatibilita)
         try:
             if is_admin:
                 logger.error("admin modifica Sondaggio azienda")
@@ -925,10 +943,10 @@ def create_modify_azienda_sondaggio_azienda_by_post(request,user,is_new_user,is_
             else:
                 logger.error("Azienda modifica Sondaggio azienda")
                 old_survey = Azienda.objects.get(pk=user.azienda_id)
-            #problema della mail non modificabile
+            # problema della mail non modificabile
             nuova_azienda.email = old_survey.email
             nuova_azienda.save()
-            #problema di mantenere offerte di lavoro vecchie
+            # problema di mantenere offerte di lavoro vecchie
             job_offers = Lavoro.objects.filter(azienda=old_survey)
             for job in job_offers:
                 job.azienda = nuova_azienda
@@ -949,7 +967,7 @@ def create_modify_azienda_sondaggio_azienda_by_post(request,user,is_new_user,is_
         # caso che non deve mai accadere
         logger.error("Qualcuno di strano vuol modifcare azienda")
 
-     # Ora parliamo dei multi valore-------------------------------------------
+        # Ora parliamo dei multi valore-------------------------------------------
     valore_list = json.loads(request.POST["altra_sede"])
     if len(valore_list) <= 0:
         nuovo_valore_nullo = AltraSede(azienda=nuova_azienda)
@@ -969,14 +987,14 @@ def create_modify_azienda_sondaggio_azienda_by_post(request,user,is_new_user,is_
                 nuovo_valore_gia_esistente.citta = nuova_valore_nuovo
                 nuovo_valore_gia_esistente.save()
 
+
 # modifica dati azienda
 class ModifyAzienda(View):
-
     # solo se autenticato come admin o utente
     @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
 
-        result={}
+        result = {}
         result = find_all_option_azienda()
 
         # per creare copie uso url GET
@@ -993,10 +1011,12 @@ class ModifyAzienda(View):
         # controllo se autenticato
         if request.user.is_authenticated:
             logger.error("Sono autenticato Azienda")
-            #controllo se passato id
+            # controllo se passato id
             if 'id' in kwargs:
-                #controllo se Utente e azienda(quindi tipo 1) con quell ID oppure amministratore BISOGNA IMPOSTARE SUPERUSER A 1
-                if (request.user.is_superuser==1) or (request.user.account.type==1 and int(request.user.account.azienda.id) == int(kwargs['id'])):
+                # controllo se Utente e azienda(quindi tipo 1) con quell ID oppure amministratore BISOGNA IMPOSTARE SUPERUSER A 1
+                if (request.user.is_superuser == 1) or (
+                                request.user.account.type == 1 and int(request.user.account.azienda.id) == int(
+                            kwargs['id'])):
                     logger.error("Posso modificare Azineda questionario")
                     copy['id'] = kwargs['id']
                     azienda_copia = Azienda.objects.select_related().get(pk=kwargs['id'])
@@ -1007,12 +1027,13 @@ class ModifyAzienda(View):
                     if azienda_copia.nome_referente != None:
                         copy['nome_referente'] = azienda_copia.nome_referente
 
-                    #esterno singolo
+                    # esterno singolo
                     if azienda_copia.citta_sede != None:
                         copy['citta'] = azienda_copia.citta_sede.valore
 
                     # esterno multiplo
-                    copy['altra_sede'] = AltraSede.objects.select_related().filter(azienda_id=copy['id']).exclude(citta=None)
+                    copy['altra_sede'] = AltraSede.objects.select_related().filter(azienda_id=copy['id']).exclude(
+                        citta=None)
 
                     result["copy"] = copy
 
@@ -1026,20 +1047,20 @@ class ModifyAzienda(View):
     @method_decorator(login_required(login_url='log_in'))
     def post(self, request, *args, **kwargs):
 
-    #si tratta di un utente corretto
+        # si tratta di un utente corretto
         if request.user.is_superuser == 1:
             logger.error("Super user vuole modificare azienda accede al metodo")
             create_modify_azienda_sondaggio_azienda_by_post(request, request.user, is_new_user=False, is_admin=True)
         elif request.user.account.type == 1:
             logger.error("Azienda vuole modifcare azienda accede al metodo")
-            create_modify_azienda_sondaggio_azienda_by_post(request, request.user.account, is_new_user=False, is_admin=False)
+            create_modify_azienda_sondaggio_azienda_by_post(request, request.user.account, is_new_user=False,
+                                                            is_admin=False)
         else:
             logger.error("un altro tipo di utente!")
         return render(request, 'index.html')
 
 
 class Aziende(View):
-
     def get(self, request, *args, **kwargs):
 
         # opzioni tag per azienda
@@ -1051,7 +1072,7 @@ class Aziende(View):
         if 'error' in kwargs:
             error = kwargs['error']
 
-        result['error']=error
+        result['error'] = error
 
         return render(request, "aziende.html", result)
 
@@ -1061,13 +1082,13 @@ class Aziende(View):
         # nuovo sondaggio quindi creo account
         post = request.POST
 
-        #creo utente nuovo
+        # creo utente nuovo
         nuovo_user = None
         username = None
         password = None
         name = None
 
-        if request.POST['email']== "":
+        if request.POST['email'] == "":
             return redirect('aziende', 'Email non valida inserita')
 
         # problema se la mail facoltativa
@@ -1077,19 +1098,21 @@ class Aziende(View):
         user_count = Account.objects.filter(username=username).count()
         if user_count != 0:
             return redirect('aziende', 'Email gia esistente')
-        nuovo_user = Account(is_active=False, first_name=name, username=username, email=post['email'], type=1) # type 1 per azienda
+        nuovo_user = Account(is_active=False, first_name=name, username=username, email=post['email'],
+                             type=1)  # type 1 per azienda
         nuovo_user.set_password(password)
         nuovo_user.activationCode = ''.join([random.choice(string.ascii_letters + string.digits) for n in range(32)])
         nuovo_user.save()
 
         # invio mail
         logger.error('invio mail azienda nuova')
-        send_verification_email(request, nuovo_user, True, password) # una Azienda Va true per messaggio diverso Mail
+        send_verification_email(request, nuovo_user, True, password)  # una Azienda Va true per messaggio diverso Mail
 
         # inserisco dati sondiaggio AZIENDA in questo caso lo creo nuovo Stesso metodo per fare modificare vecchio sondaggio
         create_modify_azienda_sondaggio_azienda_by_post(request, nuovo_user, True)
 
-        return render(request, 'grazie.html',{"azienda":'1'})
+        return render(request, 'grazie.html', {"azienda": '1'})
+
 
 # ----------------Offerte Lavoro ------------------------------------------------------------------
 
@@ -1107,25 +1130,25 @@ def find_all_option_lavoro():
 
     return result
 
+
 # serve ad inserire nuove offerte di lavoro o modificarle
 def create_modify_lavoro_sondaggio_by_post(request, account, is_new_survey, is_admin):
-
     if "codice_azienda" in request.POST:
         # creo nuova offerta di lavoro
-        nuovo_lavoro= Lavoro(azienda_id=request.POST["codice_azienda"])
+        nuovo_lavoro = Lavoro(azienda_id=request.POST["codice_azienda"])
 
         # inserirsco valori singoli se presenti
-        if request.POST['email_lavoro']== "":
+        if request.POST['email_lavoro'] == "":
             nuovo_lavoro.email_referente = None
         else:
             nuovo_lavoro.email_referente = request.POST['email_lavoro']
 
-        if request.POST['cerca_distanza']== "":
+        if request.POST['cerca_distanza'] == "":
             nuovo_lavoro.distanza_massima = None
         else:
             nuovo_lavoro.distanza_massima = request.POST['cerca_distanza']
 
-        if request.POST['note_lavoro']== "":
+        if request.POST['note_lavoro'] == "":
             nuovo_lavoro.note_lavoro = None
         else:
             nuovo_lavoro.note_lavoro = request.POST['note_lavoro']
@@ -1229,58 +1252,65 @@ def create_modify_lavoro_sondaggio_by_post(request, account, is_new_survey, is_a
                     nuovo_valore_gia_esistente.area_operativa = nuova_valore_nuovo
                     nuovo_valore_gia_esistente.save()
 
-        valore_list = json.loads(request.POST["cerca_livello_cariera"])
-        if len(valore_list) <= 0:
-            nuovo_valore_nullo = CercaLivelloCariera(lavoro=nuovo_lavoro)
-            nuovo_valore_nullo.livello_cariera = None
-            nuovo_valore_nullo.save()
-        else:
-            for v in valore_list:
-                if len(LivelloCariera.objects.filter(valore=v.capitalize())) > 0:
-                    nuovo_valore_gia_esistente = CercaLivelloCariera(lavoro=nuovo_lavoro)
-                    nuovo_valore_gia_esistente.livello_cariera = LivelloCariera.objects.filter(valore=v.capitalize())[0]
-                    nuovo_valore_gia_esistente.save()
-                else:
-                    nuova_valore_nuovo = LivelloCariera(valore=v)
-                    nuova_valore_nuovo.save()
+                    # valore_list = json.loads(request.POST["cerca_livello_cariera"])
+                    # if len(valore_list) <= 0:
+                    #   nuovo_valore_nullo = CercaLivelloCariera(lavoro=nuovo_lavoro)
+                    #  nuovo_valore_nullo.livello_cariera = None
+                    # nuovo_valore_nullo.save()
+                    # else:
+                    #    for v in valore_list:
+                    #       if len(LivelloCariera.objects.filter(valore=v.capitalize())) > 0:
+                    #          nuovo_valore_gia_esistente = CercaLivelloCariera(lavoro=nuovo_lavoro)
+                    #         nuovo_valore_gia_esistente.livello_cariera = LivelloCariera.objects.filter(valore=v.capitalize())[0]
+                    #        nuovo_valore_gia_esistente.save()
+                    #   else:
+                    #     nuova_valore_nuovo = LivelloCariera(valore=v)
+                    #     nuova_valore_nuovo.save()
                     # ora essite nel db quel valore
-                    nuovo_valore_gia_esistente = CercaLivelloCariera(lavoro=nuovo_lavoro)
-                    nuovo_valore_gia_esistente.livello_cariera = nuova_valore_nuovo
-                    nuovo_valore_gia_esistente.save()
+                    #   nuovo_valore_gia_esistente = CercaLivelloCariera(lavoro=nuovo_lavoro)
+                    #     nuovo_valore_gia_esistente.livello_cariera = nuova_valore_nuovo
+                    #    nuovo_valore_gia_esistente.save()
 
+                    # valore_list = json.loads(request.POST["cerca_tipo_contratto"])
+                    # if len(valore_list) <= 0:
+                    #   nuovo_valore_nullo = CercaTipoContratto(lavoro=nuovo_lavoro)
+                    #  nuovo_valore_nullo.tipo_contratto = None
+                    # nuovo_valore_nullo.save()
+                    # else:
+                    #    for v in valore_list:
+                    #       if len(TipoContratto.objects.filter(valore=v.capitalize())) > 0:
+                    #          nuovo_valore_gia_esistente = CercaTipoContratto(lavoro=nuovo_lavoro)
+                    #         nuovo_valore_gia_esistente.tipo_contratto = TipoContratto.objects.filter(valore=v.capitalize())[0]
+                    #        nuovo_valore_gia_esistente.save()
+                    #   else:
+                    #      nuova_valore_nuovo = TipoContratto(valore=v)
+                    #     nuova_valore_nuovo.save()
+                    # ora essite nel db quel valore
+                    #    nuovo_valore_gia_esistente = CercaTipoContratto(lavoro=nuovo_lavoro)
+                    #   nuovo_valore_gia_esistente.tipo_contratto = nuova_valore_nuovo
+                    #  nuovo_valore_gia_esistente.save()
 
-        valore_list = json.loads(request.POST["cerca_tipo_contratto"])
-        if len(valore_list) <= 0:
+        if request.POST['cerca_tipo_contratto'] == "":
+            logger.error('cerca_tipo_contratto inserisci nullo')
             nuovo_valore_nullo = CercaTipoContratto(lavoro=nuovo_lavoro)
             nuovo_valore_nullo.tipo_contratto = None
             nuovo_valore_nullo.save()
         else:
-            for v in valore_list:
-                if len(TipoContratto.objects.filter(valore=v.capitalize())) > 0:
-                    nuovo_valore_gia_esistente = CercaTipoContratto(lavoro=nuovo_lavoro)
-                    nuovo_valore_gia_esistente.tipo_contratto = TipoContratto.objects.filter(valore=v.capitalize())[0]
-                    nuovo_valore_gia_esistente.save()
-                else:
-                    nuova_valore_nuovo = TipoContratto(valore=v)
-                    nuova_valore_nuovo.save()
-                    # ora essite nel db quel valore
-                    nuovo_valore_gia_esistente = CercaTipoContratto(lavoro=nuovo_lavoro)
-                    nuovo_valore_gia_esistente.tipo_contratto = nuova_valore_nuovo
-                    nuovo_valore_gia_esistente.save()
-
-
+            logger.error('cerca_tipo_contratto inserisci valore')
+            nuovo_valore_gia_esistente = CercaTipoContratto(lavoro=nuovo_lavoro)
+            nuovo_valore_gia_esistente.tipo_contratto = TipoContratto.objects.filter(valore=request.POST['cerca_tipo_contratto'].capitalize())[0]
+            nuovo_valore_gia_esistente.save()
 
 
 # modifica dati offerta di lavoro
 class ModifyLavoro(View):
-
     # solo se autenticato come admin o utente
     @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
 
-        result={}
+        result = {}
         result = find_all_option_lavoro()
-        result['error']=''
+        result['error'] = ''
 
         # per creare copie uso url GET
         copy = {}
@@ -1293,7 +1323,7 @@ class ModifyLavoro(View):
         copy['lingua'] = ""
         copy['campo_studi'] = ""
         copy['esame'] = ""
-        copy['livello_cariera'] = ""
+        # copy['livello_cariera'] = ""
         copy['area_operativa'] = ""
         copy['tipo_contratto'] = ""
         copy['citta'] = ""
@@ -1313,15 +1343,20 @@ class ModifyLavoro(View):
             if lavoro_copia.azienda_id != None:
                 copy['codice_azienda'] = lavoro_copia.azienda_id
 
-            # esterno multiplo
+                # esterno multiplo
                 copy['citta'] = CercaCitta.objects.select_related().filter(lavoro_id=copy['id']).exclude(citta=None)
                 copy['lingua'] = CercaLingua.objects.select_related().filter(lavoro_id=copy['id']).exclude(lingua=None)
-                copy['campo_studi'] = CercaCampoStudio.objects.select_related().filter(lavoro_id=copy['id']).exclude(campo_studio=None)
+                copy['campo_studi'] = CercaCampoStudio.objects.select_related().filter(lavoro_id=copy['id']).exclude(
+                    campo_studio=None)
                 copy['esame'] = CercaEsami.objects.select_related().filter(lavoro_id=copy['id']).exclude(esame=None)
 
-                copy['livello_cariera'] = CercaLivelloCariera.objects.select_related().filter(lavoro_id=copy['id']).exclude(livello_cariera=None)
-                copy['area_operativa'] = CercaAreaOperativa.objects.select_related().filter(lavoro_id=copy['id']).exclude(area_operativa=None)
-                copy['tipo_contratto'] = CercaTipoContratto.objects.select_related().filter(lavoro_id=copy['id']).exclude(tipo_contratto=None)
+                # copy['livello_cariera'] = CercaLivelloCariera.objects.select_related().filter(lavoro_id=copy['id']).exclude(livello_cariera=None)
+                copy['area_operativa'] = CercaAreaOperativa.objects.select_related().filter(
+                    lavoro_id=copy['id']).exclude(area_operativa=None)
+                logger.error('inizio di tipo contratto')
+                copy['tipo_contratto'] = CercaTipoContratto.objects.select_related().filter(
+                    lavoro_id=copy['id']).exclude(tipo_contratto=None)
+                logger.error(copy['tipo_contratto'])
 
             result["copy"] = copy
 
@@ -1333,10 +1368,12 @@ class ModifyLavoro(View):
         # controllo se autenticato
         if request.user.is_authenticated:
             logger.error("Sono autenticato Azienda? per modificare offerta lavoro")
-            #controllo se passato id
+            # controllo se passato id
 
-            #controllo se Utente e azienda(quindi tipo 1) con quell ID oppure amministratore BISOGNA IMPOSTARE SUPERUSER A 1
-            if (request.user.is_superuser==1) or (request.user.account.type==1 and int(request.user.account.azienda.id) == int(copy['codice_azienda'])):
+            # controllo se Utente e azienda(quindi tipo 1) con quell ID oppure amministratore BISOGNA IMPOSTARE SUPERUSER A 1
+            if (request.user.is_superuser == 1) or (
+                            request.user.account.type == 1 and int(request.user.account.azienda.id) == int(
+                        copy['codice_azienda'])):
                 logger.error("Posso modificare offerta lavoro questionario")
                 result["copy"] = copy
 
@@ -1355,7 +1392,7 @@ class ModifyLavoro(View):
     @method_decorator(login_required(login_url='log_in'))
     def post(self, request, *args, **kwargs):
 
-    #si tratta di un utente corretto
+        # si tratta di un utente corretto
         if request.user.is_superuser == 1:
             logger.error("Super user vuole modificare sondaggio accede al metodo")
             create_modify_lavoro_sondaggio_by_post(request, request.user, is_new_survey=False, is_admin=True)
@@ -1367,9 +1404,7 @@ class ModifyLavoro(View):
         return render(request, 'index.html')
 
 
-
 class Lavori(View):
-
     @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
         result = {}
@@ -1377,30 +1412,30 @@ class Lavori(View):
 
         # imposto di default codice azienda
         copy = {}
-        copy['codice_azienda']=""
+        copy['codice_azienda'] = ""
         if request.user.account.azienda_id:
             copy['codice_azienda'] = request.user.account.azienda_id
         else:
             logger.error("qualcuno di sbagliato cerca di fare sondaggio offerte di lavoro")
-        result['copy']=copy
+        result['copy'] = copy
 
         return render(request, "lavoro.html", result)
 
     @method_decorator(login_required(login_url='log_in'))
     def post(self, request, *args, **kwargs):
         if "codice_azienda" in request.POST:
-            nuovo_lavoro= Lavoro(azienda_id=request.POST["codice_azienda"])
-            if request.POST['email_lavoro']== "":
+            nuovo_lavoro = Lavoro(azienda_id=request.POST["codice_azienda"])
+            if request.POST['email_lavoro'] == "":
                 nuovo_lavoro.email_referente = None
             else:
                 nuovo_lavoro.email_referente = request.POST['email_lavoro']
 
-            if request.POST['cerca_distanza']== "":
+            if request.POST['cerca_distanza'] == "":
                 nuovo_lavoro.distanza_massima = None
             else:
                 nuovo_lavoro.distanza_massima = request.POST['cerca_distanza']
 
-            if request.POST['note_lavoro']== "":
+            if request.POST['note_lavoro'] == "":
                 nuovo_lavoro.note_lavoro = None
             else:
                 nuovo_lavoro.note_lavoro = request.POST['note_lavoro']
@@ -1492,7 +1527,8 @@ class Lavori(View):
                 for v in valore_list:
                     if len(AreaOperativa.objects.filter(valore=v.capitalize())) > 0:
                         nuovo_valore_gia_esistente = CercaAreaOperativa(lavoro=nuovo_lavoro)
-                        nuovo_valore_gia_esistente.area_operativa = AreaOperativa.objects.filter(valore=v.capitalize())[0]
+                        nuovo_valore_gia_esistente.area_operativa = AreaOperativa.objects.filter(valore=v.capitalize())[
+                            0]
                         nuovo_valore_gia_esistente.save()
                     else:
                         nuova_valore_nuovo = AreaOperativa(valore=v)
@@ -1502,25 +1538,24 @@ class Lavori(View):
                         nuovo_valore_gia_esistente.area_operativa = nuova_valore_nuovo
                         nuovo_valore_gia_esistente.save()
 
-            valore_list = json.loads(request.POST["cerca_livello_cariera"])
-            if len(valore_list) <= 0:
-                nuovo_valore_nullo = CercaLivelloCariera(lavoro=nuovo_lavoro)
-                nuovo_valore_nullo.livello_cariera = None
-                nuovo_valore_nullo.save()
-            else:
-                for v in valore_list:
-                    if len(LivelloCariera.objects.filter(valore=v.capitalize())) > 0:
-                        nuovo_valore_gia_esistente = CercaLivelloCariera(lavoro=nuovo_lavoro)
-                        nuovo_valore_gia_esistente.livello_cariera = LivelloCariera.objects.filter(valore=v.capitalize())[0]
+                        # valore_list = json.loads(request.POST["cerca_livello_cariera"])
+                        # if len(valore_list) <= 0:
+                        #    nuovo_valore_nullo = CercaLivelloCariera(lavoro=nuovo_lavoro)
+                        #   nuovo_valore_nullo.livello_cariera = None
+                        #  nuovo_valore_nullo.save()
+                        # else:
+                        #    for v in valore_list:
+                        #       if len(LivelloCariera.objects.filter(valore=v.capitalize())) > 0:
+                        #         nuovo_valore_gia_esistente = CercaLivelloCariera(lavoro=nuovo_lavoro)
+                        #         nuovo_valore_gia_esistente.livello_cariera = LivelloCariera.objects.filter(valore=v.capitalize())[0]
                         nuovo_valore_gia_esistente.save()
-                    else:
-                        nuova_valore_nuovo = LivelloCariera(valore=v)
-                        nuova_valore_nuovo.save()
-                        # ora essite nel db quel valore
-                        nuovo_valore_gia_esistente = CercaLivelloCariera(lavoro=nuovo_lavoro)
-                        nuovo_valore_gia_esistente.livello_cariera = nuova_valore_nuovo
-                        nuovo_valore_gia_esistente.save()
-
+                        #   else:
+                        #        nuova_valore_nuovo = LivelloCariera(valore=v)
+                        #        nuova_valore_nuovo.save()
+                        #        # ora essite nel db quel valore
+                        #       nuovo_valore_gia_esistente = CercaLivelloCariera(lavoro=nuovo_lavoro)
+                        #       nuovo_valore_gia_esistente.livello_cariera = nuova_valore_nuovo
+                        #      nuovo_valore_gia_esistente.save()
 
             valore_list = json.loads(request.POST["cerca_tipo_contratto"])
             if len(valore_list) <= 0:
@@ -1531,7 +1566,8 @@ class Lavori(View):
                 for v in valore_list:
                     if len(TipoContratto.objects.filter(valore=v.capitalize())) > 0:
                         nuovo_valore_gia_esistente = CercaTipoContratto(lavoro=nuovo_lavoro)
-                        nuovo_valore_gia_esistente.tipo_contratto = TipoContratto.objects.filter(valore=v.capitalize())[0]
+                        nuovo_valore_gia_esistente.tipo_contratto = TipoContratto.objects.filter(valore=v.capitalize())[
+                            0]
                         nuovo_valore_gia_esistente.save()
                     else:
                         nuova_valore_nuovo = TipoContratto(valore=v)
@@ -1546,10 +1582,7 @@ class Lavori(View):
         return render(request, 'grazie.html', {"azienda": '2'})
 
 
-
-
 class Grazie(View):
-
     @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
         return render(request, "grazie.html")
@@ -1557,6 +1590,7 @@ class Grazie(View):
     @method_decorator(login_required(login_url='log_in'))
     def post(self, request, *args, **kwargs):
         return render(request, "grazie.html")
+
 
 def all_aziende():
     result = {}
@@ -1586,8 +1620,8 @@ def all_aziende():
 
     return result
 
-class RisultatiAziende(View):
 
+class RisultatiAziende(View):
     @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
         result = {}
@@ -1621,6 +1655,7 @@ class RisultatiAziende(View):
                 content_type="application/json"
             )
 
+
 def all_job():
     result = {}
     # lavori
@@ -1630,9 +1665,8 @@ def all_job():
         result[l.id] = {"id": l.id, 'id_azienda': l.azienda_id,
                         'note_azienda': l.azienda.note, "email_riferimento_azienda": l.azienda.email,
                         'email_riferimento_lavoro': l.email_referente, "citta_lavoro": "", 'lingua': "",
-                        'campo_studi': "", 'esami': "", 'area_operativa': "", 'livello_cariera': "",
-                        'tipo_contratto': "", 'distanza': l.distanza_massima, 'note': l.note_lavoro,
-                        'data': l.pub_date}
+                        'campo_studi': "", 'esami': "", 'area_operativa': "", 'tipo_contratto': "",
+                        'distanza': l.distanza_massima, 'note': l.note_lavoro, 'data': l.pub_date}
 
     # citta lavoro
     list_citta_lavoro = CercaCitta.objects.all().select_related()
@@ -1689,16 +1723,16 @@ def all_job():
         else:
             result[lao.lavoro.id]['area_operativa'] += "None"
 
-    # livello_cariera cerca lavoro
-    list_livello_cariera = CercaLivelloCariera.objects.all().select_related()
-    for llc in list_livello_cariera:
-        if llc.livello_cariera != None:
-            if result[llc.lavoro.id]['livello_cariera'] != "":
-                result[llc.lavoro.id]['livello_cariera'] += "," + llc.livello_cariera.valore
-            else:
-                result[llc.lavoro.id]['livello_cariera'] += llc.livello_cariera.valore
-        else:
-            result[llc.lavoro.id]['livello_cariera'] += "None"
+            # livello_cariera cerca lavoro
+            # list_livello_cariera = CercaLivelloCariera.objects.all().select_related()
+            # for llc in list_livello_cariera:
+            #       livello_cariera    if llc.livello_cariera != None:
+            #         if result[llc.lavoro.id]['livello_cariera'] != "":
+            #          result[llc.lavoro.id]['livello_cariera'] += "," + llc.livello_cariera.valore
+            #      else:
+            #           result[llc.lavoro.id]['livello_cariera'] += llc.livello_cariera.valore
+            #    else:
+            #        result[llc.lavoro.id]['livello_cariera'] += "None"
 
     # tipo_contratto cerca lavoro
     list_tipo_contratto = CercaTipoContratto.objects.all().select_related()
@@ -1712,6 +1746,7 @@ def all_job():
             result[ltc.lavoro.id]['tipo_contratto'] += "None"
 
     return result
+
 
 class RisultatiOffertaLavoro(View):
     @method_decorator(login_required(login_url='log_in'))
@@ -1746,6 +1781,7 @@ class RisultatiOffertaLavoro(View):
                 json.dumps({"nothing to see": "errore imprevisto"}),
                 content_type="application/json"
             )
+
 
 # mette in una lista/dizionario tutti gli studenti inseriti
 def all_student():
@@ -2032,7 +2068,6 @@ def all_student():
 
 
 class RisultatiStudenti(View):
-
     @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
         result = {}
@@ -2066,41 +2101,43 @@ class RisultatiStudenti(View):
                 content_type="application/json"
             )
 
+
 # la singola Azienda vuole vedere le sue offerte di lavoro
 class AziendaOffertaLavoro(View):
     @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
 
-        result={}
+        result = {}
 
         if request.user.account.azienda_id:
             # lavori della azienda cercata
             codice_id_azienda = request.user.account.azienda_id
             list_lavori = Lavoro.objects.filter(azienda=codice_id_azienda).select_related()
 
-            logger.error("Vettore offerte lavoro lungo:"+str(len(list_lavori)) +" con id azienda"+ str(request.user.account.azienda_id))
+            logger.error("Vettore offerte lavoro lungo:" + str(len(list_lavori)) + " con id azienda" + str(
+                request.user.account.azienda_id))
         else:
             logger.error("errore id utente")
-                    # controllo errori per registrazione
+            # controllo errori per registrazione
             return
 
         for l in list_lavori:
 
             result[l.id] = {"id": l.id, 'id_azienda': l.azienda_id,
-                            'note_azienda': l.azienda.note,"email_riferimento_azienda": l.azienda.email ,
-                            'email_riferimento_lavoro': l.email_referente, "citta_lavoro":  "", 'lingua': "",
+                            'note_azienda': l.azienda.note, "email_riferimento_azienda": l.azienda.email,
+                            'email_riferimento_lavoro': l.email_referente, "citta_lavoro": "", 'lingua': "",
                             'campo_studi': "", 'esami': "", 'area_operativa': "", 'livello_cariera': "",
                             'tipo_contratto': "", 'distanza': l.distanza_massima, 'note': l.note_lavoro,
                             'data': l.pub_date}
 
-            #tutto dentro il ciclo for
+            # tutto dentro il ciclo for
 
             # citta lavoro
             list_citta_lavoro = CercaCitta.objects.filter(lavoro=l).select_related()
             for lcs in list_citta_lavoro:
                 if lcs.citta != None:
                     if result[lcs.lavoro.id]['citta_lavoro'] != "":
-                        result[lcs.lavoro.id]['citta_lavoro'] += ","+lcs.citta.valore
+                        result[lcs.lavoro.id]['citta_lavoro'] += "," + lcs.citta.valore
                     else:
                         result[lcs.lavoro.id]['citta_lavoro'] += lcs.citta.valore
                 else:
@@ -2111,7 +2148,7 @@ class AziendaOffertaLavoro(View):
             for ll in list_lingua:
                 if ll.lingua != None:
                     if result[ll.lavoro.id]['lingua'] != "":
-                        result[ll.lavoro.id]['lingua'] += ","+ll.lingua.valore
+                        result[ll.lavoro.id]['lingua'] += "," + ll.lingua.valore
                     else:
                         result[ll.lavoro.id]['lingua'] += ll.lingua.valore
                 else:
@@ -2122,7 +2159,7 @@ class AziendaOffertaLavoro(View):
             for lcs in list_campo_studi:
                 if lcs.campo_studio != None:
                     if result[lcs.lavoro.id]['campo_studi'] != "":
-                        result[lcs.lavoro.id]['campo_studi'] += ","+lcs.campo_studio.valore
+                        result[lcs.lavoro.id]['campo_studi'] += "," + lcs.campo_studio.valore
                     else:
                         result[lcs.lavoro.id]['campo_studi'] += lcs.campo_studio.valore
                 else:
@@ -2133,7 +2170,7 @@ class AziendaOffertaLavoro(View):
             for le in list_esami:
                 if le.esame != None:
                     if result[le.lavoro.id]['esami'] != "":
-                        result[le.lavoro.id]['esami'] += ","+le.esame.valore
+                        result[le.lavoro.id]['esami'] += "," + le.esame.valore
                     else:
                         result[le.lavoro.id]['esami'] += le.esame.valore
                 else:
@@ -2144,29 +2181,29 @@ class AziendaOffertaLavoro(View):
             for lao in list_area_operativa:
                 if lao.area_operativa != None:
                     if result[lao.lavoro.id]['area_operativa'] != "":
-                        result[lao.lavoro.id]['area_operativa'] += ","+lao.area_operativa.valore
+                        result[lao.lavoro.id]['area_operativa'] += "," + lao.area_operativa.valore
                     else:
                         result[lao.lavoro.id]['area_operativa'] += lao.area_operativa.valore
                 else:
                     result[lao.lavoro.id]['area_operativa'] += "None"
 
             # livello_cariera cerca lavoro
-            list_livello_cariera = CercaLivelloCariera.objects.filter(lavoro=l).select_related()
-            for llc in list_livello_cariera:
-                if llc.livello_cariera != None:
-                    if result[llc.lavoro.id]['livello_cariera'] != "":
-                        result[llc.lavoro.id]['livello_cariera'] += ","+llc.livello_cariera.valore
-                    else:
-                        result[llc.lavoro.id]['livello_cariera'] += llc.livello_cariera.valore
-                else:
-                    result[llc.lavoro.id]['livello_cariera'] += "None"
+            # list_livello_cariera = CercaLivelloCariera.objects.filter(lavoro=l).select_related()
+            # for llc in list_livello_cariera:
+            #    if llc.livello_cariera != None:
+            #        if result[llc.lavoro.id]['livello_cariera'] != "":
+            #            result[llc.lavoro.id]['livello_cariera'] += ","+llc.livello_cariera.valore
+            #        else:
+            #            result[llc.lavoro.id]['livello_cariera'] += llc.livello_cariera.valore
+            #    else:
+            #        result[llc.lavoro.id]['livello_cariera'] += "None"
 
             # tipo_contratto cerca lavoro
             list_tipo_contratto = CercaTipoContratto.objects.filter(lavoro=l).select_related()
             for ltc in list_tipo_contratto:
                 if ltc.tipo_contratto != None:
                     if result[ltc.lavoro.id]['tipo_contratto'] != "":
-                        result[ltc.lavoro.id]['tipo_contratto'] += ","+ltc.tipo_contratto.valore
+                        result[ltc.lavoro.id]['tipo_contratto'] += "," + ltc.tipo_contratto.valore
                     else:
                         result[ltc.lavoro.id]['tipo_contratto'] += ltc.tipo_contratto.valore
                 else:
@@ -2205,7 +2242,7 @@ def result_csv(request, *args, **kwargs):
         if int(kwargs['type']) == 0:
             survey = all_student()
             # nomi dei campi
-            col_list = ['id', 'cap', 'email', 'anno', 'citta', 'zona','grado_studi', 'voto', 'esami', 'campo_studi',
+            col_list = ['id', 'cap', 'email', 'anno', 'citta', 'zona', 'grado_studi', 'voto', 'esami', 'campo_studi',
                         'livello_pc', 'lingua'"", 'conoscenza_specifica', 'stato', 'note', 'mansione_attuale',
                         'livello_cariera_attuale', 'ruolo_attuale', 'area_operativa_attuale', 'tipo_contratto_attuale',
                         'lavoro_passato', 'numero_attivita_svolte', 'mesi_attivita_svolte',
@@ -2213,7 +2250,7 @@ def result_csv(request, *args, **kwargs):
                         'ruolo_pregressa', 'area_operativa_pregressa', 'tipo_contratto_pregressa', 'mansione_futura',
                         'livello_cariera_futura', 'ruolo_futura', 'area_operativa_futura', 'tipo_contratto_futura',
                         'benefit', 'stipendio', 'interesse', 'possibilita_trasferirsi', 'data']
-            filename ='studenti_risultati'
+            filename = 'studenti_risultati'
 
         elif int(kwargs['type']) == 1:
             survey = all_aziende()
@@ -2226,7 +2263,7 @@ def result_csv(request, *args, **kwargs):
             survey = all_job()
             # nomi dei campi
             col_list = ['id', 'id_azienda', 'note_azienda', 'email_riferimento_azienda', 'email_riferimento_lavoro',
-                        'citta_lavoro', 'lingua', 'campo_studi', 'esami', 'area_operativa', 'livello_cariera',
+                        'citta_lavoro', 'lingua', 'campo_studi', 'esami', 'area_operativa',
                         'tipo_contratto', 'distanza', 'note', 'data']
 
             filename = 'offerte_lavoro_risultati'
@@ -2242,7 +2279,6 @@ def result_csv(request, *args, **kwargs):
     except:
         logger.error("Problema nel CSV")
 
-
     filename = filename.replace(" ", "_")
     return export_csv_SJA(survey, col_list, filename + ".csv")
 
@@ -2251,7 +2287,7 @@ def result_csv(request, *args, **kwargs):
 def infostd(id_student):
     student = {}
 
-    try:# controllo che esista
+    try:  # controllo che esista
 
         student_obj = Persona.objects.get(pk=id_student)
         # attributo singolo
@@ -2268,9 +2304,9 @@ def infostd(id_student):
         student['stipendio'] = 'None'
         student['lavoro_passato'] = 'False'
 
-        #attributo singolo da chiave esterna
+        # attributo singolo da chiave esterna
         student["zona"] = 'None'
-        student['grado_studi'] ='None'
+        student['grado_studi'] = 'None'
         student['livello_pc'] = 'None'
 
         # valori multipli da chiavi esterne
@@ -2281,7 +2317,7 @@ def infostd(id_student):
         student['stato'] = ''
         student['mansione_attuale'] = ''
         student['livello_cariera_attuale'] = ''
-        student['ruolo_attuale' ] = ''
+        student['ruolo_attuale'] = ''
         student['area_operativa_attuale'] = ''
         student['tipo_contratto_attuale'] = ''
         student['mansione_pregressa'] = ''
@@ -2331,8 +2367,7 @@ def infostd(id_student):
         if student_obj.livello_uso_computer:
             student['livello_pc'] = student_obj.livello_uso_computer.valore
 
-
-        #valore attributi multi valore
+        # valore attributi multi valore
         # esami
         list_esami = EsameAttuale.objects.filter(persona=id_student).select_related()
         for le in list_esami:
@@ -2582,11 +2617,9 @@ def infostd(id_student):
     return student
 
 
-
 # da alcune info su un certo lavoro
 def infojob(id_job):
-
-    job={}
+    job = {}
     job['id'] = 'None'
     job['id_azienda'] = 'None'
     job['citta_sede'] = 'None'
@@ -2599,7 +2632,7 @@ def infojob(id_job):
     job['livello_cariera'] = ''
     job['distanza'] = 'None'
 
-    try:# controllo che esista
+    try:  # controllo che esista
 
         job_obj = Lavoro.objects.get(pk=id_job)
 
@@ -2697,13 +2730,12 @@ def infojob(id_job):
 
     return job
 
+
 # Parte di raccomandazione
 class RecomStudente(View):
-
     # solo se autenticato come admin o utente
     @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
-
         # carico i dati di ogni offerta di lavoro, ma solo alcune info per mantenere anonimato
         # bisogna creare una funzione che passa i 5 valori necessari. La funzione deve dipendere dal Account collegato
         result = {0: infojob(23), 1: infojob(13), 2: infojob(14), 4: infojob(15), 5: infojob(16)}
@@ -2713,20 +2745,19 @@ class RecomStudente(View):
     # solo se autenticato come admin o utente Azienda
     @method_decorator(login_required(login_url='log_in'))
     def post(self, request, *args, **kwargs):
-
         return render(request, 'recommendation_student.html')
+
 
 # Parte di Correlazione
 class CorrelationStudente(View):
-
     # solo se autenticato come admin o utente
     @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
         if request.user.is_superuser != 1:
             raise Http404("Solo un admin puo effettuare questa richiesta")
         # passato un id da request restituisco l'utente piu correlato con il prodotto scalare
-        students={}
-        #tutti gli studenti tranne quello interessato
+        students = {}
+        # tutti gli studenti tranne quello interessato
         students = Persona.objects.filter(~Q(id=kwargs['id']))
         score = -1
         tmp = 0
@@ -2735,14 +2766,14 @@ class CorrelationStudente(View):
         if int(kwargs['type']) == 0:
             for s in students:
                 tmp = stud_prodotto_scalare(kwargs['id'], s.id)
-                if(tmp>score):
+                if (tmp > score):
                     score = tmp
                     similar_std_id = s.id
         # Dice
         elif int(kwargs['type']) == 1:
             for s in students:
                 tmp = stud_dice(kwargs['id'], s.id)
-                if(tmp>score):
+                if (tmp > score):
                     score = tmp
                     similar_std_id = s.id
         # Jaccard
@@ -2767,15 +2798,15 @@ class CorrelationStudente(View):
 
         return render(request, 'similar_student.html')
 
+
 # Uno studente e portato dare preferenze su alcuni job
 class StudenteVotaLavoro(View):
-
     # solo se autenticato Utente
     @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
         vet_jobs = MatricePunteggio.objects.filter(persona=request.user.account.survey)
         result = []
-        stars =[]
+        stars = []
         for job in vet_jobs:
             result.append(infojob(job.lavoro.id))
             stars.append(job.punteggio_dato_da_persona)
@@ -2787,8 +2818,8 @@ class StudenteVotaLavoro(View):
         vet_jobs = MatricePunteggio.objects.filter(persona=request.user.account.survey)
 
         for job in vet_jobs:
-            if request.POST['lavoro_'+str(job.lavoro.id)]:
-                job.punteggio_dato_da_persona = request.POST.get('lavoro_'+str(job.lavoro.id), 0)
+            if request.POST['lavoro_' + str(job.lavoro.id)]:
+                job.punteggio_dato_da_persona = request.POST.get('lavoro_' + str(job.lavoro.id), 0)
                 job.save()
 
         return render(request, 'index.html')

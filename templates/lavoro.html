@@ -76,32 +76,35 @@
     <div class="form-group">
         <label for="cerca_campo_studi">Campo di Studi:</label>
         <textarea style="width: 270px; height: 30px; box-shadow: inset 0 1px 1px rgba(0,0,0,.075);" name="cerca_campo_studi"  id="cerca_campo_studi" class="example" rows="1"></textarea>
-		<span class="help-block"></span>
+		<span class="help-block">Esempio: Informatica, Statistica, Biologia, Economia...</span>
     </div>
 
     <div class="form-group">
         <label for="cerca_esame">Esami:</label>
             <textarea style="width: 270px; height: 30px; box-shadow: inset 0 1px 1px rgba(0,0,0,.075);" name="cerca_esame"id="cerca_esame" class="example" rows="1"></textarea>
-		<span class="help-block"></span>
+		<span class="help-block">Corsi universitari propedeutici per il candidato</span>
     </div>
 
     <div class="form-group">
         <label for="cerca_area_operativa">Area Operativa:</label>
         <textarea style="width: 270px; height: 30px; box-shadow: inset 0 1px 1px rgba(0,0,0,.075);" name="cerca_area_operativa" id="cerca_area_operativa" class="example" rows="1"></textarea>
-		<span class="help-block"></span>
+		<span class="help-block">Quali operazioni principali il canditato sarà impegnato a svolegere</span>
     </div>
-
-    <div class="form-group">
-        <label for="cerca_livello_cariera">Livello Cariera:</label>
-        <textarea style="width: 270px; height: 30px; box-shadow: inset 0 1px 1px rgba(0,0,0,.075);" name="cerca_livello_cariera" id="cerca_livello_cariera" class="example" rows="1"></textarea>
-		<span class="help-block"></span>
-    </div>
-
 
     <div class="form-group">
         <label for="cerca_tipo_contratto">Tipo di Contratto:</label>
-        <textarea style="width: 270px; height: 30px; box-shadow: inset 0 1px 1px rgba(0,0,0,.075);" name="cerca_tipo_contratto" id="cerca_tipo_contratto" class="example" rows="1"></textarea>
-		<span class="help-block"></span>
+        <div class="selectContainer">
+            <select class="form-control" name="cerca_tipo_contratto" id="cerca_tipo_contratto">
+                <option value="">Nessuna Selezione</option>
+                        {% for a in tipo_contratto %}
+                            {% if a.valore == copy.tipo_contratto.0.tipo_contratto.valore %}
+                                <option selected="selected" value="{{a.valore}}">{{a.valore}}</option>
+                            {% else %}
+                                <option value="{{a.valore}}">{{a.valore}}</option>
+                            {% endif %}
+                        {% endfor %}
+            </select>
+        </div>
     </div>
 
 
@@ -114,7 +117,7 @@
     <div class="form-group">
         <label for="note_lavoro">Note:</label>
         <input type="text" name="note_lavoro"  value="{{ copy.note_lavoro }}"  id="note_lavoro" class="form-control">
-		<span class="help-block">descrizione dell'azienda</span>
+		<span class="help-block">Descrizione dell'azienda</span>
     </div>
 
     <div class="form-group">
@@ -186,34 +189,7 @@
         }
     );
 
-    tagCopy=[
-        {% for a in copy.livello_cariera %}
-            '{{a.livello_cariera.valore}}',
-        {% endfor %}
-    ];
-
-    $('#cerca_livello_cariera')
-        .textext({
-            tagsItems : tagCopy,
-            plugins : 'tags autocomplete'
-        })
-        .bind('getSuggestions', function(e, data)
-        {
-            var list = [
-            {% for z in livello_cariera %}
-                '{{z.valore}}',
-            {% endfor %}
-            ],
-            textext = $(e.target).textext()[0],
-            query = (data ? data.query : '') || ''
-                ;
-
-            $(this).trigger(
-                'setSuggestions',
-                { result : textext.itemManager().filter(list, query) }
-            );
-        }
-    );
+   //tolto livello cariera
 
     tagCopy=[
         {% for a in copy.campo_studi %}
@@ -244,34 +220,7 @@
         }
     );
 
-    tagCopy=[
-        {% for a in copy.tipo_contratto %}
-            '{{a.tipo_contratto.valore}}',
-        {% endfor %}
-    ];
-
-        $('#cerca_tipo_contratto')
-        .textext({
-            tagsItems : tagCopy,
-            plugins : 'tags autocomplete'
-        })
-        .bind('getSuggestions', function(e, data)
-        {
-            var list = [
-            {% for z in tipo_contratto %}
-                '{{z.valore}}',
-            {% endfor %}
-            ],
-            textext = $(e.target).textext()[0],
-            query = (data ? data.query : '') || ''
-                ;
-
-            $(this).trigger(
-                'setSuggestions',
-                { result : textext.itemManager().filter(list, query) }
-            );
-        }
-    );
+//tipo di contratto  tolto
 
     tagCopy=[
         {% for a in copy.area_operativa %}
