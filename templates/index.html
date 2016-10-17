@@ -12,9 +12,20 @@
         <a class="btn btn-primary" href="{%  url 'reco_per_studente' %}">Offerte lavoro consigliate </a>
         <a class="btn btn-primary" href="{%  url 'studente_vota_lavoro' %}">Offerte lavoro consigliate </a>
         {% elif user.account.type == 1%}
-        <a class="btn btn-primary" href="{%  url 'azienda_modifica' user.account.azienda.id  %}">Modifica sondaggio azienda</a>
-        <a class="btn btn-primary" href="{%  url 'lavori' %}">Crea Offerte di Lavoro</a>
-        <a class="btn btn-primary" href="{%  url 'offerta_lavoro_azienda' user.account.azienda.id  %}">Proprie Offerte di Lavoro</a>
+            <div class="row">
+                <div class="col-sm-4"> <h3>Gestisci il tuo profilo aziendale</h3>
+                    <p>Aggiorna le informazioni sul tuo profilo Aziendale</p>
+                    <p><a class="btn btn-primary" href="{%  url 'azienda_modifica' user.account.azienda.id  %}">Modifica sondaggio azienda</a></p>
+                </div>
+                <div class="col-sm-4"> <h3>Nuovo posizione lavorativa</h3>
+                    <p>Inserisci una nuova posizione lavorativa. Descrivi quali competenze deve avere il candidato ideale</p>
+                    <p><a class="btn btn-primary" href="{%  url 'lavori' %}">Crea Offerte di Lavoro</a></p>
+                </div>
+                <div class="col-sm-4"> <h3>Gestisci offerte di lavoro</h3>
+                    <p>Aggiorna o semplicemente osserva le tue offerte di lavoro</p>
+                    <p><a class="btn btn-primary" href="{%  url 'offerta_lavoro_azienda' user.account.azienda.id  %}">Proprie Offerte di Lavoro</a></p>
+                </div>
+            </div>
         {% endif %}
     {% else %}
     <h2>Sondaggi Creati</h2>
