@@ -1298,7 +1298,8 @@ def create_modify_lavoro_sondaggio_by_post(request, account, is_new_survey, is_a
         else:
             logger.error('cerca_tipo_contratto inserisci valore')
             nuovo_valore_gia_esistente = CercaTipoContratto(lavoro=nuovo_lavoro)
-            nuovo_valore_gia_esistente.tipo_contratto = TipoContratto.objects.filter(valore=request.POST['cerca_tipo_contratto'].capitalize())[0]
+            nuovo_valore_gia_esistente.tipo_contratto = \
+            TipoContratto.objects.filter(valore=request.POST['cerca_tipo_contratto'].capitalize())[0]
             nuovo_valore_gia_esistente.save()
 
 
@@ -1548,7 +1549,7 @@ class Lavori(View):
             #       if len(LivelloCariera.objects.filter(valore=v.capitalize())) > 0:
             #         nuovo_valore_gia_esistente = CercaLivelloCariera(lavoro=nuovo_lavoro)
             #         nuovo_valore_gia_esistente.livello_cariera = LivelloCariera.objects.filter(valore=v.capitalize())[0]
-            #nuovo_valore_gia_esistente.save()
+            # nuovo_valore_gia_esistente.save()
             #   else:
             #        nuova_valore_nuovo = LivelloCariera(valore=v)
             #        nuova_valore_nuovo.save()
@@ -1567,7 +1568,8 @@ class Lavori(View):
 
                 if len(TipoContratto.objects.filter(valore=v_post.capitalize())) > 0:
                     nuovo_valore_gia_esistente = CercaTipoContratto(lavoro=nuovo_lavoro)
-                    nuovo_valore_gia_esistente.tipo_contratto = TipoContratto.objects.filter(valore=v_post.capitalize())[0]
+                    nuovo_valore_gia_esistente.tipo_contratto = \
+                    TipoContratto.objects.filter(valore=v_post.capitalize())[0]
                     nuovo_valore_gia_esistente.save()
                 else:
                     nuova_valore_nuovo = TipoContratto(valore=v_post)
@@ -2823,3 +2825,51 @@ class StudenteVotaLavoro(View):
                 job.save()
 
         return render(request, 'index.html')
+
+
+# permette ad un utente di cercare un lavoro con parametri molto stringenti e poi puo mettere mi piace
+class SearchJob(View):
+    @method_decorator(login_required(login_url='log_in'))
+    def get(self, request, *args, **kwargs):
+
+        #carico tutti i job con anche chiavi esterne e multiple
+        job_list_tmp = all_job()
+        job_list = []
+
+        for k in job_list_tmp:
+            job_list.append(job_list_tmp[k])
+
+        paginator = Paginator(job_list, 10)  # Show 25 contacts per page
+
+        page = request.GET.get('page')
+        try:
+            jobs = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            jobs = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            jobs = paginator.page(paginator.num_pages)
+
+        return render(request, "searchJob.html", {'jobs': jobs})
+
+    # solo se autenticato come admin o utente Azienda
+    @method_decorator(login_required(login_url='log_in'))
+    def post(self, request, *args, **kwargs):
+        # l'utente ha messo mi piace ad un lavoro
+        if 'like' in request.POST:
+            job_like_id = request.POST['like'];
+            job_obj=MatricePunteggio.objects.filter(persona=request.user.account.survey,lavoro__id=job_like_id)
+            # esiste gia un record lo aggiorniamo
+            if len(job_obj)>0:
+                #restituisce una lista quindi lavoriamo sul primo valore
+                job_obj[0].punteggio_dato_da_persona=5
+                job_obj[0].save()
+            else:
+                #bisogna aggiun gere nuova preferenza
+                new_job_obj=MatricePunteggio(persona=request.user.account.survey, lavoro=Lavoro.objects.get(id= job_like_id))
+                new_job_obj.save()
+        else:
+            logger.debug('Richiesta non valida per salvare like')
+
+        return render(request, 'searchJob.html')
