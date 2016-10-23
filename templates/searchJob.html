@@ -14,11 +14,24 @@
 {% block content %}
 
     <h2>Cosa Potrebbe piacerti tra questi Lavori?</h2>
+    <form id="myForm" data-toggle="validator" action="." role="form" method="GET">
+<div class="row">
+  <div class="col-lg-12">
+    <div class="input-group">
+      <span class="input-group-btn">
+        <button id="btn_search" class="btn btn-default" type="submit">Cerca</button>
+      </span>
+        <input id="search_box" value="{{ search_query }}" name="search_box" type="text" class="form-control" placeholder="Caratteristica Lavoro...">
+    </div><!-- /input-group -->
+  </div><!-- /.col-lg-12 -->
+</div><!-- /.row -->
+</form>
+
 
     <div class="pagination">
         <span class="step-links">
             {% if jobs.has_previous %}
-                <a href="?page={{ jobs.previous_page_number }}">Indietro</a>
+                <a href="?page={{ jobs.previous_page_number }}&search_box={{ search_query }}">Indietro</a>
             {% endif %}
 
             <span class="current">
@@ -26,7 +39,7 @@
             </span>
 
             {% if jobs.has_next %}
-                <a href="?page={{ jobs.next_page_number }}">Avanti</a>
+                <a href="?page={{ jobs.next_page_number }}&search_box={{ search_query }}">Avanti</a>
             {% endif %}
         </span>
     </div>
@@ -49,8 +62,13 @@
                     <li>tipo_contratto: {{ job.tipo_contratto }}</li>
                     <li>distanza: {{ job.distanza }}</li>
                 </ul>
-                <a id="like_{{ job.id }}" onclick="like({{ job.id }});" name="like_{{ job.id }}" href="#" class="btn btn-primary btn-primary"><span class="glyphicon glyphicon-thumbs-up"></span> Mi Piace</a>
-                <a style="display: none;" id="unlike_{{ job.id }}" onclick="unlike({{ job.id }});" name="unlike_{{ job.id }}" href="#" class="btn btn-primary btn-success"><span class="glyphicon glyphicon-heart"></span> Ti Piace</a>
+                {% if job.like == 1 %}
+                    <a style="display: none;" id="like_{{ job.id }}" onclick="like({{ job.id }});" name="like_{{ job.id }}" href="#" class="btn btn-primary btn-primary"><span class="glyphicon glyphicon-thumbs-up"></span> Mi Piace</a>
+                    <a id="unlike_{{ job.id }}" onclick="unlike({{ job.id }});" name="unlike_{{ job.id }}" href="#" class="btn btn-primary btn-success"><span class="glyphicon glyphicon-heart"></span> Ti Piace</a>
+                {% else %}
+                    <a id="like_{{ job.id }}" onclick="like({{ job.id }});" name="like_{{ job.id }}" href="#" class="btn btn-primary btn-primary"><span class="glyphicon glyphicon-thumbs-up"></span> Mi Piace</a>
+                    <a style="display: none;" id="unlike_{{ job.id }}" onclick="unlike({{ job.id }});" name="unlike_{{ job.id }}" href="#" class="btn btn-primary btn-success"><span class="glyphicon glyphicon-heart"></span> Ti Piace</a>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -59,7 +77,7 @@
     <div class="pagination">
         <span class="step-links">
             {% if jobs.has_previous %}
-                <a href="?page={{ jobs.previous_page_number }}">Indietro</a>
+                <a href="?page={{ jobs.previous_page_number }}&search_box={{ search_query }}">Indietro</a>
             {% endif %}
 
             <span class="current">
@@ -67,7 +85,7 @@
             </span>
 
             {% if jobs.has_next %}
-                <a href="?page={{ jobs.next_page_number }}">Avanti</a>
+                <a href="?page={{ jobs.next_page_number }}&search_box={{ search_query }}">Avanti</a>
             {% endif %}
         </span>
     </div>
