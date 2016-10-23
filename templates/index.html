@@ -8,9 +8,16 @@
     {% if user.account %}
         <h2>Menu</h2>
         {% if user.account.type == 0 %}
-        <a class="btn btn-primary" href="{%  url 'studenti_modifica' user.account.survey.id  %}">Modifica sondaggio studente</a>
-        <!--<a class="btn btn-primary" href="{%  url 'reco_per_studente' %}">Offerte lavoro consigliate </a>-->
-        <a class="btn btn-primary" href="{%  url 'search_job'  %}">Cerca Lavoro</a>
+            <div class="row">
+                <div class="col-sm-4"> <h3>Gestisci il tuo profilo</h3>
+                    <p>Aggiorna le informazioni sul tuo profilo personale, per poter trova l'opportunita di lavoro migliore</p>
+                    <p><a class="btn btn-primary" href="{%  url 'studenti_modifica' user.account.survey.id  %}">Modifica sondaggio</a></p>
+                </div>
+                <div class="col-sm-4"> <h3>Cerca offerta di lavoro</h3>
+                    <p>Cerca tra le nostre offerte di lavoro. Assegna un Like a quelle che trovi interessanti</p>
+                    <p><a class="btn btn-primary" href="{%  url 'search_job'  %}">Cerca Offerte</a></p>
+                </div>
+            </div>
         {% elif user.account.type == 1%}
             <div class="row">
                 <div class="col-sm-4"> <h3>Gestisci il tuo profilo aziendale</h3>

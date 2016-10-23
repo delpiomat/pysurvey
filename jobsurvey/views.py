@@ -2846,7 +2846,6 @@ class SearchJob(View):
             #ogni signolo job
             for num in job_list_tmp:
                 for key in job_list_tmp[num]:
-                    logger.error('primo: '+ search_query +'Secondo: '+ str(job_list_tmp[num][key]))
                     # tutto maiuscolo il confronto
                     if(search_query.upper() in str(job_list_tmp[num][key]).upper()):
                         # contollo del like
