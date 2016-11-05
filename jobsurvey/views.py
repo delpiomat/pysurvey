@@ -72,6 +72,8 @@ def find_all_option_student():
     return result
 
 
+
+
 # ritorna N job random e differenti
 def random_jobs(num):
     jobs_vet = []
@@ -651,6 +653,16 @@ def create_modify_student_persona_survey_by_post(request, user, is_new_user, is_
                 nuovo_valore_gia_esistente = CampoStudiAttuale(persona=nuova_persona)
                 nuovo_valore_gia_esistente.campo_studi = nuova_valore_nuovo
                 nuovo_valore_gia_esistente.save()
+
+
+# Pagina di chi siamo
+class AboutPage(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, "about.html")
+
+    def post(self, request, *args, **kwargs):
+        return render(request, 'about.html')
+
 
 
 class ModifyStudente(View):

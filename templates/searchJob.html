@@ -63,11 +63,11 @@
                     <li>distanza: {{ job.distanza }}</li>
                 </ul>
                 {% if job.like == 1 %}
-                    <a style="display: none;" id="like_{{ job.id }}" onclick="like({{ job.id }});" name="like_{{ job.id }}" href="#" class="btn btn-primary btn-primary"><span class="glyphicon glyphicon-thumbs-up"></span> Mi Piace</a>
-                    <a id="unlike_{{ job.id }}" onclick="unlike({{ job.id }});" name="unlike_{{ job.id }}" href="#" class="btn btn-primary btn-success"><span class="glyphicon glyphicon-heart"></span> Ti Piace</a>
+                    <a style="display: none;" id="like_{{ job.id }}" onclick="like({{ job.id }});" name="like_{{ job.id }}" href="#" class="btn btn-primary btn-primary pylike"><span class="glyphicon glyphicon-thumbs-up"></span> Mi Piace</a>
+                    <a id="unlike_{{ job.id }}" onclick="unlike({{ job.id }});" name="unlike_{{ job.id }}" href="#" class="btn btn-primary btn-success pylike"><span class="glyphicon glyphicon-heart"></span> Ti Piace</a>
                 {% else %}
-                    <a id="like_{{ job.id }}" onclick="like({{ job.id }});" name="like_{{ job.id }}" href="#" class="btn btn-primary btn-primary"><span class="glyphicon glyphicon-thumbs-up"></span> Mi Piace</a>
-                    <a style="display: none;" id="unlike_{{ job.id }}" onclick="unlike({{ job.id }});" name="unlike_{{ job.id }}" href="#" class="btn btn-primary btn-success"><span class="glyphicon glyphicon-heart"></span> Ti Piace</a>
+                    <a id="like_{{ job.id }}" onclick="like({{ job.id }});" name="like_{{ job.id }}" href="#" class="btn btn-primary btn-primary pylike"><span class="glyphicon glyphicon-thumbs-up"></span> Mi Piace</a>
+                    <a style="display: none;" id="unlike_{{ job.id }}" onclick="unlike({{ job.id }});" name="unlike_{{ job.id }}" href="#" class="btn btn-primary btn-success pylike"><span class="glyphicon glyphicon-heart"></span> Ti Piace</a>
                 {% endif %}
             </div>
         </div>
@@ -97,6 +97,13 @@
 
 {% block bottom %}
    <script>
+
+   //impedisce di tornare nella testata della pagina
+   $("a.pylike").click(function(event){
+       event.preventDefault();
+});
+
+
     function like(id){
         var newData = {
             csrfmiddlewaretoken: $('[name=csrfmiddlewaretoken]').val(),
@@ -124,6 +131,7 @@
                  console.log("complete"+xhr.status);
             }
         });
+        return false;
     }
 
     function unlike(id){
@@ -152,6 +160,7 @@
                  console.log("complete"+xhr.status);
             }
         });
+        return false;
     }
     </script>
 {% endblock %}
