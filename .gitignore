@@ -8,3 +8,6 @@ createSurvey/migrations/__pycache__/
 jobsurvey/__pycache__/
 pysurvey/__pycache__/
 pysurvey/settings.py
+__pycache__/
+mail_azz
+test.txt

@@ -53,9 +53,11 @@ class AuthLogin(View):
     def post(self, request):
         logger.error("username! ")
         logger.error(request.POST['usr'])
+        logger.error(request.POST['password'])
         if 'usr' in request.POST:
             user = authenticate(username=request.POST['usr'], password=request.POST['password'])
         else:
+            logger.error("errore login 1 ")
             return JsonResponse({'success': False})
 
         if user:
@@ -64,6 +66,7 @@ class AuthLogin(View):
             return JsonResponse({'success': True})
         else:
             # return redirect('login')
+            logger.error("errore login 2 ")
             return JsonResponse({'success': False})
 
 # signup

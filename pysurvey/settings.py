@@ -132,7 +132,7 @@ STATICFILES_DIRS = (
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
     os.path.join(
-        os.path.dirname("c:/Users/Casa/PycharmProjects/pysurvey/"),
+        os.path.dirname("c:/Users/delpi/PycharmProjects/pysurvey/"),
         'static',
     ),
 )
@@ -140,7 +140,7 @@ STATICFILES_DIRS = (
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home2/media/media.lawrence.com/media/"
-MEDIA_ROOT = 'C:/Users/Casa/PycharmProjects/pysurvey/media/'
+MEDIA_ROOT = 'C:/Users/delpi/PycharmProjects/pysurvey/media/'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
