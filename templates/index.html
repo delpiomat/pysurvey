@@ -20,17 +20,22 @@
             </div>
         {% elif user.account.type == 1%}
             <div class="row">
-                <div class="col-sm-4"> <h3>Gestisci il tuo profilo aziendale</h3>
+                <div class="col-sm-4"> <h3 class="text-center">Gestisci il tuo profilo aziendale</h3>
+                    <img  src="{% static 'image/modifica.png' %}" class="img-responsive center-block"  height="30%" width="30%">
+                    <p><a class="btn btn-primary center-block" href="{%  url 'azienda_modifica' user.account.azienda.id  %}">Modifica sondaggio azienda</a></p>
                     <p>Aggiorna le informazioni sul tuo profilo Aziendale</p>
-                    <p><a class="btn btn-primary" href="{%  url 'azienda_modifica' user.account.azienda.id  %}">Modifica sondaggio azienda</a></p>
                 </div>
-                <div class="col-sm-4"> <h3>Nuovo posizione lavorativa</h3>
+                <div class="col-sm-4"> <h3 class="text-center">Nuovo posizione lavorativa</h3>
+                    <img  src="{% static 'image/aggiungi.png' %}" class="img-responsive center-block"  height="30%" width="30%">
+                    <p><a class="btn btn-primary center-block" href="{%  url 'lavori' %}">Crea Offerte di Lavoro</a></p>
                     <p>Inserisci una nuova posizione lavorativa. Descrivi quali competenze deve avere il candidato ideale</p>
-                    <p><a class="btn btn-primary" href="{%  url 'lavori' %}">Crea Offerte di Lavoro</a></p>
+
                 </div>
-                <div class="col-sm-4"> <h3>Gestisci offerte di lavoro</h3>
+                <div class="col-sm-4"> <h3 class="text-center">Gestisci offerte di lavoro</h3>
+                    <img  src="{% static 'image/archivio.png' %}" class="img-responsive center-block"  height="30%" width="30%">
+                    <p><a class="btn btn-primary center-block" href="{%  url 'offerta_lavoro_azienda' user.account.azienda.id  %}">Proprie Offerte di Lavoro</a></p>
                     <p>Aggiorna o semplicemente osserva le tue offerte di lavoro</p>
-                    <p><a class="btn btn-primary" href="{%  url 'offerta_lavoro_azienda' user.account.azienda.id  %}">Proprie Offerte di Lavoro</a></p>
+
                 </div>
             </div>
         {% endif %}

@@ -3,50 +3,61 @@
 
 {% block title %}Job Recommendation Unipd{% endblock %}
 {% block scripts %}
-<script type="application/javascript">
+    <script type="application/javascript">
 
         function sendPostLogin(_username, _password, token) {
-            $.post( "{% url 'log_in' %}", {usr: _username, password: _password, csrfmiddlewaretoken: token}, function( data ) {
+            $.post("{% url 'log_in' %}", {
+                usr: _username,
+                password: _password,
+                csrfmiddlewaretoken: token
+            }, function (data) {
                 //$( ".result" ).html( data );
-                if(data["success"] == true) {
+                if (data["success"] == true) {
                     $("#msgLogin").html('');
                     window.location.href = "{% url 'index' %}";
                     //location.reload();
                 } else {
                     $("#msgLogin").html('<div class="alert alert-danger" role="alert">username o password errati</div>');
-                    $("#msgLogin").effect( "shake", {times:4}, 500 );
+                    $("#msgLogin").effect("shake", {times: 4}, 500);
 
                 }
             });
         }
-</script>
+    </script>
 {% endblock %}
 
 {% block header %}
-    <header class="header-image" >
+    <header class="header-image">
         <div class="container">
             <div class="headline">
                 <div class="col-md-8">
-                    <h1 >Job Recommendation</h1>
-                    <h2>Quale lavoro fa per te?</h2>
+                    <h1>Job Recommendation</h1>
+
+                    <h2>Quale lavoro fa per te?</h1>
                 </div>
                 <div class="col-md-4">
-                    <form id="formLoginId" class="form col-md-12 center-block" action="{% url 'log_in' %}" method="post" >{% csrf_token %}
+                    <form id="formLoginId" class="form col-md-12 center-block" action="{% url 'log_in' %}"
+                          method="post">{% csrf_token %}
                         <div class="form-group">
-                            <input type="text" class="form-control input-lg" placeholder="username" id="usernamePost" onkeypress="if (event.keyCode == 13) $('#loginbuttonlogin').click();">
+                            <input type="text" class="form-control input-lg" placeholder="username" id="usernamePost"
+                                   onkeypress="if (event.keyCode == 13) $('#loginbuttonlogin').click();">
                         </div>
                         <div class="form-group">
-                            <input type="password" class="form-control input-lg" placeholder="password" id="passwordPost" onkeypress="if (event.keyCode == 13) $('#loginbuttonlogin').click();">
+                            <input type="password" class="form-control input-lg" placeholder="password"
+                                   id="passwordPost"
+                                   onkeypress="if (event.keyCode == 13) $('#loginbuttonlogin').click();">
                         </div>
                         <div class="form-group">
-                            <a id="loginbuttonlogin" class="btn btn-primary btn-lg btn-block" onclick="sendPostLogin($('#usernamePost').val(), $('#passwordPost').val(), $('[name=csrfmiddlewaretoken]').val());">Accedi</a>
+                            <a id="loginbuttonlogin" class="btn btn-primary btn-lg btn-block"
+                               onclick="sendPostLogin($('#usernamePost').val(), $('#passwordPost').val(), $('[name=csrfmiddlewaretoken]').val());">Accedi</a>
                             <span><a href="{% url 'lost_password' %}">Password dimenticata?</a></span>
+
                             <div id="msgLogin"></div>
                         </div>
                     </form>
                 </div>
             </div>
-    </div>
+        </div>
 
     </header>
 {% endblock %}
@@ -54,73 +65,96 @@
 {% block content %}
     <hr class="featurette-divider">
 
-        <!-- First Featurette -->
-        <div class="featurette" id="about">
-            <img class="featurette-image img-circle img-responsive pull-right" src="{% static 'image/logo_unipd.png' %}">
-            <h2 class="featurette-heading">Chi
-                <span class="text-muted">Siamo</span>
-            </h2>
-            <p class="lead">Siamo un gruppo di studenti magistrali. Tesisti del professore <a href="http://www.math.unipd.it/~aiolli/">Fabio Aiolli</a>.</p>
-        </div>
+    <!-- First Featurette -->
+    <div class="featurette" id="about">
+        <img class="featurette-image img-circle img-responsive pull-right" alt="logo unipd"
+             src="{% static 'image/logo_unipd.png' %}">
 
-        <hr class="featurette-divider">
+        <h2 class="featurette-heading">Chi
+            <span class="text-muted">Siamo</span>
+        </h2>
 
-        <!-- Second Featurette -->
-        <div class="featurette" id="services">
-            <img class="featurette-image img-circle img-responsive pull-left" src="{% static 'image/lavorone.png' %}">
-            <h2 class="featurette-heading">Cosa
-                <span class="text-muted">Facciamo</span>
-            </h2>
-            <p class="lead">Il nostro progetto e' basato sulla JOB RECOMMENDATION. Suggeriamo agli studenti la migliore azienda per un lavoro futuro e proponiamo alle aziende il candidato ideale</p>
-        </div>
+        <p class="lead">Siamo un gruppo di studenti magistrali. Tesisti del professore <a
+                href="http://www.math.unipd.it/~aiolli/">Fabio Aiolli</a>.</p>
+    </div>
 
-        <hr class="featurette-divider">
+    <hr class="featurette-divider">
 
-        <!-- Third Featurette -->
-        <div class="featurette" id="contact">
-            <img class="featurette-image img-circle img-responsive pull-right" src="{% static 'image/userbased.png' %}">
-            <h2 class="featurette-heading">Come lo
-                <span class="text-muted">Facciamo</span>
-            </h2>
-            <p class="lead">Per fare questo useremo tecniche di apprendimento automatico e sistemi di raccomandazione. </p>
-        </div>
+    <!-- Second Featurette -->
+    <div class="featurette" id="services">
+        <img alt="lavoro" class="featurette-image img-circle img-responsive pull-left"
+             src="{% static 'image/lavorone.png' %}">
 
-        <hr class="featurette-divider">
+        <h2 class="featurette-heading">Cosa
+            <span class="text-muted">Facciamo</span>
+        </h2>
 
-        <!-- Quarto Featurette -->
-        <div class="featurette" id="contact">
-            <img class="featurette-image img-circle img-responsive pull-left" src="{% static 'image/hand.png' %}">
-            <h2 class="featurette-heading">Perche' lo
-                <span class="text-muted">Facciamo</span>
-            </h2>
-            <p class="lead">Abbiamo bisogno di dati reali per migliorare e testare i nostri applicativi.</p>
-        </div>
+        <p class="lead">Il nostro progetto e' basato sulla JOB RECOMMENDATION. Suggeriamo agli studenti la migliore
+            azienda per un lavoro futuro e proponiamo alle aziende il candidato ideale</p>
+    </div>
 
-        <hr class="featurette-divider">
+    <hr class="featurette-divider">
 
-        <!-- Footer -->
-        <footer>
-            <div class="row">
-                <div class="col-lg-12">
-                    <p>Powered by:</p>
-                </div>
-    <div class="col-lg-3">
-                    <img  src="{% static 'image/python_django.jpg' %}" height="60%" width="60%">
-        </div>
-        <div class="col-lg-3">
-                    <img  src="{% static 'image/MariaDB.png' %}" height="60%" width="60%">
+    <!-- Third Featurette -->
+    <div class="featurette" id="userbased">
+        <img alt="basato su utenti" class="featurette-image img-circle img-responsive pull-right"
+             src="{% static 'image/userbased.png' %}">
+
+        <h2 class="featurette-heading">Come lo
+            <span class="text-muted">Facciamo</span>
+        </h2>
+
+        <p class="lead">Per fare questo useremo tecniche di apprendimento automatico e sistemi di raccomandazione. </p>
+    </div>
+
+    <hr class="featurette-divider">
+
+    <!-- Quarto Featurette -->
+    <div class="featurette" id="contact">
+        <img alt="serve una mano" class="featurette-image img-circle img-responsive pull-left"
+             src="{% static 'image/hand.png' %}">
+
+        <h2 class="featurette-heading">Perche' lo
+            <span class="text-muted">Facciamo</span>
+        </h2>
+
+        <p class="lead">Abbiamo bisogno di dati reali per migliorare e testare i nostri applicativi.</p>
+    </div>
+
+    <hr class="featurette-divider">
+
+    <!-- Footer -->
+    <footer>
+        <div class="row">
+            <div class="col-lg-12">
+                <p>Powered by:</p>
             </div>
-            <div class="col-lg-3">
-                    <img  src="{% static 'image/bootstrap.png' %}" height="60%" width="60%">
-                </div>
-                <div class="col-lg-3">
-                    <img  src="{% static 'image/aws.png' %}" height="60%" width="60%">
-                    </div>
-                <div class="col-lg-12">
-                    <p>Matteo Del Pioluogo for Unipd 2016</p>
-                </div>
+            <div class="col-lg-2">
+                <img alt="logo ubuntu" src="{% static 'image/ubuntu.png' %}" height="100%" width="100%">
             </div>
-        </footer>
+            <div class="col-lg-2">
+                <img alt="logo javascript" src="{% static 'image/javascript.png' %}" height="100%" width="100%">
+            </div>
+            <div class="col-lg-2">
+                <img alt="logo django" src="{% static 'image/python_django.jpg' %}" height="100%" width="100%">
+            </div>
+            <div class="col-lg-2">
+                <img alt="logo maria DB" src="{% static 'image/MariaDB.png' %}" height="100%" width="100%">
+            </div>
+
+            <div class="col-lg-2">
+                <img alt="logo amazon aws" src="{% static 'image/aws.png' %}" height="100%" width="100%">
+            </div>
+            <div class="col-lg-2">
+                <img alt="logo boostrap" src="{% static 'image/bootstrap.png' %}" height="100%" width="100%">
+            </div>
+
+
+            <div class="col-lg-12">
+                <p>Matteo Del Pioluogo for Unipd 2016</p>
+            </div>
+        </div>
+    </footer>
 
 
 {% endblock %}

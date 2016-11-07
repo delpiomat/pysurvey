@@ -64,7 +64,7 @@
     {% else %}
         <div class="form-group">
             <label for="email">Email:</label>
-            <input type="text" value="{{ copy.email }}" name="email" id="email" class="form-control">
+            <input type="text" value="{{ copy.email }}" name="email" id="email" class="form-control" maxlength="35">
             <span class="help-block">email per riferimento dell'azienda</span>
         </div>
     {% endif %}

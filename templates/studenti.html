@@ -56,7 +56,7 @@
     {% if user.is_authenticated %}
     <div class="form-group">
             <label for="email">Email:</label>
-            <input type="text" value="{{ copy.email }}" name="email" id="email" class="form-control" maxlength="20" readonly>
+            <input type="text" value="{{ copy.email }}" name="email" id="email" class="form-control"  readonly>
 		<span class="help-block">email per riferimento dello studente</span>
     </div>
 
@@ -64,7 +64,7 @@
 
         <div class="form-group">
             <label for="email">Email:</label>
-            <input type="text" value="{{ copy.email }}" name="email" id="email" maxlength="32" class="form-control">
+            <input type="text" value="{{ copy.email }}" name="email" id="email" maxlength="35" class="form-control">
 		    <span class="help-block">email per riferimento dello studente</span>
         </div>
 
