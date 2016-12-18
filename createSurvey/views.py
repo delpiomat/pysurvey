@@ -42,14 +42,22 @@ logger = logging.getLogger(__name__)
 import time
 
 
-# login
+'''
+Classe per permettere autenticazione dell'utente
+Utilizzare per gestire login
+'''
 class AuthLogin(View):
     method_decorator(csrf_protect)
+    '''
+    Funzione per gestire le richieste GET sul template log_in.html
+    '''
     def get(self, request):
         c = {}
        #c.update(csrf(request)) #deprecato
         return render(request, 'log_in.html', c)
-
+    '''
+    Funzione per gestire le richieste POST sul template log_in.html
+    '''
     def post(self, request):
         logger.error("username! ")
         logger.error(request.POST['usr'])
@@ -69,9 +77,14 @@ class AuthLogin(View):
             logger.error("errore login 2 ")
             return JsonResponse({'success': False})
 
-# signup
+'''
+Classe per gestire la registrazione di nuovi utenti
+'''
 class SignUp(View):
     method_decorator(csrf_protect)
+    '''
+    Funzione per gestire le richieste GET sul template sign_up.html
+    '''
     def get(self, request):
         error = None
         if 'error' in request.GET:
@@ -82,7 +95,9 @@ class SignUp(View):
         c = {'error': error, 'result': result}
         #c.update(csrf(request)) #deprecato
         return render(request, 'sign_up.html', c)
-
+    '''
+    Funzione per gestire le richieste POST sul template sign_up.html
+    '''
     def post(self, request):
         post = request.POST
         username = None
@@ -105,12 +120,17 @@ class SignUp(View):
         return redirect('index')
 
 
-# log out
+'''
+Funzione per deautenticare un utente dal portale
+'''
 def log_out(request):
     logout(request)
     return redirect('index')
 
-# attivazione account
+
+'''
+Funzione per gestire il codice di attivazione di un Accounnt
+'''
 def verification(request, id, str):
     user = None
     try:
@@ -125,9 +145,16 @@ def verification(request, id, str):
     time.sleep(2)
     return render(request, 'verification.html', {'msg': 'Errore'})
 
-# Index Page.
+'''
+Classe per la gestione della pagina principale dove è presente un menu di navigazione
+'''
 class Index(View):
 
+    '''
+    Funzione per gestire le richieste GET sul template index.html
+    Prima versione del portale vnivano gestiti sondaggi di qualsiasi tipo
+    Dovra essere rimossa o modificata
+    '''
     @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
         survey_list = Survey.objects.all()
@@ -144,18 +171,30 @@ class Index(View):
 
         return render(request, "index.html", {"surveys":  surveys})
 
+    '''
+    Funzione per gestire le richieste POST sul template index.html
+    '''
     @method_decorator(login_required(login_url='log_in'))
     def post(self, request, *args, **kwargs):
         return render(request, 'index.html')
 
 
-# Create New Survey
+'''
+Classe per la gestione della generazioen di nuovi sondaggi
+'''
 class NewSurvey(View):
-
+    '''
+    Funzione per la gestione delle richieste GET su creazione nuovi sondaggi
+    '''
     @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
         return render(request, 'new_survey.html')
 
+    '''
+    Funzione per la gestione delle richieste POST su creazione nuovi sondaggi
+    Questo modo di fare è superato e deve essere rimosso o modificato
+    Non è piu necessario creare nuovi sondaggi
+    '''
     @method_decorator(login_required(login_url='log_in'))
     def post(self, request, *args, **kwargs):
 
@@ -184,9 +223,14 @@ class NewSurvey(View):
         return render(request, 'new_survey.html')
 
 
-# Preview Survey
+'''
+Classe per la gestione la visulaizzazione dei sondaggi, vecchio modo di gestire il portale
+Deve essere rimosso o modificato
+'''
 class PreviewSurvey(View):
-
+    '''
+    Funzione per gestire le richieste GET per visualizzare i risultati dei sondaggi
+    '''
     @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
         id_survey = None
@@ -194,23 +238,32 @@ class PreviewSurvey(View):
             id_survey = kwargs['id']
         survey = Column.objects.filter(survey=id_survey)
         return render(request, 'preview_survey.html', {"survey": json_form_in_html(survey)})
-
+    '''
+    Funzione per gestire le richieste POST per visualizzare i risultati dei sondaggi
+    '''
     @method_decorator(login_required(login_url='log_in'))
     def post(self, request, *args, **kwargs):
         return render(request, 'preview_survey.html')
 
 
-# Make Survey
-# after survey its important to log out for secure issues
+'''
+Classe per fare un sondaggio, attenzione importante effettuare il log out da amministratore prima di svolgere un sondaggio
+per motivi di sicurezza
+Deve essere rimosso o modificato, vecchio modo di fare sondaggi
+'''
 class MakeSurvey(View):
-
+    '''
+    Funzione per gestire le richieste GET per effettuare un sondaggio
+    '''
     def get(self, request, *args, **kwargs):
         id_survey = None
         if 'id' in kwargs:
             id_survey = kwargs['id']
         survey = Column.objects.filter(survey=id_survey)
         return render(request, 'make_survey.html', {"survey": json_form_in_html(survey), "id": kwargs['id'], "thank": 0})
-
+    '''
+    Funzione per gestire le richieste POST per effettuare un sondaggio
+    '''
     def post(self, request, *args, **kwargs):
         new_interview = Interview(name_user="anonymous", type_user="people")
         new_interview.save()
@@ -234,8 +287,14 @@ class MakeSurvey(View):
         return render(request, 'make_survey.html', {"id": kwargs['id'], "thank": 1})
 
 
-# Result of Survey
+'''
+Classe per vedere i risultati di un sondaggio
+Deve essere rimosso o modificato, vecchio modo di fare sondaggi
+'''
 class ResultSurvey(View):
+    '''
+    Funzione per gestire le richieste GET per leggere risultati di un sondaggio
+    '''
     @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
         id_survey = None
@@ -252,12 +311,18 @@ class ResultSurvey(View):
             for i in range(0, len(result_list[0])):
                 final_list[i].append(val[i])
         return render(request, 'result.html', {"columns": col_list, "results":  final_list})
-
+    '''
+    Funzione per gestire le richieste POST per leggere risultati di un sondaggio
+    '''
     @method_decorator(login_required(login_url='log_in'))
     def post(self, request, *args, **kwargs):
         return render(request, 'result.html')
 
 
+'''
+Funzione i download con i risultati di un sondaggio
+Vecchio modo di fare va tolto o modificato
+'''
 def result_download(request, type, survey_id):
     try:
         survey = Survey.objects.get(id=survey_id)
@@ -280,9 +345,13 @@ def result_download(request, type, survey_id):
 
 
 
-# Pagina per richiedere una nuova password
+'''
+Classe per gestire la richiesta di una nuova password dopo aver smarrito la precedetne
+'''
 class Lost_password(View):
-
+    '''
+    Per gestire le richieste di GET sulla pagina della richiesta password smarrita
+    '''
     def get(self, request, *args, **kwargs):
         error = None
         if 'error' in request.GET:
@@ -292,7 +361,9 @@ class Lost_password(View):
             result = request.GET['result']
 
         return render(request, 'lost_password.html', {'error': error, 'result': result})
-
+    '''
+    Per gestire le richieste di POST sulla pagina della richiesta password smarrita
+    '''
     def post(self, request, *args, **kwargs):
         if 'mailReset' in request.POST:
             account = None
@@ -310,13 +381,20 @@ class Lost_password(View):
         return custom_redirect('lost_password', error='mail non valida')
 
 
-# reset passowrd dimenticata dopo link di verifica
+'''
+Classe che permette di resettare la password di un account dopo aver controllato un link con codice di verifica
+'''
 class Reset_password(View):
-
+    '''
+    Per gestire le richieste di GET sulla di reset dela password
+    '''
     def get(self, request, *args, **kwargs):
         return render(request, 'reset_password.html', {"code": kwargs['str'], "id": kwargs['id']})
 
-# usare date time
+
+    '''
+    Per gestire le richieste di POST sulla di reset dela password
+    '''
     def post(self, request, *args, **kwargs):
         if 'id' in request.POST:
             u = User.objects.get(id=request.POST['id'])
@@ -341,8 +419,13 @@ class Reset_password(View):
         return redirect('reset_password')
 
 
+'''
+Classe che permette di il cambio della password di un utente
+'''
 class Change_password(View):
-
+    '''
+    Per gestire le richieste di GET sulla pagina di cambio della password
+    '''
     @method_decorator(login_required(login_url='login'))
     def get(self, request, *args, **kwargs):
         error = None
@@ -355,7 +438,9 @@ class Change_password(View):
         if 'code' in request.GET:
             code = request.GET['code']
         return render(request, 'change_password.html', {'code': code, 'error': error, 'result': result})
-
+    '''
+    Per gestire le richieste di POST sulla pagina di cambio della password
+    '''
     @method_decorator(login_required(login_url='login'))
     def post(self, request, *args, **kwargs):
         if 'oldPassword' in request.POST:
