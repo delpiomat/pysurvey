@@ -418,6 +418,9 @@ class AltraSede(models.Model):
 
 
 class Lavoro(models.Model):
+    '''
+    Rappresenta la tabella delle offerte di lavoro
+    '''
     email_referente = models.CharField(max_length=64, null=True)
     note_lavoro = models.CharField(max_length=512, null=True)
     durata_lavoro = models.IntegerField(null=True)
@@ -428,40 +431,64 @@ class Lavoro(models.Model):
 
 
 class CercaLingua(models.Model):
+    '''
+    Rappresenta la tabella che associa una Offerta di Lavoro con zero o piu tipi Lingue
+    '''
     lavoro = models.ForeignKey(Lavoro, on_delete=models.CASCADE)
     lingua= models.ForeignKey(Lingua, on_delete=models.CASCADE, null=True)
 
 
 class CercaLivelloCariera(models.Model):
+    '''
+    Rappresenta la tabella che associa una Offerta di Lavoro con zero o piu livelli cariera
+    '''
     lavoro = models.ForeignKey(Lavoro, on_delete=models.CASCADE)
     livello_cariera = models.ForeignKey(LivelloCariera, on_delete=models.CASCADE, null=True)
 
 
 class CercaCitta(models.Model):
+    '''
+    Rappresenta la tabella che associa una Offerta di Lavoro con zero o piu Citta
+    '''
     lavoro = models.ForeignKey(Lavoro, on_delete=models.CASCADE)
     citta = models.ForeignKey(Citta, on_delete=models.CASCADE, null=True)
 
 
 class CercaTipoContratto(models.Model):
+    '''
+    Rappresenta la tabella che associa una Offerta di Lavoro con zero o piu Tipi di Contratto
+    '''
     lavoro = models.ForeignKey(Lavoro, on_delete=models.CASCADE)
     tipo_contratto = models.ForeignKey(TipoContratto, on_delete=models.CASCADE, null=True)
 
 
 class CercaEsami(models.Model):
+    '''
+    Rappresenta la tabella che associa una Offerta di Lavoro con zero o piu Esami
+    '''
     lavoro = models.ForeignKey(Lavoro, on_delete=models.CASCADE)
     esame = models.ForeignKey(Esame, on_delete=models.CASCADE, null=True)
 
 class CercaAreaOperativa(models.Model):
+    '''
+    Rappresenta la tabella che associa una Offerta di Lavoro con zero o piu Aree Operative
+    '''
     lavoro = models.ForeignKey(Lavoro, on_delete=models.CASCADE)
     area_operativa = models.ForeignKey(AreaOperativa, on_delete=models.CASCADE, null=True)
 
 class CercaCampoStudio(models.Model):
+    '''
+    Rappresenta la tabella che associa una Offerta di Lavoro con zero o piu Campi di Studio
+    '''
     lavoro = models.ForeignKey(Lavoro, on_delete=models.CASCADE)
     campo_studio = models.ForeignKey(CampoStudi, on_delete=models.CASCADE, null=True)
 
 
 # utente modificato
 class Account(User):
+    '''
+    Account deriva dalla classe account e permette di aggiungere utleriori caratteristiche all'untente loggato
+    '''
     type = models.IntegerField(choices=TYPE_CHOICES, default=0)
     # email gia nella classe base con   Optional. Email address.
     activationCode = models.CharField(max_length=32, default="", null=False)
@@ -473,6 +500,9 @@ class Account(User):
         return self.username
 
 class MatricePunteggio(models.Model):
+    '''
+    Rappresente la Matrice dei punteggi tra Persone e Lavori
+    '''
     persona = models.ForeignKey(Persona, null=True, on_delete=models.CASCADE)
     lavoro = models.ForeignKey(Lavoro, null=True, on_delete=models.CASCADE)
     punteggio_dato_da_persona = models.IntegerField(null=True)
