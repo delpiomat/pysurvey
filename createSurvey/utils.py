@@ -27,6 +27,12 @@ from django.core.urlresolvers import reverse
 from django.core.mail import send_mail
 
 def json_form_in_html(survey):
+    '''
+    trasforma un Json in una form HTML srve nella prima versione del programma, ora obsoleta
+    :param survey: passare un oggetto contenente il risultato di un sondaggio
+    :return: ritorna una forma HTML con i risultati
+    '''
+
     form = dict()
     for col in survey:
         min = ""
@@ -76,6 +82,14 @@ def json_form_in_html(survey):
 
 # Export data old method
 def export_csv(survey, col_list, final_list, filename):
+    '''
+    Per esportare il programma i risultati in CSV prima versione del programma ora obsoleta
+    :param survey:
+    :param col_list:
+    :param final_list:
+    :param filename:
+    :return:
+    '''
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename=' + filename
     writer = csv.writer(response, csv.excel)
@@ -95,6 +109,13 @@ def export_csv(survey, col_list, final_list, filename):
 
 # Export data for Student, Job and Aziende
 def export_csv_SJA(survey, col_list, filename):
+    '''
+    Permette di esportare i risultati di sondaggi a
+    :param survey:
+    :param col_list:
+    :param filename:
+    :return:
+    '''
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename=' + filename
     writer = csv.writer(response, csv.excel)
@@ -126,6 +147,10 @@ import string
 
 # password generator
 def gen_password():
+    '''
+    Genera una password a partire da un dizionario di parole
+    :return:  la èassword generata
+    '''
     # Legge un file.
     file = open(settings.STATICFILES_DIRS[0]+"/dict/words_italian.txt", "r")
     list_num = [line.strip() for line in file]
@@ -142,6 +167,13 @@ def gen_password():
 
 # manda mail con codice attivazione
 def send_verification_email(request, user, isAzienda,password):
+    '''
+    :param request:
+    :param user: utente
+    :param isAzienda: mail diversa per le aziende
+    :param password: codice per la passoword
+    :return:
+    '''
     # se nel futuro vogliamo persoanlizzare messaggio azienda o stundete modificare qui
     if user.type == 1:
         link = request.build_absolute_uri(reverse('verification', args=[user.id, user.activationCode]))
@@ -158,6 +190,13 @@ def send_verification_email(request, user, isAzienda,password):
 
 # per un redirect customizzato lo uso su reset password
 def custom_redirect(url_name, *args, **kwargs):
+    '''
+    Permette di effettuare dei redirect
+    :param url_name: url per effettuare il redirect
+    :param args: arogmenti
+    :param kwargs: vettore arogmenti
+    :return:
+    '''
     if args:
         url = reverse(url_name, args=args)
     else:
@@ -167,6 +206,12 @@ def custom_redirect(url_name, *args, **kwargs):
 
 
 def send_reset_pass_email(request, user):
+    '''
+    Genera una mail con il codice per aggiornare la password
+    :param request:
+    :param user: utente
+    :return:
+    '''
     #link url server
     link = request.build_absolute_uri(reverse('reset_password', args=[user.id, user.account.activationCode]))
     text_content = "Job UNIPD\nApri il link per resettare la password dell'account\n" + link

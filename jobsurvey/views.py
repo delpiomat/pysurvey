@@ -47,11 +47,16 @@ from jobsurvey.recommendation import *
 import logging
 
 # Get an instance of a logger
+# Il Logger permette di avere una Log per fare Debug
 logger = logging.getLogger(__name__)
 
 
 # Per ogni campo del questionario studente restituisce possibili valori
 def find_all_option_student():
+    '''
+    Per ogni attributo di uno studente multivalore, trova tutte le opzioni Possibili
+    :return: ritorna un oggetto con i risultati
+    '''
     # inizio questionario
     result = {}
     result['zona'] = Zona.objects.all()
@@ -72,10 +77,13 @@ def find_all_option_student():
     return result
 
 
-
-
 # ritorna N job random e differenti
 def random_jobs(num):
+    '''
+    Ritorna un vettore contenente un numero random di Lavori
+    :param num: numero di Jobs Richiesti
+    :return: vettore di jobs
+    '''
     jobs_vet = []
     all_jobs = Lavoro.objects.all()
     temp = None
@@ -88,6 +96,14 @@ def random_jobs(num):
 
 # crea o modifica il profilo di uno Studente
 def create_modify_student_persona_survey_by_post(request, user, is_new_user, is_admin=False):
+    '''
+    Permette di creare o modificare il profilo di uno studente
+    :param request:
+    :param user:
+    :param is_new_user: Flag da usare se è un nuovo utente
+    :param is_admin: Flag da usare per identificare un admin, come utente che effettua la richiesta
+    :return:
+    '''
     nuova_persona = Persona()
 
     if request.POST['cap'] == "":
@@ -657,19 +673,45 @@ def create_modify_student_persona_survey_by_post(request, user, is_new_user, is_
 
 # Pagina di chi siamo
 class AboutPage(View):
+    '''
+    Gestisce la Pagina: Chi Siamo
+    '''
     def get(self, request, *args, **kwargs):
+        '''
+        Richieste Get sulla pagina chi siamo
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        '''
         return render(request, "about.html")
 
     def post(self, request, *args, **kwargs):
+        '''
+        Richieste POST sulla pagina chi siamo
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        '''
         return render(request, 'about.html')
 
 
 
 class ModifyStudente(View):
+    '''
+    Gestisce la modifica di uno Studente
+    '''
     # solo se autenticato come admin o utente
     @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
-
+        '''
+        Gestisce le richieste di GET sulla pagina di uno studente
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        '''
         result = {}
         result = find_all_option_student()
 
@@ -827,7 +869,13 @@ class ModifyStudente(View):
     # POST solo se autenticato come admin o utente
     @method_decorator(login_required(login_url='log_in'))
     def post(self, request, *args, **kwargs):
-
+        '''
+        Gestisce le Richieste di POST sulla Pagina di modifica del sondaggio per lo studente
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        '''
         # si tratta di un utente corretto
         if request.user.is_superuser == 1:
             create_modify_student_persona_survey_by_post(request, request.user, False, True)
@@ -841,9 +889,18 @@ class ModifyStudente(View):
 
 # per sondaggio
 class Studenti(View):
+    '''
+    Uno studente esegue un nuovo sondaggio
+    '''
     # non deve essere autenticato
     def get(self, request, *args, **kwargs):
-
+        '''
+        Richieste di GET per un nuovo studente che vuole autenticarsi
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        '''
         # controllo errori per registrazione
         error = None
         if 'error' in kwargs:
@@ -858,6 +915,13 @@ class Studenti(View):
 
     # non deve essere autenticato
     def post(self, request, *args, **kwargs):
+        '''
+        Richieste di POST per un nuovo studente che vuole autenticarsi
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        '''
         # logger.error("la post! ")
 
         # nuovo sondaggio quindi creo account
@@ -895,6 +959,10 @@ class Studenti(View):
 
 # tutti i tag e possibilita per azienda
 def find_all_option_azienda():
+    '''
+    Cerca tutti i valori degli attributi (Multivalore) che puo assumere un'azienda.
+    :return: per ogni attributo restituisce la lista di valori possibili
+    '''
     # Cerco cose per Azienda
     result = {}
     result['citta'] = Citta.objects.all()
@@ -902,6 +970,14 @@ def find_all_option_azienda():
 
 
 def create_modify_azienda_sondaggio_azienda_by_post(request, user, is_new_user, is_admin=False):
+    '''
+    Permette di inserire o modificare un utente corrente.
+    :param request:
+    :param user: utente corrente che fa la richiesta
+    :param is_new_user: nuova azienda
+    :param is_admin: Flag, segnala che la richiesta proviene da un ADMIN
+    :return:
+    '''
     nuova_azienda = Azienda()
 
     if request.POST['email'] == "":
@@ -1002,10 +1078,19 @@ def create_modify_azienda_sondaggio_azienda_by_post(request, user, is_new_user, 
 
 # modifica dati azienda
 class ModifyAzienda(View):
+    '''
+    Gestisce la Pagina di modifca del sondaggio di un'azienda, la sua anagrafica quindi.
+    '''
     # solo se autenticato come admin o utente
     @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
-
+        '''
+        Gestisce le Chiamate di GET sulla Pagina di Modifica di una Azienda
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        '''
         result = {}
         result = find_all_option_azienda()
 
@@ -1058,7 +1143,13 @@ class ModifyAzienda(View):
     # solo se autenticato come admin o utente Azienda
     @method_decorator(login_required(login_url='log_in'))
     def post(self, request, *args, **kwargs):
-
+        '''
+        Gestisce le Chiamate di POST sulla Pagina di Modifica di una Azienda
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        '''
         # si tratta di un utente corretto
         if request.user.is_superuser == 1:
             logger.error("Super user vuole modificare azienda accede al metodo")
@@ -1073,8 +1164,17 @@ class ModifyAzienda(View):
 
 
 class Aziende(View):
+    '''
+    Gestisce La creazione di una nuova Azienda grazie alla pagina di sondaggio.
+    '''
     def get(self, request, *args, **kwargs):
-
+        '''
+        Gestisce le chiamate di GET sulla Pagina di Sondaggio di una Azienda
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        '''
         # opzioni tag per azienda
         result = {}
         result = find_all_option_azienda()
@@ -1089,7 +1189,13 @@ class Aziende(View):
         return render(request, "aziende.html", result)
 
     def post(self, request, *args, **kwargs):
-
+        '''
+        Gestisce le chiamate di POST sulla Pagina di Sondaggio di una Azienda
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        '''
         # parte creazione nuovo Accont
         # nuovo sondaggio quindi creo account
         post = request.POST
@@ -1128,8 +1234,13 @@ class Aziende(View):
 
 # ----------------Offerte Lavoro ------------------------------------------------------------------
 
-# tutti i tag e possibilita per offerete di lavoro
+
 def find_all_option_lavoro():
+    '''
+    Tutti i tag e possibilita per offerete di lavoro,
+    cioè trova i valori possibili di tutti gli attributi multivalore delle offerte di Lavoro
+    :return: vettore contentente per ogni attributo una lista di valori.
+    '''
     # Cerco cose per offeerte di lavoro
     result = {}
     result['lingua'] = Lingua.objects.all()
@@ -1139,12 +1250,19 @@ def find_all_option_lavoro():
     result['area_operativa'] = AreaOperativa.objects.all()
     result['tipo_contratto'] = TipoContratto.objects.all()
     result['citta'] = Citta.objects.all()
-
     return result
 
 
-# serve ad inserire nuove offerte di lavoro o modificarle
+
 def create_modify_lavoro_sondaggio_by_post(request, account, is_new_survey, is_admin):
+    '''
+    Inserire nuove offerte di lavoro o modificarle
+    :param request:
+    :param account: accounte corrente che ha effettuato la richiesta
+    :param is_new_survey: flag per nuovi sondaggi
+    :param is_admin: flaga se la richiesta viene da un amministratore
+    :return:
+    '''
     if "codice_azienda" in request.POST:
         # creo nuova offerta di lavoro
         nuovo_lavoro = Lavoro(azienda_id=request.POST["codice_azienda"])
@@ -1315,12 +1433,21 @@ def create_modify_lavoro_sondaggio_by_post(request, account, is_new_survey, is_a
             nuovo_valore_gia_esistente.save()
 
 
-# modifica dati offerta di lavoro
+
 class ModifyLavoro(View):
+    '''
+    Modifica dati offerta di lavoro
+    '''
     # solo se autenticato come admin o utente
     @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
-
+        '''
+        Modifica Dati per offerte di Lavoro richieste di GET
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        '''
         result = {}
         result = find_all_option_lavoro()
         result['error'] = ''
@@ -1404,7 +1531,13 @@ class ModifyLavoro(View):
     # solo se autenticato come admin o utente Azienda
     @method_decorator(login_required(login_url='log_in'))
     def post(self, request, *args, **kwargs):
-
+        '''
+        Modifica Dati per offerte di Lavoro richieste di POST
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        '''
         # si tratta di un utente corretto
         if request.user.is_superuser == 1:
             logger.error("Super user vuole modificare sondaggio accede al metodo")
@@ -1418,8 +1551,18 @@ class ModifyLavoro(View):
 
 
 class Lavori(View):
+    '''
+    Permette di Gestire i sondaggi sulle offerte di Lavoro
+    '''
     @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
+        '''
+        Gestisce le chiamate di GET sulle offerte di Lavoro
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        '''
         result = {}
         result = find_all_option_lavoro()
 
@@ -1436,6 +1579,13 @@ class Lavori(View):
 
     @method_decorator(login_required(login_url='log_in'))
     def post(self, request, *args, **kwargs):
+        '''
+        Gestisce le chiamate di POST sulle offerte di Lavoro
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        '''
         if "codice_azienda" in request.POST:
             nuovo_lavoro = Lavoro(azienda_id=request.POST["codice_azienda"])
             if request.POST['email_lavoro'] == "":
@@ -1597,18 +1747,39 @@ class Lavori(View):
 
 
 class Grazie(View):
+    '''
+    Gestisce il ringraziamento al completamento del questionario
+    '''
     @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
+        '''
+        Gestisce il ringraziamento al completamento del questionario, GET.
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        '''
         return render(request, "grazie.html")
 
     @method_decorator(login_required(login_url='log_in'))
     def post(self, request, *args, **kwargs):
+        '''
+        Gestisce il ringraziamento al completamento del questionario, POST.
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        '''
         return render(request, "grazie.html")
 
 
 def all_aziende():
+    '''
+    Cerca tutte le azienda inserite nel DB e restiuisce il una lista che le contiene,
+    con anche i relativi attributi valorizzati.
+    :return: lista di DIZIONARI, uno per azienda.
+    '''
     result = {}
-
     # aziende
     list_aziende = Azienda.objects.all().select_related()
 
@@ -1636,8 +1807,18 @@ def all_aziende():
 
 
 class RisultatiAziende(View):
+    '''
+    Gestisce la Pagina con i risultati per ogni Azienda inserita nel DB
+    '''
     @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
+        '''
+        Gestisce le richieste di GET sulle pagine per i risultati delle Aziende
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        '''
         result = {}
         # se non admin pagina non trovata
         if request.user.is_superuser != 1:
@@ -1647,6 +1828,13 @@ class RisultatiAziende(View):
 
     @method_decorator(login_required(login_url='log_in'))
     def post(self, request, *args, **kwargs):
+        '''
+        Gestisce le richieste di POST sulle pagine per i risultati delle Aziende
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        '''
         # se non admin pagina non trovata
         if request.user.is_superuser != 1:
             raise Http404("Solo un admin puo effettuare questa richiesta")
@@ -1671,6 +1859,11 @@ class RisultatiAziende(View):
 
 
 def all_job():
+    '''
+    Cerca tutti i lavori inseriti da Aziende nel DB e restiuisce il una lista che li contiene,
+    con anche i relativi attributi valorizzati.
+    :return: una lista che contiene dizionari, un dizionario per ogni lavoro
+    '''
     result = {}
     # lavori
     list_lavori = Lavoro.objects.all().select_related()
@@ -1763,8 +1956,18 @@ def all_job():
 
 
 class RisultatiOffertaLavoro(View):
+    '''
+    Gestisce la pagina dei risultati per le offerte di Lavoro
+    '''
     @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
+        '''
+        Gestisce le chiamate di GET per i risultati sulle offerte di lavoro
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        '''
         result = {}
         # se non admin pagina non trovata
         if request.user.is_superuser != 1:
@@ -1775,6 +1978,13 @@ class RisultatiOffertaLavoro(View):
 
     @method_decorator(login_required(login_url='log_in'))
     def post(self, request, *args, **kwargs):
+        '''
+        Gestisce le chiamate di POST per i risultati sulle offerte di lavoro
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        '''
         if request.user.is_superuser != 1:
             raise Http404("Solo un admin puo effettuare questa richiesta")
         if request.method == 'POST':
@@ -1799,6 +2009,11 @@ class RisultatiOffertaLavoro(View):
 
 # mette in una lista/dizionario tutti gli studenti inseriti
 def all_student():
+    '''
+    Cerca tutti gli Studenti inseriti nel DB e restiuisce una lista che li contiene,
+    con anche i relativi attributi valorizzati.
+    :return: restituisce una lista di dizionari, un dizionario per ogni studente
+    '''
     result = {}
     # studenti
     list_studenti = Persona.objects.all().select_related()
@@ -2082,8 +2297,18 @@ def all_student():
 
 
 class RisultatiStudenti(View):
+    '''
+    Gestisce la pagina con i risultati di ogni Studente
+    '''
     @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
+        '''
+        Richieste GET sulla pagina dei risultati degli studenti
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        '''
         result = {}
         # se non admin pagina non trovata
         if request.user.is_superuser != 1:
@@ -2094,6 +2319,13 @@ class RisultatiStudenti(View):
 
     @method_decorator(login_required(login_url='log_in'))
     def post(self, request, *args, **kwargs):
+        '''
+        Richieste POST sulla pagina dei risultati degli studenti
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        '''
         if request.user.is_superuser != 1:
             raise Http404("Solo un admin puo effettuare questa richiesta")
         if request.method == 'POST':
@@ -2118,9 +2350,18 @@ class RisultatiStudenti(View):
 
 # la singola Azienda vuole vedere le sue offerte di lavoro
 class AziendaOffertaLavoro(View):
+    '''
+    Pagina riassuntiva del sondaggio prodotto da una Azienda
+    '''
     @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
-
+        '''
+        Gestisce le richieste di GET per la Pagina riassuntiva del sondaggio prodotto da una Azienda
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        '''
         result = {}
 
         if request.user.account.azienda_id:
@@ -2227,6 +2468,13 @@ class AziendaOffertaLavoro(View):
 
     @method_decorator(login_required(login_url='log_in'))
     def post(self, request, *args, **kwargs):
+        '''
+        Gestisce le richieste di POST per la Pagina riassuntiva del sondaggio prodotto da una Azienda
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        '''
         if request.method == 'POST':
             if "id" in request.POST:
                 lavoro = Lavoro.objects.get(pk=int(request.POST["id"]))
@@ -2249,6 +2497,13 @@ class AziendaOffertaLavoro(View):
 
 # type puo essere 0 studente, 1 azienda, 2 lavoro
 def result_csv(request, *args, **kwargs):
+    '''
+    Produce un file di tipo .csv con i risultati
+    :param request:
+    :param args:
+    :param kwargs:
+    :return: File csv
+    '''
     # bisogna essere admin per i csv
     if request.user.is_superuser != 1:
         raise Http404("Solo un admin puo vedere questa pagina")
@@ -2299,6 +2554,11 @@ def result_csv(request, *args, **kwargs):
 
 # da alcune info su un studente in maniera anonima
 def infostd(id_student):
+    '''
+    Per un certo studente vengono emesse delle informazioni e nascoste altre, ad esempio per non produrre un Bias
+    :param id_student: id dello studente
+    :return:
+    '''
     student = {}
 
     try:  # controllo che esista
@@ -2633,6 +2893,11 @@ def infostd(id_student):
 
 # da alcune info su un certo lavoro
 def infojob(id_job):
+    '''
+    Per un certo Lavoro vengono emesse delle informazioni e nascoste altre, ad esempio per non produrre un Bias
+    :param id_job:
+    :return:
+    '''
     job = {}
     job['id'] = 'None'
     job['id_azienda'] = 'None'
@@ -2747,11 +3012,20 @@ def infojob(id_job):
 
 # Parte di raccomandazione
 class RecomStudente(View):
+    '''
+    Gestissce la pagina per la parte di raccomandazione di uno studente
+    '''
     # solo se autenticato come admin o utente
     @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
-        # carico i dati di ogni offerta di lavoro, ma solo alcune info per mantenere anonimato
-        # bisogna creare una funzione che passa i 5 valori necessari. La funzione deve dipendere dal Account collegato
+        '''
+        Carica i dati di ogni offerta di lavoro, ma solo alcune info per mantenere anonimato
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        '''
+        # Bisogna creare una funzione che passa i 5 valori necessari. La funzione deve dipendere dal Account collegato
         result = {0: infojob(23), 1: infojob(13), 2: infojob(14), 4: infojob(15), 5: infojob(16)}
 
         return render(request, "recommendation_student.html", {"result": result})
@@ -2759,14 +3033,31 @@ class RecomStudente(View):
     # solo se autenticato come admin o utente Azienda
     @method_decorator(login_required(login_url='log_in'))
     def post(self, request, *args, **kwargs):
+        '''
+        Gestisce le richieste di Post sulla pagian di raccomadnazione degli studenti
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        '''
         return render(request, 'recommendation_student.html')
 
 
 # Parte di Correlazione
 class CorrelationStudente(View):
+    '''
+    Gestisce la correlazione tra due studenti.
+    '''
     # solo se autenticato come admin o utente
     @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
+        '''
+        Gestisce le richieste di GET sulla pagina delle correlazioni tra studenti
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        '''
         if request.user.is_superuser != 1:
             raise Http404("Solo un admin puo effettuare questa richiesta")
         # passato un id da request restituisco l'utente piu correlato con il prodotto scalare
@@ -2807,6 +3098,13 @@ class CorrelationStudente(View):
     # solo se autenticato come admin o utente Azienda
     @method_decorator(login_required(login_url='log_in'))
     def post(self, request, *args, **kwargs):
+        '''
+        Gestisce le richieste di POST sulla pagina delle correlazioni tra studenti
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        '''
         if request.user.is_superuser != 1:
             raise Http404("Solo un admin puo effettuare questa richiesta")
 
@@ -2815,9 +3113,19 @@ class CorrelationStudente(View):
 
 # Uno studente e portato dare preferenze su alcuni job
 class StudenteVotaLavoro(View):
+    '''
+    Allo Studente viene richiesta la possibilita di votare alcuni JOB
+    '''
     # solo se autenticato Utente
     @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
+        '''
+        Richieste di GET su lavori da Votare
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        '''
         vet_jobs = MatricePunteggio.objects.filter(persona=request.user.account.survey)
         result = []
         stars = []
@@ -2829,6 +3137,13 @@ class StudenteVotaLavoro(View):
     # solo se autenticato come admin o utente Azienda
     @method_decorator(login_required(login_url='log_in'))
     def post(self, request, *args, **kwargs):
+        '''
+        Richieste di POST su lavori da Votare
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        '''
         vet_jobs = MatricePunteggio.objects.filter(persona=request.user.account.survey)
 
         for job in vet_jobs:
@@ -2843,9 +3158,18 @@ class StudenteVotaLavoro(View):
 
 # permette ad un utente di cercare un lavoro con parametri molto stringenti e poi puo mettere mi piace
 class SearchJob(View):
+    '''
+    Permette ad un utente di Cercare dei Job e poi esprimere una preferenza su di essi.
+    '''
     @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
-
+        '''
+        Richieste di GET sulla pagina per cercare i lavori
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        '''
         # carico tutti i job con anche chiavi esterne e multiple
         job_list_tmp = all_job()
         job_list = []
@@ -2902,6 +3226,13 @@ class SearchJob(View):
     # solo se autenticato come admin o utente Azienda
     @method_decorator(login_required(login_url='log_in'))
     def post(self, request, *args, **kwargs):
+        '''
+        Richieste di POST sulla pagina per cercare i lavori
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        '''
         # l'utente ha messo mi piace ad un lavoro
         if 'like' in request.POST:
             job_like_id = request.POST['like'];

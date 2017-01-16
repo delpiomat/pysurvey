@@ -15,6 +15,9 @@ TYPE_CHOICES = ((0, 'Utente'), (1, 'Azienda'), (2, 'Admin'))
 
 #id is by default
 class Survey(models.Model):
+    '''
+    Sondaggio vecchio modo di fare, obsoleto
+    '''
     name = models.CharField(max_length=256)
     pub_date = models.DateTimeField(auto_now_add=True, blank=True)
     note = models.CharField(max_length=512)
@@ -25,6 +28,9 @@ class Survey(models.Model):
 
 
 class Column(models.Model):
+    '''
+    Attributi di un sondagggio vecchio modo di fare, obsoleto
+    '''
     label = models.CharField(max_length=256, default="")
     type = models.CharField(max_length=256, default="")
     required = models.BooleanField(default=True)
@@ -40,6 +46,9 @@ class Column(models.Model):
 
 
 class Interview(models.Model):
+    '''
+    Intervista di un sondagggio vecchio modo di fare, obsoleto
+    '''
     name_user = models.CharField(max_length=256, default="anonymous")
     type_user = models.CharField(max_length=256, default="people")
 
@@ -48,6 +57,9 @@ class Interview(models.Model):
 
 
 class Result(models.Model):
+    '''
+    Risultato di un sondagggio vecchio modo di fare, obsoleto
+    '''
     value = models.CharField(max_length=256, default="")
     type_value = models.CharField(max_length=256, default="single")  # for array/single/dict value
     column = models.ForeignKey(Column, on_delete=models.CASCADE)
@@ -60,65 +72,113 @@ class Result(models.Model):
 
 # valori sigoli ----------------------------------------------------------------------------------------------------
 class Zona(models.Model):
+    '''
+    Rappresenta la tabella con tutte le possibili Zone
+    '''
     valore = models.CharField(max_length=64)
 
 
 class LivelloPC(models.Model):
+    '''
+    Rappresenta la tabella con tutte  i possibili Livelli di conoscenza nell'uso del Computer
+    '''
     valore = models.CharField(max_length=64)
 
 
 class GradoStudi(models.Model):
+    '''
+    Rappresenta la tabella con tutte i possibili Livelli di Istruzione
+    '''
     valore = models.CharField(max_length=64)
 
 
 # valori multipli------------------------------------------------------------------------------------------------------
 class Stato(models.Model):
+    '''
+    Rappresenta la tabella con tutte i  possibili Stati occupazionali
+    '''
     valore = models.CharField(max_length=64)
 
 
 class Lingua(models.Model):
+    '''
+    La tabella con tutte le possibili lingue presenti nei sondaggi
+    '''
     valore = models.CharField(max_length=64)
 
 
 class ConoscenzaSpecifica(models.Model):
+    '''
+    Rappresenta la tabella con tutte le possibili conoscenza specifiche
+    '''
     valore = models.CharField(max_length=64)
 
 
 class Mansione(models.Model):
-    valore = models.CharField(max_length=64)
+    '''
+    Rappresenta la tabella con tutte le possibili mansioni
+    '''
+valore = models.CharField(max_length=64)
 
 
 class LivelloCariera(models.Model):
+    '''
+    Rappresenta la tabella con tutte i possibili Livelli di Cariera
+    '''
     valore = models.CharField(max_length=64)
 
 
 class Ruolo(models.Model):
+    '''
+    Rappresenta la tabella con tutte i possibili Ruoli
+    '''
     valore = models.CharField(max_length=64)
 
 
 class AreaOperativa(models.Model):
+    '''
+    Rappresenta la tabella con tutte le possibili Aree Operative
+    '''
     valore = models.CharField(max_length=64)
 
 
 class TipoContratto(models.Model):
+    '''
+    Rappresenta la tabella con tutti i possibili Tipi Di Contratto
+    '''
     valore = models.CharField(max_length=64)
 
 
 class Benefit(models.Model):
+    '''
+    Rappresenta la tabella con tutti i possibili Benefit
+    '''
     valore = models.CharField(max_length=64)
 
 
 class Interesse(models.Model):
+    '''
+    Rappresenta la tabella con tutti i possibili Interessi
+    '''
     valore = models.CharField(max_length=64)
 
 class Esame(models.Model):
+    '''
+    Rappresenta la tabella con tutte i possibili esami
+    '''
     valore = models.CharField(max_length=64)
 
 class CampoStudi(models.Model):
+    '''
+    Rappresenta la tabella con tutte i possibili Campi di Studio
+    '''
     valore = models.CharField(max_length=64)
 
 
 class Persona(models.Model):
+    '''
+    Rappresenta la tabella Tutte le persone (Studenti) che hanno effettuato un sondaggio
+    '''
     #anagrafica
     email = models.CharField(max_length=64, null=True)
     cap = models.CharField(max_length=64, null=True)
@@ -148,110 +208,176 @@ class Persona(models.Model):
 
 
 class StatoAttuale(models.Model):
+    '''
+    Rappresenta la tabella che associa una Persona con zero o piu stati occupazionali
+    '''
     stato = models.ForeignKey(Stato, on_delete=models.CASCADE, null=True)
     persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
 
 
 class LinguaAttuale(models.Model):
+    '''
+    Rappresenta la tabella che associa una Persona con zero o piu Lingue conosciute
+    '''
     lingua = models.ForeignKey(Lingua, on_delete=models.CASCADE, null=True)
     persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
 
 
 class ConoscenzaSpecificaAttuale(models.Model):
+    '''
+    Rappresenta la tabella che associa una Persona con zero o piu conoscenze specifiche
+    '''
     conoscenza_specifica = models.ForeignKey(ConoscenzaSpecifica, on_delete=models.CASCADE, null=True)
     persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
 
 
 class MansioneAttuale(models.Model):
+    '''
+    Rappresenta la tabella che associa una Persona con zero o piu Mansioni Attuali
+    '''
     mansione = models.ForeignKey(Mansione, on_delete=models.CASCADE, null=True)
     persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
 
 
 class MansionePregresso(models.Model):
+    '''
+    Rappresenta la tabella che associa una Persona con zero o piu Mansioni Passate
+    '''
     mansione = models.ForeignKey(Mansione, on_delete=models.CASCADE, null=True)
     persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
 
 
 class MansioneFuturo(models.Model):
+    '''
+    Rappresenta la tabella che associa una Persona con zero o piu Mansioni Future
+    '''
     mansione = models.ForeignKey(Mansione, on_delete=models.CASCADE, null=True)
     persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
 
 
 class LivelloCarieraAttuale(models.Model):
+    '''
+    Rappresenta la tabella che associa una Persona con zero o piu Livelli di cariera Attuali
+    '''
     persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
     livello_cariera = models.ForeignKey(LivelloCariera, on_delete=models.CASCADE, null=True )
 
 
 class LivelloCarieraPregresso(models.Model):
+    '''
+    Rappresenta la tabella che associa una Persona con zero o piu Livelli di cariera Passati
+    '''
     persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
     livello_cariera = models.ForeignKey(LivelloCariera, on_delete=models.CASCADE, null=True)
 
 
 class LivelloCarieraFuturo(models.Model):
+    '''
+    Rappresenta la tabella che associa una Persona con zero o piu Livelli di cariera Futuri
+    '''
     persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
     livello_cariera = models.ForeignKey(LivelloCariera, on_delete=models.CASCADE, null=True)
 
 
 class RuoloAttuale(models.Model):
+    '''
+    Rappresenta la tabella che associa una Persona con zero o piu Ruoli Attuali
+    '''
     ruolo = models.ForeignKey(Ruolo, on_delete=models.CASCADE, null=True)
     persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
 
 
 class RuoloPregresso(models.Model):
+    '''
+    Rappresenta la tabella che associa una Persona con zero o piu Ruoli Passati
+    '''
     ruolo = models.ForeignKey(Ruolo, on_delete=models.CASCADE, null=True)
     persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
 
 
 class RuoloFuturo(models.Model):
+    '''
+    Rappresenta la tabella che associa una Persona con zero o piu Ruoli Futuri
+    '''
     ruolo = models.ForeignKey(Ruolo, on_delete=models.CASCADE, null=True)
     persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
 
 
 class AreaOperativaAttuale(models.Model):
+    '''
+    Rappresenta la tabella che associa una Persona con zero o piu Aree Operative Attuali
+    '''
     area_operativa = models.ForeignKey(AreaOperativa, on_delete=models.CASCADE, null=True)
     persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
 
 
 class AreaOperativaPregresso(models.Model):
+    '''
+    Rappresenta la tabella che associa una Persona con zero o piu Aree Operative Passate
+    '''
     area_operativa = models.ForeignKey(AreaOperativa, on_delete=models.CASCADE, null=True)
     persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
 
 
 class AreaOperativaFuturo(models.Model):
+    '''
+    Rappresenta la tabella che associa una Persona con zero o piu Aree Operative Future
+    '''
     area_operativa = models.ForeignKey(AreaOperativa, on_delete=models.CASCADE, null=True)
     persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
 
 
 class TipoContrattoAttuale(models.Model):
+    '''
+    Rappresenta la tabella che associa una Persona con zero o piu tipi di Contratti Attuali
+    '''
     tipo_contratto = models.ForeignKey(TipoContratto, on_delete=models.CASCADE, null=True)
     persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
 
 
 class TipoContrattoPregesso(models.Model):
+    '''
+    Rappresenta la tabella che associa una Persona con zero o piu tipi di Contratti Passati
+    '''
     tipo_contratto = models.ForeignKey(TipoContratto, on_delete=models.CASCADE, null=True)
     persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
 
 
 class TipoContrattoFuturo(models.Model):
+    '''
+    Rappresenta la tabella che associa una Persona con zero o piu tipi di Contratti Futuri
+    '''
     tipo_contratto = models.ForeignKey(TipoContratto, on_delete=models.CASCADE, null=True)
     persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
 
 
 class BenefitFuturo(models.Model):
+    '''
+    Rappresenta la tabella che associa una Persona con zero o piu Benefit Futuri
+    '''
     benefit = models.ForeignKey(Benefit, on_delete=models.CASCADE, null=True)
     persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
 
 
 class InteresseFuturo(models.Model):
+    '''
+    Rappresenta la tabella che associa una Persona con zero o piu Interessi Futuri
+    '''
     interesse = models.ForeignKey(Interesse, on_delete=models.CASCADE, null=True)
     persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
 
 
 class EsameAttuale(models.Model):
+    '''
+    Rappresenta la tabella che associa una Persona con zero o piu Esami
+    '''
     esame = models.ForeignKey(Esame, on_delete=models.CASCADE, null=True)
     persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
 
 class CampoStudiAttuale(models.Model):
+    '''
+    Rappresenta la tabella che associa una Persona con zero o piu Campi di Studio
+    '''
     campo_studi = models.ForeignKey(CampoStudi, on_delete=models.CASCADE, null=True)
     persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
 
@@ -261,10 +387,16 @@ class CampoStudiAttuale(models.Model):
 # Aziende
 
 class Citta(models.Model):
+    '''
+    Rappresenta la tabella delle citta
+    '''
     valore = models.CharField(max_length=64)
 
 
 class Azienda(models.Model):
+    '''
+    Rappresenta la tabella delle Aziende che proponogno offerte di lavoro
+    '''
     #anagrafica
     email = models.CharField(max_length=64, null=True)
     nome_referente = models.CharField(max_length=512, null=True)
@@ -275,6 +407,9 @@ class Azienda(models.Model):
 
 
 class AltraSede(models.Model):
+    '''
+    Rappresenta la tabella che associa un azienda a zero o piu sedi alternative
+    '''
     citta = models.ForeignKey(Citta, on_delete=models.CASCADE, null=True)
     azienda = models.ForeignKey(Azienda, on_delete=models.CASCADE)
 

@@ -1,8 +1,14 @@
 from createSurvey.models import *
 
-# prodotto scalare tra due utenti per la distanza (cardinalita intersezione 2 insiemi)
-# se un termine Nullo il punteggio per quel dato vale ZERO (parte di And negli if)
+
 def stud_prodotto_scalare(st1_id, st2_id):
+    '''
+    Prodotto scalare tra due utenti per la distanza (cardinalita intersezione 2 insiemi)
+    se un termine Nullo il punteggio per quel dato vale ZERO (parte di And negli if)
+    :param st1_id: id primo studente
+    :param st2_id: id secondo stundente
+    :return: ritorna un punteggio di similarità
+    '''
     score = 0
     s1 = Persona.objects.get(pk=st1_id)
     s2 = Persona.objects.get(pk=st2_id)
@@ -194,6 +200,11 @@ def stud_prodotto_scalare(st1_id, st2_id):
     return score
 
 def stud_cardinality (st_id):
+    '''
+    Conta quanti elementi possiede uno studente in totale tra tutte le sue feature
+    :param st_id: id di uno studente
+    :return: la cardinalita
+    '''
     dim = 0
     s = Persona.objects.get(pk=st_id)
     #cardinalita di A
@@ -343,6 +354,12 @@ def stud_cardinality (st_id):
 # Misura Dice
 # 2*|A intersezione B| / |A|+|B|
 def stud_dice(st1_id, st2_id):
+    '''
+    Calcola una forma leggermente imprecisa di Misura DICE 2*|A intersezione B| / |A|+|B|
+    :param st1_id: id primo studente
+    :param st2_id: id secondo studente
+    :return: il punteggio
+    '''
     intersection = stud_prodotto_scalare(st1_id, st2_id)
     union = stud_cardinality(st1_id) + stud_cardinality(st2_id)
     return (2*intersection)/union
@@ -351,6 +368,13 @@ def stud_dice(st1_id, st2_id):
 # Misura dice Jaccard  ( |A intersecato B| / |A unione B| )
 # Jaccard = Dice/(2-Dice) e Dice = 2Jaccard / (1+Jaccard)
 def stud_jaccard(st1_id, st2_id):
+    '''
+    Calcola la misura di Jaccard in Maniera un po im precisa, Misura dice Jaccard  ( |A intersecato B| / |A unione B| )
+    quindi Jaccard = Dice/(2-Dice) e Dice = 2Jaccard / (1+Jaccard)
+    :param st1_id: id primo studente
+    :param st2_id: id secodno studente
+    :return: ritorna il punteggio di jaccard
+    '''
     score_dice = stud_dice(st1_id, st2_id)
     return score_dice/(2-score_dice)
 
@@ -360,5 +384,11 @@ def stud_jaccard(st1_id, st2_id):
 # se un termine Nullo il punteggio per quel dato vale ZERO (parte di And negli if)
 
 def azieda_scalare(az1_id, az2_id):
+    '''
+    Da Completare produce il Prodotto scalare tra due Aziende
+    :param az1_id: id prima Azienda
+    :param az2_id: id Seconda Azienda
+    :return: Lo score
+    '''
     score=0
     return score
