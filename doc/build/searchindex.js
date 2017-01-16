@@ -1,1 +1,0 @@
-Search.setIndex({envversion:50,filenames:["index"],objects:{},objnames:{},objtypes:{},terms:{content:0,genindex:[],index:0,maxdepth:[],model:[],modindex:[],modul:0,page:0,ref:[],search:0,toctre:[]},titles:["Welcome to PySurvey&#8217;s documentation!"],titleterms:{document:0,indice:0,pysurvei:0,tabl:0,welcom:0}})
