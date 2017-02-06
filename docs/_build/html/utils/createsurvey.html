@@ -1,0 +1,179 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="it">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>createSurvey.utils &#8212; pysurvey 1 documentazione</title>
+    
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/translations.js"></script>
+    <link rel="index" title="Indice" href="../genindex.html" />
+    <link rel="search" title="Cerca" href="../search.html" />
+    <link rel="top" title="pysurvey 1 documentazione" href="../index.html" />
+    <link rel="next" title="jobsurvey.recommendation" href="jobsurvey.html" />
+    <link rel="prev" title="jobsurvey.views" href="../views/jobsurvey.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-createSurvey.utils">
+<span id="createsurvey-utils"></span><h1>createSurvey.utils<a class="headerlink" href="#module-createSurvey.utils" title="Link a questa intestazione">¶</a></h1>
+<dl class="function">
+<dt id="createSurvey.utils.custom_redirect">
+<code class="descclassname">createSurvey.utils.</code><code class="descname">custom_redirect</code><span class="sig-paren">(</span><em>url_name</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.utils.custom_redirect" title="Link a questa definizione">¶</a></dt>
+<dd><p>Permette di effettuare dei redirect
+:param url_name: url per effettuare il redirect
+:param args: arogmenti
+:param kwargs: vettore arogmenti
+:return:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="createSurvey.utils.export_csv">
+<code class="descclassname">createSurvey.utils.</code><code class="descname">export_csv</code><span class="sig-paren">(</span><em>survey</em>, <em>col_list</em>, <em>final_list</em>, <em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.utils.export_csv" title="Link a questa definizione">¶</a></dt>
+<dd><p>Per esportare il programma i risultati in CSV prima versione del programma ora obsoleta
+:param survey:
+:param col_list:
+:param final_list:
+:param filename:
+:return:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="createSurvey.utils.export_csv_SJA">
+<code class="descclassname">createSurvey.utils.</code><code class="descname">export_csv_SJA</code><span class="sig-paren">(</span><em>survey</em>, <em>col_list</em>, <em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.utils.export_csv_SJA" title="Link a questa definizione">¶</a></dt>
+<dd><p>Permette di esportare i risultati di sondaggi a
+:param survey:
+:param col_list:
+:param filename:
+:return:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="createSurvey.utils.gen_password">
+<code class="descclassname">createSurvey.utils.</code><code class="descname">gen_password</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.utils.gen_password" title="Link a questa definizione">¶</a></dt>
+<dd><p>Genera una password a partire da un dizionario di parole
+:return:  la èassword generata</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="createSurvey.utils.json_form_in_html">
+<code class="descclassname">createSurvey.utils.</code><code class="descname">json_form_in_html</code><span class="sig-paren">(</span><em>survey</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.utils.json_form_in_html" title="Link a questa definizione">¶</a></dt>
+<dd><p>trasforma un Json in una form HTML srve nella prima versione del programma, ora obsoleta
+:param survey: passare un oggetto contenente il risultato di un sondaggio
+:return: ritorna una forma HTML con i risultati</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="createSurvey.utils.send_reset_pass_email">
+<code class="descclassname">createSurvey.utils.</code><code class="descname">send_reset_pass_email</code><span class="sig-paren">(</span><em>request</em>, <em>user</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.utils.send_reset_pass_email" title="Link a questa definizione">¶</a></dt>
+<dd><p>Genera una mail con il codice per aggiornare la password
+:param request:
+:param user: utente
+:return:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="createSurvey.utils.send_verification_email">
+<code class="descclassname">createSurvey.utils.</code><code class="descname">send_verification_email</code><span class="sig-paren">(</span><em>request</em>, <em>user</em>, <em>isAzienda</em>, <em>password</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.utils.send_verification_email" title="Link a questa definizione">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parametri:</th><td class="field-body"><ul class="first simple">
+<li><strong>request</strong> &#8211; </li>
+<li><strong>user</strong> &#8211; utente</li>
+<li><strong>isAzienda</strong> &#8211; mail diversa per le aziende</li>
+<li><strong>password</strong> &#8211; codice per la passoword</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Ritorna:</th><td class="field-body"><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="../views/jobsurvey.html" title="capitolo precedente">jobsurvey.views</a></li>
+      <li>Next: <a href="jobsurvey.html" title="capitolo successivo">jobsurvey.recommendation</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>Questa pagina</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/utils/createsurvey.txt"
+            rel="nofollow">Mostra sorgente</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Ricerca veloce</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Vai" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Matteo Del Pioluogo.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.8</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+      |
+      <a href="../_sources/utils/createsurvey.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

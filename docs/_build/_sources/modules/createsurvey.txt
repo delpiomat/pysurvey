@@ -1,4 +1,4 @@
-Models
+Createsurvey
 ======
 .. automodule:: createSurvey.models
     :members:

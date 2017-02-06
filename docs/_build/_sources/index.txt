@@ -11,7 +11,12 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
-   modules/models
+   modules/createsurvey
+
+.. toctree::
+   :maxdepth: 2
+
+   views/createsurvey
 
 
 Indices and tables

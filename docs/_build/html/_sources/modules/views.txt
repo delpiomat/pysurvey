@@ -1,0 +1,9 @@
+Views
+======
+.. automodule:: createSurvey.views
+    :members:
+
+Views2
+======
+.. automodule:: jobsurvey.views
+    :members:

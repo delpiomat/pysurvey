@@ -1,0 +1,432 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="it">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Createsurvey &#8212; pysurvey 1 documentazione</title>
+    
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/translations.js"></script>
+    <link rel="index" title="Indice" href="../genindex.html" />
+    <link rel="search" title="Cerca" href="../search.html" />
+    <link rel="top" title="pysurvey 1 documentazione" href="../index.html" />
+    <link rel="next" title="Createsurvey" href="../views/createsurvey.html" />
+    <link rel="prev" title="Welcome to pysurvey’s documentation!" href="../index.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="createsurvey">
+<h1>Createsurvey<a class="headerlink" href="#createsurvey" title="Link a questa intestazione">¶</a></h1>
+<span class="target" id="module-createSurvey.models"></span><dl class="class">
+<dt id="createSurvey.models.Account">
+<em class="property">class </em><code class="descclassname">createSurvey.models.</code><code class="descname">Account</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.models.Account" title="Link a questa definizione">¶</a></dt>
+<dd><p>Account deriva dalla classe account e permette di aggiungere utleriori caratteristiche all&#8217;untente loggato</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.models.AltraSede">
+<em class="property">class </em><code class="descclassname">createSurvey.models.</code><code class="descname">AltraSede</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.models.AltraSede" title="Link a questa definizione">¶</a></dt>
+<dd><p>Rappresenta la tabella che associa un azienda a zero o piu sedi alternative</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.models.AreaOperativa">
+<em class="property">class </em><code class="descclassname">createSurvey.models.</code><code class="descname">AreaOperativa</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.models.AreaOperativa" title="Link a questa definizione">¶</a></dt>
+<dd><p>Rappresenta la tabella con tutte le possibili Aree Operative</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.models.AreaOperativaAttuale">
+<em class="property">class </em><code class="descclassname">createSurvey.models.</code><code class="descname">AreaOperativaAttuale</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.models.AreaOperativaAttuale" title="Link a questa definizione">¶</a></dt>
+<dd><p>Rappresenta la tabella che associa una Persona con zero o piu Aree Operative Attuali</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.models.AreaOperativaFuturo">
+<em class="property">class </em><code class="descclassname">createSurvey.models.</code><code class="descname">AreaOperativaFuturo</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.models.AreaOperativaFuturo" title="Link a questa definizione">¶</a></dt>
+<dd><p>Rappresenta la tabella che associa una Persona con zero o piu Aree Operative Future</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.models.AreaOperativaPregresso">
+<em class="property">class </em><code class="descclassname">createSurvey.models.</code><code class="descname">AreaOperativaPregresso</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.models.AreaOperativaPregresso" title="Link a questa definizione">¶</a></dt>
+<dd><p>Rappresenta la tabella che associa una Persona con zero o piu Aree Operative Passate</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.models.Azienda">
+<em class="property">class </em><code class="descclassname">createSurvey.models.</code><code class="descname">Azienda</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.models.Azienda" title="Link a questa definizione">¶</a></dt>
+<dd><p>Rappresenta la tabella delle Aziende che proponogno offerte di lavoro</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.models.Benefit">
+<em class="property">class </em><code class="descclassname">createSurvey.models.</code><code class="descname">Benefit</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.models.Benefit" title="Link a questa definizione">¶</a></dt>
+<dd><p>Rappresenta la tabella con tutti i possibili Benefit</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.models.BenefitFuturo">
+<em class="property">class </em><code class="descclassname">createSurvey.models.</code><code class="descname">BenefitFuturo</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.models.BenefitFuturo" title="Link a questa definizione">¶</a></dt>
+<dd><p>Rappresenta la tabella che associa una Persona con zero o piu Benefit Futuri</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.models.CampoStudi">
+<em class="property">class </em><code class="descclassname">createSurvey.models.</code><code class="descname">CampoStudi</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.models.CampoStudi" title="Link a questa definizione">¶</a></dt>
+<dd><p>Rappresenta la tabella con tutte i possibili Campi di Studio</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.models.CampoStudiAttuale">
+<em class="property">class </em><code class="descclassname">createSurvey.models.</code><code class="descname">CampoStudiAttuale</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.models.CampoStudiAttuale" title="Link a questa definizione">¶</a></dt>
+<dd><p>Rappresenta la tabella che associa una Persona con zero o piu Campi di Studio</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.models.CercaAreaOperativa">
+<em class="property">class </em><code class="descclassname">createSurvey.models.</code><code class="descname">CercaAreaOperativa</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.models.CercaAreaOperativa" title="Link a questa definizione">¶</a></dt>
+<dd><p>Rappresenta la tabella che associa una Offerta di Lavoro con zero o piu Aree Operative</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.models.CercaCampoStudio">
+<em class="property">class </em><code class="descclassname">createSurvey.models.</code><code class="descname">CercaCampoStudio</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.models.CercaCampoStudio" title="Link a questa definizione">¶</a></dt>
+<dd><p>Rappresenta la tabella che associa una Offerta di Lavoro con zero o piu Campi di Studio</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.models.CercaCitta">
+<em class="property">class </em><code class="descclassname">createSurvey.models.</code><code class="descname">CercaCitta</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.models.CercaCitta" title="Link a questa definizione">¶</a></dt>
+<dd><p>Rappresenta la tabella che associa una Offerta di Lavoro con zero o piu Citta</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.models.CercaEsami">
+<em class="property">class </em><code class="descclassname">createSurvey.models.</code><code class="descname">CercaEsami</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.models.CercaEsami" title="Link a questa definizione">¶</a></dt>
+<dd><p>Rappresenta la tabella che associa una Offerta di Lavoro con zero o piu Esami</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.models.CercaLingua">
+<em class="property">class </em><code class="descclassname">createSurvey.models.</code><code class="descname">CercaLingua</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.models.CercaLingua" title="Link a questa definizione">¶</a></dt>
+<dd><p>Rappresenta la tabella che associa una Offerta di Lavoro con zero o piu tipi Lingue</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.models.CercaLivelloCariera">
+<em class="property">class </em><code class="descclassname">createSurvey.models.</code><code class="descname">CercaLivelloCariera</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.models.CercaLivelloCariera" title="Link a questa definizione">¶</a></dt>
+<dd><p>Rappresenta la tabella che associa una Offerta di Lavoro con zero o piu livelli cariera</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.models.CercaTipoContratto">
+<em class="property">class </em><code class="descclassname">createSurvey.models.</code><code class="descname">CercaTipoContratto</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.models.CercaTipoContratto" title="Link a questa definizione">¶</a></dt>
+<dd><p>Rappresenta la tabella che associa una Offerta di Lavoro con zero o piu Tipi di Contratto</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.models.Citta">
+<em class="property">class </em><code class="descclassname">createSurvey.models.</code><code class="descname">Citta</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.models.Citta" title="Link a questa definizione">¶</a></dt>
+<dd><p>Rappresenta la tabella delle citta</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.models.Column">
+<em class="property">class </em><code class="descclassname">createSurvey.models.</code><code class="descname">Column</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.models.Column" title="Link a questa definizione">¶</a></dt>
+<dd><p>Attributi di un sondagggio vecchio modo di fare, obsoleto</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.models.ConoscenzaSpecifica">
+<em class="property">class </em><code class="descclassname">createSurvey.models.</code><code class="descname">ConoscenzaSpecifica</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.models.ConoscenzaSpecifica" title="Link a questa definizione">¶</a></dt>
+<dd><p>Rappresenta la tabella con tutte le possibili conoscenza specifiche</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.models.ConoscenzaSpecificaAttuale">
+<em class="property">class </em><code class="descclassname">createSurvey.models.</code><code class="descname">ConoscenzaSpecificaAttuale</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.models.ConoscenzaSpecificaAttuale" title="Link a questa definizione">¶</a></dt>
+<dd><p>Rappresenta la tabella che associa una Persona con zero o piu conoscenze specifiche</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.models.Esame">
+<em class="property">class </em><code class="descclassname">createSurvey.models.</code><code class="descname">Esame</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.models.Esame" title="Link a questa definizione">¶</a></dt>
+<dd><p>Rappresenta la tabella con tutte i possibili esami</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.models.EsameAttuale">
+<em class="property">class </em><code class="descclassname">createSurvey.models.</code><code class="descname">EsameAttuale</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.models.EsameAttuale" title="Link a questa definizione">¶</a></dt>
+<dd><p>Rappresenta la tabella che associa una Persona con zero o piu Esami</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.models.GradoStudi">
+<em class="property">class </em><code class="descclassname">createSurvey.models.</code><code class="descname">GradoStudi</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.models.GradoStudi" title="Link a questa definizione">¶</a></dt>
+<dd><p>Rappresenta la tabella con tutte i possibili Livelli di Istruzione</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.models.Interesse">
+<em class="property">class </em><code class="descclassname">createSurvey.models.</code><code class="descname">Interesse</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.models.Interesse" title="Link a questa definizione">¶</a></dt>
+<dd><p>Rappresenta la tabella con tutti i possibili Interessi</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.models.InteresseFuturo">
+<em class="property">class </em><code class="descclassname">createSurvey.models.</code><code class="descname">InteresseFuturo</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.models.InteresseFuturo" title="Link a questa definizione">¶</a></dt>
+<dd><p>Rappresenta la tabella che associa una Persona con zero o piu Interessi Futuri</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.models.Interview">
+<em class="property">class </em><code class="descclassname">createSurvey.models.</code><code class="descname">Interview</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.models.Interview" title="Link a questa definizione">¶</a></dt>
+<dd><p>Intervista di un sondagggio vecchio modo di fare, obsoleto</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.models.Lavoro">
+<em class="property">class </em><code class="descclassname">createSurvey.models.</code><code class="descname">Lavoro</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.models.Lavoro" title="Link a questa definizione">¶</a></dt>
+<dd><p>Rappresenta la tabella delle offerte di lavoro</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.models.Lingua">
+<em class="property">class </em><code class="descclassname">createSurvey.models.</code><code class="descname">Lingua</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.models.Lingua" title="Link a questa definizione">¶</a></dt>
+<dd><p>La tabella con tutte le possibili lingue presenti nei sondaggi</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.models.LinguaAttuale">
+<em class="property">class </em><code class="descclassname">createSurvey.models.</code><code class="descname">LinguaAttuale</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.models.LinguaAttuale" title="Link a questa definizione">¶</a></dt>
+<dd><p>Rappresenta la tabella che associa una Persona con zero o piu Lingue conosciute</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.models.LivelloCariera">
+<em class="property">class </em><code class="descclassname">createSurvey.models.</code><code class="descname">LivelloCariera</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.models.LivelloCariera" title="Link a questa definizione">¶</a></dt>
+<dd><p>Rappresenta la tabella con tutte i possibili Livelli di Cariera</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.models.LivelloCarieraAttuale">
+<em class="property">class </em><code class="descclassname">createSurvey.models.</code><code class="descname">LivelloCarieraAttuale</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.models.LivelloCarieraAttuale" title="Link a questa definizione">¶</a></dt>
+<dd><p>Rappresenta la tabella che associa una Persona con zero o piu Livelli di cariera Attuali</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.models.LivelloCarieraFuturo">
+<em class="property">class </em><code class="descclassname">createSurvey.models.</code><code class="descname">LivelloCarieraFuturo</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.models.LivelloCarieraFuturo" title="Link a questa definizione">¶</a></dt>
+<dd><p>Rappresenta la tabella che associa una Persona con zero o piu Livelli di cariera Futuri</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.models.LivelloCarieraPregresso">
+<em class="property">class </em><code class="descclassname">createSurvey.models.</code><code class="descname">LivelloCarieraPregresso</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.models.LivelloCarieraPregresso" title="Link a questa definizione">¶</a></dt>
+<dd><p>Rappresenta la tabella che associa una Persona con zero o piu Livelli di cariera Passati</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.models.LivelloPC">
+<em class="property">class </em><code class="descclassname">createSurvey.models.</code><code class="descname">LivelloPC</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.models.LivelloPC" title="Link a questa definizione">¶</a></dt>
+<dd><p>Rappresenta la tabella con tutte  i possibili Livelli di conoscenza nell&#8217;uso del Computer</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.models.Mansione">
+<em class="property">class </em><code class="descclassname">createSurvey.models.</code><code class="descname">Mansione</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.models.Mansione" title="Link a questa definizione">¶</a></dt>
+<dd><p>Rappresenta la tabella con tutte le possibili mansioni</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.models.MansioneAttuale">
+<em class="property">class </em><code class="descclassname">createSurvey.models.</code><code class="descname">MansioneAttuale</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.models.MansioneAttuale" title="Link a questa definizione">¶</a></dt>
+<dd><p>Rappresenta la tabella che associa una Persona con zero o piu Mansioni Attuali</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.models.MansioneFuturo">
+<em class="property">class </em><code class="descclassname">createSurvey.models.</code><code class="descname">MansioneFuturo</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.models.MansioneFuturo" title="Link a questa definizione">¶</a></dt>
+<dd><p>Rappresenta la tabella che associa una Persona con zero o piu Mansioni Future</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.models.MansionePregresso">
+<em class="property">class </em><code class="descclassname">createSurvey.models.</code><code class="descname">MansionePregresso</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.models.MansionePregresso" title="Link a questa definizione">¶</a></dt>
+<dd><p>Rappresenta la tabella che associa una Persona con zero o piu Mansioni Passate</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.models.MatricePunteggio">
+<em class="property">class </em><code class="descclassname">createSurvey.models.</code><code class="descname">MatricePunteggio</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.models.MatricePunteggio" title="Link a questa definizione">¶</a></dt>
+<dd><p>Rappresente la Matrice dei punteggi tra Persone e Lavori</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.models.Persona">
+<em class="property">class </em><code class="descclassname">createSurvey.models.</code><code class="descname">Persona</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.models.Persona" title="Link a questa definizione">¶</a></dt>
+<dd><p>Rappresenta la tabella Tutte le persone (Studenti) che hanno effettuato un sondaggio</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.models.Result">
+<em class="property">class </em><code class="descclassname">createSurvey.models.</code><code class="descname">Result</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.models.Result" title="Link a questa definizione">¶</a></dt>
+<dd><p>Risultato di un sondagggio vecchio modo di fare, obsoleto</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.models.Ruolo">
+<em class="property">class </em><code class="descclassname">createSurvey.models.</code><code class="descname">Ruolo</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.models.Ruolo" title="Link a questa definizione">¶</a></dt>
+<dd><p>Rappresenta la tabella con tutte i possibili Ruoli</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.models.RuoloAttuale">
+<em class="property">class </em><code class="descclassname">createSurvey.models.</code><code class="descname">RuoloAttuale</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.models.RuoloAttuale" title="Link a questa definizione">¶</a></dt>
+<dd><p>Rappresenta la tabella che associa una Persona con zero o piu Ruoli Attuali</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.models.RuoloFuturo">
+<em class="property">class </em><code class="descclassname">createSurvey.models.</code><code class="descname">RuoloFuturo</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.models.RuoloFuturo" title="Link a questa definizione">¶</a></dt>
+<dd><p>Rappresenta la tabella che associa una Persona con zero o piu Ruoli Futuri</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.models.RuoloPregresso">
+<em class="property">class </em><code class="descclassname">createSurvey.models.</code><code class="descname">RuoloPregresso</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.models.RuoloPregresso" title="Link a questa definizione">¶</a></dt>
+<dd><p>Rappresenta la tabella che associa una Persona con zero o piu Ruoli Passati</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.models.Stato">
+<em class="property">class </em><code class="descclassname">createSurvey.models.</code><code class="descname">Stato</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.models.Stato" title="Link a questa definizione">¶</a></dt>
+<dd><p>Rappresenta la tabella con tutte i  possibili Stati occupazionali</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.models.StatoAttuale">
+<em class="property">class </em><code class="descclassname">createSurvey.models.</code><code class="descname">StatoAttuale</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.models.StatoAttuale" title="Link a questa definizione">¶</a></dt>
+<dd><p>Rappresenta la tabella che associa una Persona con zero o piu stati occupazionali</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.models.Survey">
+<em class="property">class </em><code class="descclassname">createSurvey.models.</code><code class="descname">Survey</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.models.Survey" title="Link a questa definizione">¶</a></dt>
+<dd><p>Sondaggio vecchio modo di fare, obsoleto</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.models.TipoContratto">
+<em class="property">class </em><code class="descclassname">createSurvey.models.</code><code class="descname">TipoContratto</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.models.TipoContratto" title="Link a questa definizione">¶</a></dt>
+<dd><p>Rappresenta la tabella con tutti i possibili Tipi Di Contratto</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.models.TipoContrattoAttuale">
+<em class="property">class </em><code class="descclassname">createSurvey.models.</code><code class="descname">TipoContrattoAttuale</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.models.TipoContrattoAttuale" title="Link a questa definizione">¶</a></dt>
+<dd><p>Rappresenta la tabella che associa una Persona con zero o piu tipi di Contratti Attuali</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.models.TipoContrattoFuturo">
+<em class="property">class </em><code class="descclassname">createSurvey.models.</code><code class="descname">TipoContrattoFuturo</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.models.TipoContrattoFuturo" title="Link a questa definizione">¶</a></dt>
+<dd><p>Rappresenta la tabella che associa una Persona con zero o piu tipi di Contratti Futuri</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.models.TipoContrattoPregesso">
+<em class="property">class </em><code class="descclassname">createSurvey.models.</code><code class="descname">TipoContrattoPregesso</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.models.TipoContrattoPregesso" title="Link a questa definizione">¶</a></dt>
+<dd><p>Rappresenta la tabella che associa una Persona con zero o piu tipi di Contratti Passati</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.models.Zona">
+<em class="property">class </em><code class="descclassname">createSurvey.models.</code><code class="descname">Zona</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.models.Zona" title="Link a questa definizione">¶</a></dt>
+<dd><p>Rappresenta la tabella con tutte le possibili Zone</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="../index.html" title="capitolo precedente">Welcome to pysurvey&#8217;s documentation!</a></li>
+      <li>Next: <a href="../views/createsurvey.html" title="capitolo successivo">Createsurvey</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>Questa pagina</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/modules/createsurvey.txt"
+            rel="nofollow">Mostra sorgente</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Ricerca veloce</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Vai" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Matteo Del Pioluogo.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.8</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+      |
+      <a href="../_sources/modules/createsurvey.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

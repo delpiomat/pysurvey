@@ -355,7 +355,7 @@ def stud_cardinality (st_id):
 # 2*|A intersezione B| / |A|+|B|
 def stud_dice(st1_id, st2_id):
     '''
-    Calcola una forma leggermente imprecisa di Misura DICE 2*|A intersezione B| / |A|+|B|
+    Calcola una forma leggermente imprecisa di Misura DICE 2* (A intersezione B) / (A)+(B)
     :param st1_id: id primo studente
     :param st2_id: id secondo studente
     :return: il punteggio
@@ -369,7 +369,7 @@ def stud_dice(st1_id, st2_id):
 # Jaccard = Dice/(2-Dice) e Dice = 2Jaccard / (1+Jaccard)
 def stud_jaccard(st1_id, st2_id):
     '''
-    Calcola la misura di Jaccard in Maniera un po im precisa, Misura dice Jaccard  ( |A intersecato B| / |A unione B| )
+    Calcola la misura di Jaccard in Maniera un po im precisa, Misura dice Jaccard  ( (A intersecato B) / (A unione B) )
     quindi Jaccard = Dice/(2-Dice) e Dice = 2Jaccard / (1+Jaccard)
     :param st1_id: id primo studente
     :param st2_id: id secodno studente

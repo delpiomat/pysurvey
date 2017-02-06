@@ -1,0 +1,308 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="it">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Views &#8212; pysurvey 1 documentazione</title>
+    
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/translations.js"></script>
+    <link rel="index" title="Indice" href="../genindex.html" />
+    <link rel="search" title="Cerca" href="../search.html" />
+    <link rel="top" title="pysurvey 1 documentazione" href="../index.html" />
+    <link rel="prev" title="Models" href="models.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-createSurvey.views">
+<span id="views"></span><h1>Views<a class="headerlink" href="#module-createSurvey.views" title="Link a questa intestazione">¶</a></h1>
+<dl class="class">
+<dt id="createSurvey.views.AuthLogin">
+<em class="property">class </em><code class="descclassname">createSurvey.views.</code><code class="descname">AuthLogin</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.views.AuthLogin" title="Link a questa definizione">¶</a></dt>
+<dd><p>Classe per permettere autenticazione dell&#8217;utente
+Utilizzare per gestire login</p>
+<dl class="method">
+<dt id="createSurvey.views.AuthLogin.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.views.AuthLogin.get" title="Link a questa definizione">¶</a></dt>
+<dd><p>Funzione per gestire le richieste GET sul template log_in.html</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="createSurvey.views.AuthLogin.post">
+<code class="descname">post</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.views.AuthLogin.post" title="Link a questa definizione">¶</a></dt>
+<dd><p>Funzione per gestire le richieste POST sul template log_in.html</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.views.Change_password">
+<em class="property">class </em><code class="descclassname">createSurvey.views.</code><code class="descname">Change_password</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.views.Change_password" title="Link a questa definizione">¶</a></dt>
+<dd><p>Classe che permette di il cambio della password di un utente</p>
+<dl class="method">
+<dt id="createSurvey.views.Change_password.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.views.Change_password.get" title="Link a questa definizione">¶</a></dt>
+<dd><p>Per gestire le richieste di GET sulla pagina di cambio della password</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="createSurvey.views.Change_password.post">
+<code class="descname">post</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.views.Change_password.post" title="Link a questa definizione">¶</a></dt>
+<dd><p>Per gestire le richieste di POST sulla pagina di cambio della password</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.views.Index">
+<em class="property">class </em><code class="descclassname">createSurvey.views.</code><code class="descname">Index</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.views.Index" title="Link a questa definizione">¶</a></dt>
+<dd><p>Classe per la gestione della pagina principale dove è presente un menu di navigazione</p>
+<dl class="method">
+<dt id="createSurvey.views.Index.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.views.Index.get" title="Link a questa definizione">¶</a></dt>
+<dd><p>Funzione per gestire le richieste GET sul template index.html
+Prima versione del portale vnivano gestiti sondaggi di qualsiasi tipo
+Dovra essere rimossa o modificata</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="createSurvey.views.Index.post">
+<code class="descname">post</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.views.Index.post" title="Link a questa definizione">¶</a></dt>
+<dd><p>Funzione per gestire le richieste POST sul template index.html</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.views.Lost_password">
+<em class="property">class </em><code class="descclassname">createSurvey.views.</code><code class="descname">Lost_password</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.views.Lost_password" title="Link a questa definizione">¶</a></dt>
+<dd><p>Classe per gestire la richiesta di una nuova password dopo aver smarrito la precedetne</p>
+<dl class="method">
+<dt id="createSurvey.views.Lost_password.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.views.Lost_password.get" title="Link a questa definizione">¶</a></dt>
+<dd><p>Per gestire le richieste di GET sulla pagina della richiesta password smarrita</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="createSurvey.views.Lost_password.post">
+<code class="descname">post</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.views.Lost_password.post" title="Link a questa definizione">¶</a></dt>
+<dd><p>Per gestire le richieste di POST sulla pagina della richiesta password smarrita</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.views.MakeSurvey">
+<em class="property">class </em><code class="descclassname">createSurvey.views.</code><code class="descname">MakeSurvey</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.views.MakeSurvey" title="Link a questa definizione">¶</a></dt>
+<dd><p>Classe per fare un sondaggio, attenzione importante effettuare il log out da amministratore prima di svolgere un sondaggio
+per motivi di sicurezza
+Deve essere rimosso o modificato, vecchio modo di fare sondaggi</p>
+<dl class="method">
+<dt id="createSurvey.views.MakeSurvey.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.views.MakeSurvey.get" title="Link a questa definizione">¶</a></dt>
+<dd><p>Funzione per gestire le richieste GET per effettuare un sondaggio</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="createSurvey.views.MakeSurvey.post">
+<code class="descname">post</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.views.MakeSurvey.post" title="Link a questa definizione">¶</a></dt>
+<dd><p>Funzione per gestire le richieste POST per effettuare un sondaggio</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.views.NewSurvey">
+<em class="property">class </em><code class="descclassname">createSurvey.views.</code><code class="descname">NewSurvey</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.views.NewSurvey" title="Link a questa definizione">¶</a></dt>
+<dd><p>Classe per la gestione della generazioen di nuovi sondaggi</p>
+<dl class="method">
+<dt id="createSurvey.views.NewSurvey.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.views.NewSurvey.get" title="Link a questa definizione">¶</a></dt>
+<dd><p>Funzione per la gestione delle richieste GET su creazione nuovi sondaggi</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="createSurvey.views.NewSurvey.post">
+<code class="descname">post</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.views.NewSurvey.post" title="Link a questa definizione">¶</a></dt>
+<dd><p>Funzione per la gestione delle richieste POST su creazione nuovi sondaggi
+Questo modo di fare è superato e deve essere rimosso o modificato
+Non è piu necessario creare nuovi sondaggi</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.views.PreviewSurvey">
+<em class="property">class </em><code class="descclassname">createSurvey.views.</code><code class="descname">PreviewSurvey</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.views.PreviewSurvey" title="Link a questa definizione">¶</a></dt>
+<dd><p>Classe per la gestione la visulaizzazione dei sondaggi, vecchio modo di gestire il portale
+Deve essere rimosso o modificato</p>
+<dl class="method">
+<dt id="createSurvey.views.PreviewSurvey.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.views.PreviewSurvey.get" title="Link a questa definizione">¶</a></dt>
+<dd><p>Funzione per gestire le richieste GET per visualizzare i risultati dei sondaggi</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="createSurvey.views.PreviewSurvey.post">
+<code class="descname">post</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.views.PreviewSurvey.post" title="Link a questa definizione">¶</a></dt>
+<dd><p>Funzione per gestire le richieste POST per visualizzare i risultati dei sondaggi</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.views.Reset_password">
+<em class="property">class </em><code class="descclassname">createSurvey.views.</code><code class="descname">Reset_password</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.views.Reset_password" title="Link a questa definizione">¶</a></dt>
+<dd><p>Classe che permette di resettare la password di un account dopo aver controllato un link con codice di verifica</p>
+<dl class="method">
+<dt id="createSurvey.views.Reset_password.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.views.Reset_password.get" title="Link a questa definizione">¶</a></dt>
+<dd><p>Per gestire le richieste di GET sulla di reset dela password</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="createSurvey.views.Reset_password.post">
+<code class="descname">post</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.views.Reset_password.post" title="Link a questa definizione">¶</a></dt>
+<dd><p>Per gestire le richieste di POST sulla di reset dela password</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.views.ResultSurvey">
+<em class="property">class </em><code class="descclassname">createSurvey.views.</code><code class="descname">ResultSurvey</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.views.ResultSurvey" title="Link a questa definizione">¶</a></dt>
+<dd><p>Classe per vedere i risultati di un sondaggio
+Deve essere rimosso o modificato, vecchio modo di fare sondaggi</p>
+<dl class="method">
+<dt id="createSurvey.views.ResultSurvey.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.views.ResultSurvey.get" title="Link a questa definizione">¶</a></dt>
+<dd><p>Funzione per gestire le richieste GET per leggere risultati di un sondaggio</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="createSurvey.views.ResultSurvey.post">
+<code class="descname">post</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.views.ResultSurvey.post" title="Link a questa definizione">¶</a></dt>
+<dd><p>Funzione per gestire le richieste POST per leggere risultati di un sondaggio</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="createSurvey.views.SignUp">
+<em class="property">class </em><code class="descclassname">createSurvey.views.</code><code class="descname">SignUp</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.views.SignUp" title="Link a questa definizione">¶</a></dt>
+<dd><p>Classe per gestire la registrazione di nuovi utenti</p>
+<dl class="method">
+<dt id="createSurvey.views.SignUp.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.views.SignUp.get" title="Link a questa definizione">¶</a></dt>
+<dd><p>Funzione per gestire le richieste GET sul template sign_up.html</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="createSurvey.views.SignUp.post">
+<code class="descname">post</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.views.SignUp.post" title="Link a questa definizione">¶</a></dt>
+<dd><p>Funzione per gestire le richieste POST sul template sign_up.html</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="createSurvey.views.log_out">
+<code class="descclassname">createSurvey.views.</code><code class="descname">log_out</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.views.log_out" title="Link a questa definizione">¶</a></dt>
+<dd><p>Funzione per deautenticare un utente dal portale</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="createSurvey.views.result_download">
+<code class="descclassname">createSurvey.views.</code><code class="descname">result_download</code><span class="sig-paren">(</span><em>request</em>, <em>type</em>, <em>survey_id</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.views.result_download" title="Link a questa definizione">¶</a></dt>
+<dd><p>Funzione i download con i risultati di un sondaggio
+Vecchio modo di fare va tolto o modificato</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="createSurvey.views.verification">
+<code class="descclassname">createSurvey.views.</code><code class="descname">verification</code><span class="sig-paren">(</span><em>request</em>, <em>id</em>, <em>str</em><span class="sig-paren">)</span><a class="headerlink" href="#createSurvey.views.verification" title="Link a questa definizione">¶</a></dt>
+<dd><p>Funzione per gestire il codice di attivazione di un Accounnt</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="models.html" title="capitolo precedente">Models</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>Questa pagina</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/modules/views.txt"
+            rel="nofollow">Mostra sorgente</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Ricerca veloce</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Vai" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Matteo Del Pioluogo.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.8</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+      |
+      <a href="../_sources/modules/views.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

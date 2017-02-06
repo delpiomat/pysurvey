@@ -1,0 +1,4 @@
+Createsurvey
+======
+.. automodule:: createSurvey.views
+    :members:

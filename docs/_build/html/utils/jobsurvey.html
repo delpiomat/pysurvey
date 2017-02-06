@@ -1,0 +1,146 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="it">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>jobsurvey.recommendation &#8212; pysurvey 1 documentazione</title>
+    
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/translations.js"></script>
+    <link rel="index" title="Indice" href="../genindex.html" />
+    <link rel="search" title="Cerca" href="../search.html" />
+    <link rel="top" title="pysurvey 1 documentazione" href="../index.html" />
+    <link rel="prev" title="createSurvey.utils" href="createsurvey.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-jobsurvey.recommendation">
+<span id="jobsurvey-recommendation"></span><h1>jobsurvey.recommendation<a class="headerlink" href="#module-jobsurvey.recommendation" title="Link a questa intestazione">¶</a></h1>
+<dl class="function">
+<dt id="jobsurvey.recommendation.azieda_scalare">
+<code class="descclassname">jobsurvey.recommendation.</code><code class="descname">azieda_scalare</code><span class="sig-paren">(</span><em>az1_id</em>, <em>az2_id</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.recommendation.azieda_scalare" title="Link a questa definizione">¶</a></dt>
+<dd><p>Da Completare produce il Prodotto scalare tra due Aziende
+:param az1_id: id prima Azienda
+:param az2_id: id Seconda Azienda
+:return: Lo score</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="jobsurvey.recommendation.stud_cardinality">
+<code class="descclassname">jobsurvey.recommendation.</code><code class="descname">stud_cardinality</code><span class="sig-paren">(</span><em>st_id</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.recommendation.stud_cardinality" title="Link a questa definizione">¶</a></dt>
+<dd><p>Conta quanti elementi possiede uno studente in totale tra tutte le sue feature
+:param st_id: id di uno studente
+:return: la cardinalita</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="jobsurvey.recommendation.stud_dice">
+<code class="descclassname">jobsurvey.recommendation.</code><code class="descname">stud_dice</code><span class="sig-paren">(</span><em>st1_id</em>, <em>st2_id</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.recommendation.stud_dice" title="Link a questa definizione">¶</a></dt>
+<dd><p>Calcola una forma leggermente imprecisa di Misura DICE 2* (A intersezione B) / (A)+(B)
+:param st1_id: id primo studente
+:param st2_id: id secondo studente
+:return: il punteggio</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="jobsurvey.recommendation.stud_jaccard">
+<code class="descclassname">jobsurvey.recommendation.</code><code class="descname">stud_jaccard</code><span class="sig-paren">(</span><em>st1_id</em>, <em>st2_id</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.recommendation.stud_jaccard" title="Link a questa definizione">¶</a></dt>
+<dd><p>Calcola la misura di Jaccard in Maniera un po im precisa, Misura dice Jaccard  ( (A intersecato B) / (A unione B) )
+quindi Jaccard = Dice/(2-Dice) e Dice = 2Jaccard / (1+Jaccard)
+:param st1_id: id primo studente
+:param st2_id: id secodno studente
+:return: ritorna il punteggio di jaccard</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="jobsurvey.recommendation.stud_prodotto_scalare">
+<code class="descclassname">jobsurvey.recommendation.</code><code class="descname">stud_prodotto_scalare</code><span class="sig-paren">(</span><em>st1_id</em>, <em>st2_id</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.recommendation.stud_prodotto_scalare" title="Link a questa definizione">¶</a></dt>
+<dd><p>Prodotto scalare tra due utenti per la distanza (cardinalita intersezione 2 insiemi)
+se un termine Nullo il punteggio per quel dato vale ZERO (parte di And negli if)
+:param st1_id: id primo studente
+:param st2_id: id secondo stundente
+:return: ritorna un punteggio di similarità</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="createsurvey.html" title="capitolo precedente">createSurvey.utils</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>Questa pagina</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/utils/jobsurvey.txt"
+            rel="nofollow">Mostra sorgente</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Ricerca veloce</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Vai" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Matteo Del Pioluogo.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.8</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+      |
+      <a href="../_sources/utils/jobsurvey.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

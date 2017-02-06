@@ -1,0 +1,629 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="it">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>jobsurvey.views &#8212; pysurvey 1 documentazione</title>
+    
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/translations.js"></script>
+    <link rel="index" title="Indice" href="../genindex.html" />
+    <link rel="search" title="Cerca" href="../search.html" />
+    <link rel="top" title="pysurvey 1 documentazione" href="../index.html" />
+    <link rel="prev" title="jobsurvey.models" href="../modules/jobsurvey.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-jobsurvey.views">
+<span id="jobsurvey-views"></span><h1>jobsurvey.views<a class="headerlink" href="#module-jobsurvey.views" title="Link a questa intestazione">¶</a></h1>
+<dl class="class">
+<dt id="jobsurvey.views.AboutPage">
+<em class="property">class </em><code class="descclassname">jobsurvey.views.</code><code class="descname">AboutPage</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.AboutPage" title="Link a questa definizione">¶</a></dt>
+<dd><p>Gestisce la Pagina: Chi Siamo</p>
+<dl class="method">
+<dt id="jobsurvey.views.AboutPage.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.AboutPage.get" title="Link a questa definizione">¶</a></dt>
+<dd><p>Richieste Get sulla pagina chi siamo
+:param request:
+:param args:
+:param kwargs:
+:return:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jobsurvey.views.AboutPage.post">
+<code class="descname">post</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.AboutPage.post" title="Link a questa definizione">¶</a></dt>
+<dd><p>Richieste POST sulla pagina chi siamo
+:param request:
+:param args:
+:param kwargs:
+:return:</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jobsurvey.views.AziendaOffertaLavoro">
+<em class="property">class </em><code class="descclassname">jobsurvey.views.</code><code class="descname">AziendaOffertaLavoro</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.AziendaOffertaLavoro" title="Link a questa definizione">¶</a></dt>
+<dd><p>Pagina riassuntiva del sondaggio prodotto da una Azienda</p>
+<dl class="method">
+<dt id="jobsurvey.views.AziendaOffertaLavoro.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.AziendaOffertaLavoro.get" title="Link a questa definizione">¶</a></dt>
+<dd><p>Gestisce le richieste di GET per la Pagina riassuntiva del sondaggio prodotto da una Azienda
+:param request:
+:param args:
+:param kwargs:
+:return:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jobsurvey.views.AziendaOffertaLavoro.post">
+<code class="descname">post</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.AziendaOffertaLavoro.post" title="Link a questa definizione">¶</a></dt>
+<dd><p>Gestisce le richieste di POST per la Pagina riassuntiva del sondaggio prodotto da una Azienda
+:param request:
+:param args:
+:param kwargs:
+:return:</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jobsurvey.views.Aziende">
+<em class="property">class </em><code class="descclassname">jobsurvey.views.</code><code class="descname">Aziende</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.Aziende" title="Link a questa definizione">¶</a></dt>
+<dd><p>Gestisce La creazione di una nuova Azienda grazie alla pagina di sondaggio.</p>
+<dl class="method">
+<dt id="jobsurvey.views.Aziende.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.Aziende.get" title="Link a questa definizione">¶</a></dt>
+<dd><p>Gestisce le chiamate di GET sulla Pagina di Sondaggio di una Azienda
+:param request:
+:param args:
+:param kwargs:
+:return:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jobsurvey.views.Aziende.post">
+<code class="descname">post</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.Aziende.post" title="Link a questa definizione">¶</a></dt>
+<dd><p>Gestisce le chiamate di POST sulla Pagina di Sondaggio di una Azienda
+:param request:
+:param args:
+:param kwargs:
+:return:</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jobsurvey.views.CorrelationStudente">
+<em class="property">class </em><code class="descclassname">jobsurvey.views.</code><code class="descname">CorrelationStudente</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.CorrelationStudente" title="Link a questa definizione">¶</a></dt>
+<dd><p>Gestisce la correlazione tra due studenti.</p>
+<dl class="method">
+<dt id="jobsurvey.views.CorrelationStudente.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.CorrelationStudente.get" title="Link a questa definizione">¶</a></dt>
+<dd><p>Gestisce le richieste di GET sulla pagina delle correlazioni tra studenti
+:param request:
+:param args:
+:param kwargs:
+:return:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jobsurvey.views.CorrelationStudente.post">
+<code class="descname">post</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.CorrelationStudente.post" title="Link a questa definizione">¶</a></dt>
+<dd><p>Gestisce le richieste di POST sulla pagina delle correlazioni tra studenti
+:param request:
+:param args:
+:param kwargs:
+:return:</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jobsurvey.views.Grazie">
+<em class="property">class </em><code class="descclassname">jobsurvey.views.</code><code class="descname">Grazie</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.Grazie" title="Link a questa definizione">¶</a></dt>
+<dd><p>Gestisce il ringraziamento al completamento del questionario</p>
+<dl class="method">
+<dt id="jobsurvey.views.Grazie.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.Grazie.get" title="Link a questa definizione">¶</a></dt>
+<dd><p>Gestisce il ringraziamento al completamento del questionario, GET.
+:param request:
+:param args:
+:param kwargs:
+:return:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jobsurvey.views.Grazie.post">
+<code class="descname">post</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.Grazie.post" title="Link a questa definizione">¶</a></dt>
+<dd><p>Gestisce il ringraziamento al completamento del questionario, POST.
+:param request:
+:param args:
+:param kwargs:
+:return:</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jobsurvey.views.Lavori">
+<em class="property">class </em><code class="descclassname">jobsurvey.views.</code><code class="descname">Lavori</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.Lavori" title="Link a questa definizione">¶</a></dt>
+<dd><p>Permette di Gestire i sondaggi sulle offerte di Lavoro</p>
+<dl class="method">
+<dt id="jobsurvey.views.Lavori.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.Lavori.get" title="Link a questa definizione">¶</a></dt>
+<dd><p>Gestisce le chiamate di GET sulle offerte di Lavoro
+:param request:
+:param args:
+:param kwargs:
+:return:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jobsurvey.views.Lavori.post">
+<code class="descname">post</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.Lavori.post" title="Link a questa definizione">¶</a></dt>
+<dd><p>Gestisce le chiamate di POST sulle offerte di Lavoro
+:param request:
+:param args:
+:param kwargs:
+:return:</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jobsurvey.views.ModifyAzienda">
+<em class="property">class </em><code class="descclassname">jobsurvey.views.</code><code class="descname">ModifyAzienda</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.ModifyAzienda" title="Link a questa definizione">¶</a></dt>
+<dd><p>Gestisce la Pagina di modifca del sondaggio di un&#8217;azienda, la sua anagrafica quindi.</p>
+<dl class="method">
+<dt id="jobsurvey.views.ModifyAzienda.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.ModifyAzienda.get" title="Link a questa definizione">¶</a></dt>
+<dd><p>Gestisce le Chiamate di GET sulla Pagina di Modifica di una Azienda
+:param request:
+:param args:
+:param kwargs:
+:return:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jobsurvey.views.ModifyAzienda.post">
+<code class="descname">post</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.ModifyAzienda.post" title="Link a questa definizione">¶</a></dt>
+<dd><p>Gestisce le Chiamate di POST sulla Pagina di Modifica di una Azienda
+:param request:
+:param args:
+:param kwargs:
+:return:</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jobsurvey.views.ModifyLavoro">
+<em class="property">class </em><code class="descclassname">jobsurvey.views.</code><code class="descname">ModifyLavoro</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.ModifyLavoro" title="Link a questa definizione">¶</a></dt>
+<dd><p>Modifica dati offerta di lavoro</p>
+<dl class="method">
+<dt id="jobsurvey.views.ModifyLavoro.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.ModifyLavoro.get" title="Link a questa definizione">¶</a></dt>
+<dd><p>Modifica Dati per offerte di Lavoro richieste di GET
+:param request:
+:param args:
+:param kwargs:
+:return:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jobsurvey.views.ModifyLavoro.post">
+<code class="descname">post</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.ModifyLavoro.post" title="Link a questa definizione">¶</a></dt>
+<dd><p>Modifica Dati per offerte di Lavoro richieste di POST
+:param request:
+:param args:
+:param kwargs:
+:return:</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jobsurvey.views.ModifyStudente">
+<em class="property">class </em><code class="descclassname">jobsurvey.views.</code><code class="descname">ModifyStudente</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.ModifyStudente" title="Link a questa definizione">¶</a></dt>
+<dd><p>Gestisce la modifica di uno Studente</p>
+<dl class="method">
+<dt id="jobsurvey.views.ModifyStudente.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.ModifyStudente.get" title="Link a questa definizione">¶</a></dt>
+<dd><p>Gestisce le richieste di GET sulla pagina di uno studente
+:param request:
+:param args:
+:param kwargs:
+:return:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jobsurvey.views.ModifyStudente.post">
+<code class="descname">post</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.ModifyStudente.post" title="Link a questa definizione">¶</a></dt>
+<dd><p>Gestisce le Richieste di POST sulla Pagina di modifica del sondaggio per lo studente
+:param request:
+:param args:
+:param kwargs:
+:return:</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jobsurvey.views.RecomStudente">
+<em class="property">class </em><code class="descclassname">jobsurvey.views.</code><code class="descname">RecomStudente</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.RecomStudente" title="Link a questa definizione">¶</a></dt>
+<dd><p>Gestissce la pagina per la parte di raccomandazione di uno studente</p>
+<dl class="method">
+<dt id="jobsurvey.views.RecomStudente.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.RecomStudente.get" title="Link a questa definizione">¶</a></dt>
+<dd><p>Carica i dati di ogni offerta di lavoro, ma solo alcune info per mantenere anonimato
+:param request:
+:param args:
+:param kwargs:
+:return:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jobsurvey.views.RecomStudente.post">
+<code class="descname">post</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.RecomStudente.post" title="Link a questa definizione">¶</a></dt>
+<dd><p>Gestisce le richieste di Post sulla pagian di raccomadnazione degli studenti
+:param request:
+:param args:
+:param kwargs:
+:return:</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jobsurvey.views.RisultatiAziende">
+<em class="property">class </em><code class="descclassname">jobsurvey.views.</code><code class="descname">RisultatiAziende</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.RisultatiAziende" title="Link a questa definizione">¶</a></dt>
+<dd><p>Gestisce la Pagina con i risultati per ogni Azienda inserita nel DB</p>
+<dl class="method">
+<dt id="jobsurvey.views.RisultatiAziende.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.RisultatiAziende.get" title="Link a questa definizione">¶</a></dt>
+<dd><p>Gestisce le richieste di GET sulle pagine per i risultati delle Aziende
+:param request:
+:param args:
+:param kwargs:
+:return:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jobsurvey.views.RisultatiAziende.post">
+<code class="descname">post</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.RisultatiAziende.post" title="Link a questa definizione">¶</a></dt>
+<dd><p>Gestisce le richieste di POST sulle pagine per i risultati delle Aziende
+:param request:
+:param args:
+:param kwargs:
+:return:</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jobsurvey.views.RisultatiOffertaLavoro">
+<em class="property">class </em><code class="descclassname">jobsurvey.views.</code><code class="descname">RisultatiOffertaLavoro</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.RisultatiOffertaLavoro" title="Link a questa definizione">¶</a></dt>
+<dd><p>Gestisce la pagina dei risultati per le offerte di Lavoro</p>
+<dl class="method">
+<dt id="jobsurvey.views.RisultatiOffertaLavoro.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.RisultatiOffertaLavoro.get" title="Link a questa definizione">¶</a></dt>
+<dd><p>Gestisce le chiamate di GET per i risultati sulle offerte di lavoro
+:param request:
+:param args:
+:param kwargs:
+:return:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jobsurvey.views.RisultatiOffertaLavoro.post">
+<code class="descname">post</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.RisultatiOffertaLavoro.post" title="Link a questa definizione">¶</a></dt>
+<dd><p>Gestisce le chiamate di POST per i risultati sulle offerte di lavoro
+:param request:
+:param args:
+:param kwargs:
+:return:</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jobsurvey.views.RisultatiStudenti">
+<em class="property">class </em><code class="descclassname">jobsurvey.views.</code><code class="descname">RisultatiStudenti</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.RisultatiStudenti" title="Link a questa definizione">¶</a></dt>
+<dd><p>Gestisce la pagina con i risultati di ogni Studente</p>
+<dl class="method">
+<dt id="jobsurvey.views.RisultatiStudenti.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.RisultatiStudenti.get" title="Link a questa definizione">¶</a></dt>
+<dd><p>Richieste GET sulla pagina dei risultati degli studenti
+:param request:
+:param args:
+:param kwargs:
+:return:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jobsurvey.views.RisultatiStudenti.post">
+<code class="descname">post</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.RisultatiStudenti.post" title="Link a questa definizione">¶</a></dt>
+<dd><p>Richieste POST sulla pagina dei risultati degli studenti
+:param request:
+:param args:
+:param kwargs:
+:return:</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jobsurvey.views.SearchJob">
+<em class="property">class </em><code class="descclassname">jobsurvey.views.</code><code class="descname">SearchJob</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.SearchJob" title="Link a questa definizione">¶</a></dt>
+<dd><p>Permette ad un utente di Cercare dei Job e poi esprimere una preferenza su di essi.</p>
+<dl class="method">
+<dt id="jobsurvey.views.SearchJob.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.SearchJob.get" title="Link a questa definizione">¶</a></dt>
+<dd><p>Richieste di GET sulla pagina per cercare i lavori
+:param request:
+:param args:
+:param kwargs:
+:return:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jobsurvey.views.SearchJob.post">
+<code class="descname">post</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.SearchJob.post" title="Link a questa definizione">¶</a></dt>
+<dd><p>Richieste di POST sulla pagina per cercare i lavori
+:param request:
+:param args:
+:param kwargs:
+:return:</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jobsurvey.views.StudenteVotaLavoro">
+<em class="property">class </em><code class="descclassname">jobsurvey.views.</code><code class="descname">StudenteVotaLavoro</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.StudenteVotaLavoro" title="Link a questa definizione">¶</a></dt>
+<dd><p>Allo Studente viene richiesta la possibilita di votare alcuni JOB</p>
+<dl class="method">
+<dt id="jobsurvey.views.StudenteVotaLavoro.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.StudenteVotaLavoro.get" title="Link a questa definizione">¶</a></dt>
+<dd><p>Richieste di GET su lavori da Votare
+:param request:
+:param args:
+:param kwargs:
+:return:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jobsurvey.views.StudenteVotaLavoro.post">
+<code class="descname">post</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.StudenteVotaLavoro.post" title="Link a questa definizione">¶</a></dt>
+<dd><p>Richieste di POST su lavori da Votare
+:param request:
+:param args:
+:param kwargs:
+:return:</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jobsurvey.views.Studenti">
+<em class="property">class </em><code class="descclassname">jobsurvey.views.</code><code class="descname">Studenti</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.Studenti" title="Link a questa definizione">¶</a></dt>
+<dd><p>Uno studente esegue un nuovo sondaggio</p>
+<dl class="method">
+<dt id="jobsurvey.views.Studenti.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.Studenti.get" title="Link a questa definizione">¶</a></dt>
+<dd><p>Richieste di GET per un nuovo studente che vuole autenticarsi
+:param request:
+:param args:
+:param kwargs:
+:return:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jobsurvey.views.Studenti.post">
+<code class="descname">post</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.Studenti.post" title="Link a questa definizione">¶</a></dt>
+<dd><p>Richieste di POST per un nuovo studente che vuole autenticarsi
+:param request:
+:param args:
+:param kwargs:
+:return:</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="jobsurvey.views.all_aziende">
+<code class="descclassname">jobsurvey.views.</code><code class="descname">all_aziende</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.all_aziende" title="Link a questa definizione">¶</a></dt>
+<dd><p>Cerca tutte le azienda inserite nel DB e restiuisce il una lista che le contiene,
+con anche i relativi attributi valorizzati.
+:return: lista di DIZIONARI, uno per azienda.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="jobsurvey.views.all_job">
+<code class="descclassname">jobsurvey.views.</code><code class="descname">all_job</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.all_job" title="Link a questa definizione">¶</a></dt>
+<dd><p>Cerca tutti i lavori inseriti da Aziende nel DB e restiuisce il una lista che li contiene,
+con anche i relativi attributi valorizzati.
+:return: una lista che contiene dizionari, un dizionario per ogni lavoro</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="jobsurvey.views.all_student">
+<code class="descclassname">jobsurvey.views.</code><code class="descname">all_student</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.all_student" title="Link a questa definizione">¶</a></dt>
+<dd><p>Cerca tutti gli Studenti inseriti nel DB e restiuisce una lista che li contiene,
+con anche i relativi attributi valorizzati.
+:return: restituisce una lista di dizionari, un dizionario per ogni studente</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="jobsurvey.views.create_modify_azienda_sondaggio_azienda_by_post">
+<code class="descclassname">jobsurvey.views.</code><code class="descname">create_modify_azienda_sondaggio_azienda_by_post</code><span class="sig-paren">(</span><em>request</em>, <em>user</em>, <em>is_new_user</em>, <em>is_admin=False</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.create_modify_azienda_sondaggio_azienda_by_post" title="Link a questa definizione">¶</a></dt>
+<dd><p>Permette di inserire o modificare un utente corrente.
+:param request:
+:param user: utente corrente che fa la richiesta
+:param is_new_user: nuova azienda
+:param is_admin: Flag, segnala che la richiesta proviene da un ADMIN
+:return:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="jobsurvey.views.create_modify_lavoro_sondaggio_by_post">
+<code class="descclassname">jobsurvey.views.</code><code class="descname">create_modify_lavoro_sondaggio_by_post</code><span class="sig-paren">(</span><em>request</em>, <em>account</em>, <em>is_new_survey</em>, <em>is_admin</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.create_modify_lavoro_sondaggio_by_post" title="Link a questa definizione">¶</a></dt>
+<dd><p>Inserire nuove offerte di lavoro o modificarle
+:param request:
+:param account: accounte corrente che ha effettuato la richiesta
+:param is_new_survey: flag per nuovi sondaggi
+:param is_admin: flaga se la richiesta viene da un amministratore
+:return:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="jobsurvey.views.create_modify_student_persona_survey_by_post">
+<code class="descclassname">jobsurvey.views.</code><code class="descname">create_modify_student_persona_survey_by_post</code><span class="sig-paren">(</span><em>request</em>, <em>user</em>, <em>is_new_user</em>, <em>is_admin=False</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.create_modify_student_persona_survey_by_post" title="Link a questa definizione">¶</a></dt>
+<dd><p>Permette di creare o modificare il profilo di uno studente
+:param request:
+:param user:
+:param is_new_user: Flag da usare se è un nuovo utente
+:param is_admin: Flag da usare per identificare un admin, come utente che effettua la richiesta
+:return:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="jobsurvey.views.find_all_option_azienda">
+<code class="descclassname">jobsurvey.views.</code><code class="descname">find_all_option_azienda</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.find_all_option_azienda" title="Link a questa definizione">¶</a></dt>
+<dd><p>Cerca tutti i valori degli attributi (Multivalore) che puo assumere un&#8217;azienda.
+:return: per ogni attributo restituisce la lista di valori possibili</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="jobsurvey.views.find_all_option_lavoro">
+<code class="descclassname">jobsurvey.views.</code><code class="descname">find_all_option_lavoro</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.find_all_option_lavoro" title="Link a questa definizione">¶</a></dt>
+<dd><p>Tutti i tag e possibilita per offerete di lavoro,
+cioè trova i valori possibili di tutti gli attributi multivalore delle offerte di Lavoro
+:return: vettore contentente per ogni attributo una lista di valori.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="jobsurvey.views.find_all_option_student">
+<code class="descclassname">jobsurvey.views.</code><code class="descname">find_all_option_student</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.find_all_option_student" title="Link a questa definizione">¶</a></dt>
+<dd><p>Per ogni attributo di uno studente multivalore, trova tutte le opzioni Possibili
+:return: ritorna un oggetto con i risultati</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="jobsurvey.views.infojob">
+<code class="descclassname">jobsurvey.views.</code><code class="descname">infojob</code><span class="sig-paren">(</span><em>id_job</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.infojob" title="Link a questa definizione">¶</a></dt>
+<dd><p>Per un certo Lavoro vengono emesse delle informazioni e nascoste altre, ad esempio per non produrre un Bias
+:param id_job:
+:return:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="jobsurvey.views.infostd">
+<code class="descclassname">jobsurvey.views.</code><code class="descname">infostd</code><span class="sig-paren">(</span><em>id_student</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.infostd" title="Link a questa definizione">¶</a></dt>
+<dd><p>Per un certo studente vengono emesse delle informazioni e nascoste altre, ad esempio per non produrre un Bias
+:param id_student: id dello studente
+:return:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="jobsurvey.views.random_jobs">
+<code class="descclassname">jobsurvey.views.</code><code class="descname">random_jobs</code><span class="sig-paren">(</span><em>num</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.random_jobs" title="Link a questa definizione">¶</a></dt>
+<dd><p>Ritorna un vettore contenente un numero random di Lavori
+:param num: numero di Jobs Richiesti
+:return: vettore di jobs</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="jobsurvey.views.result_csv">
+<code class="descclassname">jobsurvey.views.</code><code class="descname">result_csv</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.views.result_csv" title="Link a questa definizione">¶</a></dt>
+<dd><p>Produce un file di tipo .csv con i risultati
+:param request:
+:param args:
+:param kwargs:
+:return: File csv</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="../modules/jobsurvey.html" title="capitolo precedente">jobsurvey.models</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>Questa pagina</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/views/jobsurvey.txt"
+            rel="nofollow">Mostra sorgente</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Ricerca veloce</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Vai" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Matteo Del Pioluogo.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.8</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+      |
+      <a href="../_sources/views/jobsurvey.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
