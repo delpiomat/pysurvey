@@ -55,6 +55,26 @@
 </dd></dl>
 
 <dl class="function">
+<dt id="jobsurvey.recommendation.cold_start_score">
+<code class="descclassname">jobsurvey.recommendation.</code><code class="descname">cold_start_score</code><span class="sig-paren">(</span><em>stu_vett</em>, <em>job_vett</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.recommendation.cold_start_score" title="Link a questa definizione">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parametri:</th><td class="field-body"><ul class="first simple">
+<li><strong>stu_vett</strong> &#8211; vettore termini di uno studente</li>
+<li><strong>job_vett</strong> &#8211; vettore termini dell&#8217;offerta di lavoro</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Ritorna:</th><td class="field-body"><p class="first last">punteggio basato sull&#8217;intersezione tra Studente e Lavoro</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="jobsurvey.recommendation.stud_cardinality">
 <code class="descclassname">jobsurvey.recommendation.</code><code class="descname">stud_cardinality</code><span class="sig-paren">(</span><em>st_id</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.recommendation.stud_cardinality" title="Link a questa definizione">¶</a></dt>
 <dd><p>Conta quanti elementi possiede uno studente in totale tra tutte le sue feature
@@ -89,6 +109,24 @@ se un termine Nullo il punteggio per quel dato vale ZERO (parte di And negli if)
 :param st1_id: id primo studente
 :param st2_id: id secondo stundente
 :return: ritorna un punteggio di similarità</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="jobsurvey.recommendation.vettore_lavoro">
+<code class="descclassname">jobsurvey.recommendation.</code><code class="descname">vettore_lavoro</code><span class="sig-paren">(</span><em>job_id</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.recommendation.vettore_lavoro" title="Link a questa definizione">¶</a></dt>
+<dd><p>Calcola il vettore di temini che compone un lavoro
+inserisce tutti i termini che sono presenti nel sondaggio di un lavoro
+:param job_id: id lavoro
+:return: vettore contenente tutti i valori di una offerta di lavoro anche con stopWORDS</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="jobsurvey.recommendation.vettore_studente">
+<code class="descclassname">jobsurvey.recommendation.</code><code class="descname">vettore_studente</code><span class="sig-paren">(</span><em>st_id</em><span class="sig-paren">)</span><a class="headerlink" href="#jobsurvey.recommendation.vettore_studente" title="Link a questa definizione">¶</a></dt>
+<dd><p>Calcola il vettore di temini che compone uno studente
+inserisce tutti i termini che sono presenti nel sondaggio di uno studente
+:param st_id: id studente
+:return: vettore contenente tutti i valori di uno studente anche con stopWORDS</p>
 </dd></dl>
 
 </div>

@@ -22,11 +22,14 @@ def stud_prodotto_scalare(st1_id, st2_id):
             score += 1
     if (s1.esperienze_pregresse == s2.esperienze_pregresse) and s1.esperienze_pregresse and s2.esperienze_pregresse:
         score += 1
-    if (s1.numero_attivita_svolte == s2.numero_attivita_svolte) and s1.numero_attivita_svolte and s2.numero_attivita_svolte:
+    if (
+                s1.numero_attivita_svolte == s2.numero_attivita_svolte) and s1.numero_attivita_svolte and s2.numero_attivita_svolte:
         score += 1
-    if (s1.numero_mesi_attivita_svolte == s2.numero_mesi_attivita_svolte) and s1.numero_mesi_attivita_svolte and s2.numero_mesi_attivita_svolte:
+    if (
+                s1.numero_mesi_attivita_svolte == s2.numero_mesi_attivita_svolte) and s1.numero_mesi_attivita_svolte and s2.numero_mesi_attivita_svolte:
         score += 1
-    if (s1.possibilita_trasferirsi == s2.possibilita_trasferirsi) and s1.possibilita_trasferirsi == s2.possibilita_trasferirsi:
+    if (
+                s1.possibilita_trasferirsi == s2.possibilita_trasferirsi) and s1.possibilita_trasferirsi == s2.possibilita_trasferirsi:
         score += 1
     # per 200 euro gli stipendi sono simili
     if s1.stipendio_futuro and s2.stipendio_futuro:
@@ -34,13 +37,14 @@ def stud_prodotto_scalare(st1_id, st2_id):
             score += 1
     if (s1.grado_studi_id == s2.grado_studi_id) and s1.grado_studi_id and s2.grado_studi_id:
         score += 1
-    if (s1.livello_uso_computer_id == s2.livello_uso_computer_id) and s1.livello_uso_computer_id and s2.livello_uso_computer_id:
+    if (
+                s1.livello_uso_computer_id == s2.livello_uso_computer_id) and s1.livello_uso_computer_id and s2.livello_uso_computer_id:
         score += 1
     if (s1.zona_id == s2.zona_id) and s1.zona_id and s2.zona_id:
         score += 1
 
     # Mansione
-    s1_att= MansionePregresso.objects.filter(persona=s1).select_related()
+    s1_att = MansionePregresso.objects.filter(persona=s1).select_related()
     s2_att = MansionePregresso.objects.filter(persona=s2).select_related()
     for m1 in s1_att:
         for m2 in s2_att:
@@ -199,7 +203,8 @@ def stud_prodotto_scalare(st1_id, st2_id):
 
     return score
 
-def stud_cardinality (st_id):
+
+def stud_cardinality(st_id):
     '''
     Conta quanti elementi possiede uno studente in totale tra tutte le sue feature
     :param st_id: id di uno studente
@@ -207,7 +212,7 @@ def stud_cardinality (st_id):
     '''
     dim = 0
     s = Persona.objects.get(pk=st_id)
-    #cardinalita di A
+    # cardinalita di A
     if s.anno_nascita:
         dim += 1
     if s.cap:
@@ -225,7 +230,7 @@ def stud_cardinality (st_id):
         dim += 1
     if s.stipendio_futuro:
         dim += 1
-    if s.grado_studi_id :
+    if s.grado_studi_id:
         dim += 1
     if s.livello_uso_computer_id:
         dim += 1
@@ -233,7 +238,7 @@ def stud_cardinality (st_id):
         dim += 1
 
     # Mansione
-    s_att= MansionePregresso.objects.filter(persona=s).select_related()
+    s_att = MansionePregresso.objects.filter(persona=s).select_related()
     for m in s_att:
         if m.mansione_id:
             dim += 1
@@ -362,7 +367,7 @@ def stud_dice(st1_id, st2_id):
     '''
     intersection = stud_prodotto_scalare(st1_id, st2_id)
     union = stud_cardinality(st1_id) + stud_cardinality(st2_id)
-    return (2*intersection)/union
+    return (2 * intersection) / union
 
 
 # Misura dice Jaccard  ( |A intersecato B| / |A unione B| )
@@ -376,10 +381,10 @@ def stud_jaccard(st1_id, st2_id):
     :return: ritorna il punteggio di jaccard
     '''
     score_dice = stud_dice(st1_id, st2_id)
-    return score_dice/(2-score_dice)
+    return score_dice / (2 - score_dice)
 
 
-#-------------------------------Aziende--------------------------------------------------------------------------------
+# -------------------------------Aziende--------------------------------------------------------------------------------
 # prodotto scalare tra due utenti Azienda per la distanza (cardinalita intersezione 2 insiemi)
 # se un termine Nullo il punteggio per quel dato vale ZERO (parte di And negli if)
 
@@ -390,5 +395,199 @@ def azieda_scalare(az1_id, az2_id):
     :param az2_id: id Seconda Azienda
     :return: Lo score
     '''
+    score = 0
+    return score
+
+
+# -------------------------COLD START------------------------------------------------------------------------------------
+# utilizzando un sistema di raccomandazione molto semplice creaiamo un cold start per dare:
+#  ad ogni studente qualche azienda o viceversa
+
+def vettore_studente(st_id):
+    '''
+    Calcola il vettore di temini che compone uno studente
+    inserisce tutti i termini che sono presenti nel sondaggio di uno studente
+    :param st_id: id studente
+    :return: vettore contenente tutti i valori di uno studente anche con stopWORDS
+    '''
+    s = Persona.objects.get(pk=st_id)
+    vett_valori = []
+    # Mansione
+    s_att = MansionePregresso.objects.filter(persona=s).select_related()
+    for m in s_att:
+        if m.mansione_id:
+            vett_valori.append(Mansione.objects.get(pk=m.mansione_id))
+
+    s_att = MansioneAttuale.objects.filter(persona=s).select_related()
+    for m in s_att:
+        if m.mansione_id:
+            vett_valori.append(m.mansione.valore)
+
+    s_att = MansioneFuturo.objects.filter(persona=s).select_related()
+    for m in s_att:
+        if m.mansione_id:
+            vett_valori.append(m.mansione.valore)
+
+    # Ruolo
+    s_att = RuoloPregresso.objects.filter(persona=s).select_related()
+    for m in s_att:
+        if m.ruolo_id:
+            vett_valori.append(m.ruolo.valore)
+
+    s_att = RuoloAttuale.objects.filter(persona=s).select_related()
+    for m in s_att:
+        if m.ruolo_id:
+            vett_valori.append(m.ruolo.valore)
+
+    s1_att = RuoloFuturo.objects.filter(persona=s).select_related()
+    for m in s_att:
+        if m.ruolo_id:
+            vett_valori.append(m.ruolo.valore)
+
+    # Area Operativa
+    s_att = AreaOperativaPregresso.objects.filter(persona=s).select_related()
+    for m in s_att:
+        if m.area_operativa_id:
+            vett_valori.append(m.area_operativa.valore)
+
+    s_att = AreaOperativaAttuale.objects.filter(persona=s).select_related()
+    for m in s_att:
+        if m.area_operativa_id:
+            vett_valori.append(m.area_operativa.valore)
+
+    s_att = AreaOperativaFuturo.objects.filter(persona=s).select_related()
+    for m in s_att:
+        if m.area_operativa_id:
+            vett_valori.append(m.area_operativa.valore)
+
+    # Livello Cariera
+    s_att = LivelloCarieraPregresso.objects.filter(persona=s).select_related()
+    for m in s_att:
+        if m.livello_cariera_id:
+            vett_valori.append(m.livello_cariera.valore)
+
+    s_att = LivelloCarieraAttuale.objects.filter(persona=s).select_related()
+    for m in s_att:
+        if m.livello_cariera_id:
+            vett_valori.append(m.livello_cariera.valore)
+
+    s_att = LivelloCarieraFuturo.objects.filter(persona=s).select_related()
+    for m in s_att:
+        if m.livello_cariera_id:
+            vett_valori.append(m.livello_cariera.valore)
+
+    # Tipo Contratto
+    s_att = TipoContrattoPregesso.objects.filter(persona=s).select_related()
+    for m in s_att:
+        if m.tipo_contratto_id:
+            vett_valori.append(m.tipo_contratto.valore)
+
+    s_att = TipoContrattoAttuale.objects.filter(persona=s).select_related()
+    for m in s_att:
+        if m.tipo_contratto_id:
+            vett_valori.append(m.tipo_contratto.valore)
+
+    s_att = TipoContrattoFuturo.objects.filter(persona=s).select_related()
+    for m in s_att:
+        if m.tipo_contratto_id:
+            vett_valori.append(m.tipo_contratto.valore)
+
+    # Esame
+    s_att = EsameAttuale.objects.filter(persona=s).select_related()
+    for m in s_att:
+        if m.esame_id:
+            vett_valori.append(m.esame.valore)
+
+    # Conoscenza
+    s_att = ConoscenzaSpecificaAttuale.objects.filter(persona=s).select_related()
+    for m in s_att:
+        if m.conoscenza_specifica_id:
+            vett_valori.append(m.conoscenza_specifica.valore)
+
+    # Interesse
+    s_att = InteresseFuturo.objects.filter(persona=s).select_related()
+    for m in s_att:
+        if m.interesse_id:
+            vett_valori.append(m.interesse.valore)
+
+    # Benefit
+    s_att = BenefitFuturo.objects.filter(persona=s).select_related()
+    for m in s_att:
+        if m.benefit_id:
+            vett_valori.append(m.benefit.valore)
+
+    # Campo di Studi
+    s_att = CampoStudiAttuale.objects.filter(persona=s).select_related()
+    for m in s_att:
+        if m.campo_studi_id:
+            vett_valori.append(m.campo_studi.valore)
+
+    # Lingua
+    s_att = LinguaAttuale.objects.filter(persona=s).select_related()
+    for m in s_att:
+        if m.lingua_id:
+            vett_valori.append(m.lingua.valore)
+
+    return vett_valori
+
+def vettore_lavoro(job_id):
+    '''
+    Calcola il vettore di temini che compone un lavoro
+    inserisce tutti i termini che sono presenti nel sondaggio di un lavoro
+    :param job_id: id lavoro
+    :return: vettore contenente tutti i valori di una offerta di lavoro anche con stopWORDS
+    '''
+    j = Lavoro.objects.get(pk=job_id)
+    vett_valori = []
+
+    # Area Operativa
+    j_att = CercaAreaOperativa.objects.filter(lavoro=j).select_related()
+    for m in j_att:
+        if m.area_operativa_id:
+            vett_valori.append(m.area_operativa.valore)
+
+    # Campo Studio
+    j_att = CercaCampoStudio.objects.filter(lavoro=j).select_related()
+    for m in j_att:
+        if m.campo_studio_id:
+            vett_valori.append(m.campo_studio.valore)
+
+    # Citta
+    j_att = CercaCitta.objects.filter(lavoro=j).select_related()
+    for m in j_att:
+        if m.citta_id:
+            vett_valori.append(m.citta.valore)
+
+    # Esami
+    j_att = CercaEsami.objects.filter(lavoro=j).select_related()
+    for m in j_att:
+        if m.esame_id:
+            vett_valori.append(m.esame.valore)
+
+    # Lingua
+    j_att = CercaLingua.objects.filter(lavoro=j).select_related()
+    for m in j_att:
+        if m.lingua_id:
+            vett_valori.append(m.lingua.valore)
+
+    # Livello Cariera
+    j_att = CercaLivelloCariera.objects.filter(lavoro=j).select_related()
+    for m in j_att:
+        if m.livello_cariera_id:
+            vett_valori.append(m.livello_cariera.valore)
+
+    return vett_valori
+
+
+def cold_start_score(stu_vett, job_vett):
+    '''
+    :param stu_vett: vettore termini di uno studente
+    :param job_vett: vettore termini dell'offerta di lavoro
+    :return: punteggio basato sull'intersezione tra Studente e Lavoro
+    '''
     score=0
+    for s in stu_vett:
+        for j in job_vett:
+            if s==j:
+                score+=1
     return score

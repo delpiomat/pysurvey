@@ -266,6 +266,7 @@ function deleteLavoro(id){
                             <a type="submit" id="simile_persona" value="{{value.id}}" href="{% url 'corelazione_studente' value.id 0 %}" class="btn btn-primary">Prodotto Scalare</a>
                             <a type="submit" id="simile_persona" value="{{value.id}}" href="{% url 'corelazione_studente' value.id 1 %}" class="btn btn-primary">Dice</a>
                             <a type="submit" id="simile_persona" value="{{value.id}}" href="{% url 'corelazione_studente' value.id 2 %}" class="btn btn-primary">Jaccard</a>
+                            <a type="submit" id="simile_persona" value="{{value.id}}" href="{% url 'cold_start_std' value.id %}" class="btn btn-primary">Raccomanda Lavoro</a>
                         </td>
                         <td>{{ value.id }}</td>
                         <td>{{ value.cap }}</td>

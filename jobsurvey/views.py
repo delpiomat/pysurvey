@@ -676,6 +676,7 @@ class AboutPage(View):
     '''
     Gestisce la Pagina: Chi Siamo
     '''
+
     def get(self, request, *args, **kwargs):
         '''
         Richieste Get sulla pagina chi siamo
@@ -697,11 +698,11 @@ class AboutPage(View):
         return render(request, 'about.html')
 
 
-
 class ModifyStudente(View):
     '''
     Gestisce la modifica di uno Studente
     '''
+
     # solo se autenticato come admin o utente
     @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
@@ -892,6 +893,7 @@ class Studenti(View):
     '''
     Uno studente esegue un nuovo sondaggio
     '''
+
     # non deve essere autenticato
     def get(self, request, *args, **kwargs):
         '''
@@ -1081,6 +1083,7 @@ class ModifyAzienda(View):
     '''
     Gestisce la Pagina di modifca del sondaggio di un'azienda, la sua anagrafica quindi.
     '''
+
     # solo se autenticato come admin o utente
     @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
@@ -1167,6 +1170,7 @@ class Aziende(View):
     '''
     Gestisce La creazione di una nuova Azienda grazie alla pagina di sondaggio.
     '''
+
     def get(self, request, *args, **kwargs):
         '''
         Gestisce le chiamate di GET sulla Pagina di Sondaggio di una Azienda
@@ -1251,7 +1255,6 @@ def find_all_option_lavoro():
     result['tipo_contratto'] = TipoContratto.objects.all()
     result['citta'] = Citta.objects.all()
     return result
-
 
 
 def create_modify_lavoro_sondaggio_by_post(request, account, is_new_survey, is_admin):
@@ -1429,15 +1432,15 @@ def create_modify_lavoro_sondaggio_by_post(request, account, is_new_survey, is_a
             logger.error('cerca_tipo_contratto inserisci valore')
             nuovo_valore_gia_esistente = CercaTipoContratto(lavoro=nuovo_lavoro)
             nuovo_valore_gia_esistente.tipo_contratto = \
-            TipoContratto.objects.filter(valore=request.POST['cerca_tipo_contratto'].capitalize())[0]
+                TipoContratto.objects.filter(valore=request.POST['cerca_tipo_contratto'].capitalize())[0]
             nuovo_valore_gia_esistente.save()
-
 
 
 class ModifyLavoro(View):
     '''
     Modifica dati offerta di lavoro
     '''
+
     # solo se autenticato come admin o utente
     @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
@@ -1554,6 +1557,7 @@ class Lavori(View):
     '''
     Permette di Gestire i sondaggi sulle offerte di Lavoro
     '''
+
     @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
         '''
@@ -1731,7 +1735,7 @@ class Lavori(View):
                 if len(TipoContratto.objects.filter(valore=v_post.capitalize())) > 0:
                     nuovo_valore_gia_esistente = CercaTipoContratto(lavoro=nuovo_lavoro)
                     nuovo_valore_gia_esistente.tipo_contratto = \
-                    TipoContratto.objects.filter(valore=v_post.capitalize())[0]
+                        TipoContratto.objects.filter(valore=v_post.capitalize())[0]
                     nuovo_valore_gia_esistente.save()
                 else:
                     nuova_valore_nuovo = TipoContratto(valore=v_post)
@@ -1750,6 +1754,7 @@ class Grazie(View):
     '''
     Gestisce il ringraziamento al completamento del questionario
     '''
+
     @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
         '''
@@ -1810,6 +1815,7 @@ class RisultatiAziende(View):
     '''
     Gestisce la Pagina con i risultati per ogni Azienda inserita nel DB
     '''
+
     @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
         '''
@@ -1959,6 +1965,7 @@ class RisultatiOffertaLavoro(View):
     '''
     Gestisce la pagina dei risultati per le offerte di Lavoro
     '''
+
     @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
         '''
@@ -2300,6 +2307,7 @@ class RisultatiStudenti(View):
     '''
     Gestisce la pagina con i risultati di ogni Studente
     '''
+
     @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
         '''
@@ -2353,6 +2361,7 @@ class AziendaOffertaLavoro(View):
     '''
     Pagina riassuntiva del sondaggio prodotto da una Azienda
     '''
+
     @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
         '''
@@ -3015,6 +3024,7 @@ class RecomStudente(View):
     '''
     Gestissce la pagina per la parte di raccomandazione di uno studente
     '''
+
     # solo se autenticato come admin o utente
     @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
@@ -3048,6 +3058,7 @@ class CorrelationStudente(View):
     '''
     Gestisce la correlazione tra due studenti.
     '''
+
     # solo se autenticato come admin o utente
     @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
@@ -3116,6 +3127,7 @@ class StudenteVotaLavoro(View):
     '''
     Allo Studente viene richiesta la possibilita di votare alcuni JOB
     '''
+
     # solo se autenticato Utente
     @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
@@ -3154,13 +3166,12 @@ class StudenteVotaLavoro(View):
         return render(request, 'index.html')
 
 
-
-
 # permette ad un utente di cercare un lavoro con parametri molto stringenti e poi puo mettere mi piace
 class SearchJob(View):
     '''
     Permette ad un utente di Cercare dei Job e poi esprimere una preferenza su di essi.
     '''
+
     @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
         '''
@@ -3179,11 +3190,11 @@ class SearchJob(View):
                 search_query = ''
             else:
                 search_query = request.GET.get('search_box', None)
-            #ogni signolo job
+            # ogni signolo job
             for num in job_list_tmp:
                 for key in job_list_tmp[num]:
                     # tutto maiuscolo il confronto
-                    if(search_query.upper() in str(job_list_tmp[num][key]).upper()):
+                    if (search_query.upper() in str(job_list_tmp[num][key]).upper()):
                         # contollo del like
                         job_like = MatricePunteggio.objects.filter(persona=request.user.account.survey,
                                                                    lavoro__id=job_list_tmp[num]['id'])
@@ -3199,11 +3210,12 @@ class SearchJob(View):
             search_query = ''
             for k in job_list_tmp:
                 # contollo del like
-                job_like = MatricePunteggio.objects.filter(persona=request.user.account.survey,lavoro__id=job_list_tmp[k]['id'])
+                job_like = MatricePunteggio.objects.filter(persona=request.user.account.survey,
+                                                           lavoro__id=job_list_tmp[k]['id'])
                 # contrololo se  mai stato assegnato un  punteggio
-                like=0
+                like = 0
                 if len(job_like) > 0:
-                    if job_like[0].punteggio_dato_da_persona==5:
+                    if job_like[0].punteggio_dato_da_persona == 5:
                         like = 1
                 job_list_tmp[k]['like'] = like
                 # metto in una lista e non un dizionario di numeri che da problemi
@@ -3221,7 +3233,7 @@ class SearchJob(View):
             # If page is out of range (e.g. 9999), deliver last page of results.
             jobs = paginator.page(paginator.num_pages)
 
-        return render(request, "searchJob.html", {'jobs': jobs, 'search_query':search_query})
+        return render(request, "searchJob.html", {'jobs': jobs, 'search_query': search_query})
 
     # solo se autenticato come admin o utente Azienda
     @method_decorator(login_required(login_url='log_in'))
@@ -3236,29 +3248,77 @@ class SearchJob(View):
         # l'utente ha messo mi piace ad un lavoro
         if 'like' in request.POST:
             job_like_id = request.POST['like'];
-            job_obj=MatricePunteggio.objects.filter(persona=request.user.account.survey,lavoro__id=job_like_id)
+            job_obj = MatricePunteggio.objects.filter(persona=request.user.account.survey, lavoro__id=job_like_id)
             # esiste gia un record lo aggiorniamo
-            if len(job_obj)>0:
-                #restituisce una lista quindi lavoriamo sul primo valore
-                job_obj[0].punteggio_dato_da_persona=5
+            if len(job_obj) > 0:
+                # restituisce una lista quindi lavoriamo sul primo valore
+                job_obj[0].punteggio_dato_da_persona = 5
                 job_obj[0].save()
             else:
-                #bisogna aggiun gere nuova preferenza
-                new_job_obj=MatricePunteggio(persona=request.user.account.survey, lavoro=Lavoro.objects.get(id= job_like_id), punteggio_dato_da_persona=5)
+                # bisogna aggiun gere nuova preferenza
+                new_job_obj = MatricePunteggio(persona=request.user.account.survey,
+                                               lavoro=Lavoro.objects.get(id=job_like_id), punteggio_dato_da_persona=5)
                 new_job_obj.save()
         elif 'unlike' in request.POST:
             job_like_id = request.POST['unlike'];
-            job_obj=MatricePunteggio.objects.filter(persona=request.user.account.survey, lavoro__id=job_like_id)
+            job_obj = MatricePunteggio.objects.filter(persona=request.user.account.survey, lavoro__id=job_like_id)
             # esiste gia un record lo aggiorniamo
-            if len(job_obj)>0:
-                #restituisce una lista quindi lavoriamo sul primo valore
-                job_obj[0].punteggio_dato_da_persona=0
+            if len(job_obj) > 0:
+                # restituisce una lista quindi lavoriamo sul primo valore
+                job_obj[0].punteggio_dato_da_persona = 0
                 job_obj[0].save()
             else:
-                #bisogna aggiungere nuova preferenza
-                new_job_obj=MatricePunteggio(persona=request.user.account.survey, lavoro=Lavoro.objects.get(id= job_like_id), punteggio_dato_da_persona=0 )
+                # bisogna aggiungere nuova preferenza
+                new_job_obj = MatricePunteggio(persona=request.user.account.survey,
+                                               lavoro=Lavoro.objects.get(id=job_like_id), punteggio_dato_da_persona=0)
                 new_job_obj.save()
         else:
             logger.debug('Richiesta non valida per salvare like')
 
         return render(request, 'searchJob.html')
+
+
+    # Parte di Cold Start
+class ColdStartStudente(View):
+    '''
+    Gestisce la correlazione tra due studenti.
+    '''
+    @method_decorator(login_required(login_url='log_in'))
+    def get(self, request, *args, **kwargs):
+        '''
+        Gestisce le richieste di GET sulla pagina di cold start
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        '''
+        jobs_score = {}
+        jobs_vett = {}
+        std_vett = []
+        logger.error('cold start')
+        if 'id' in kwargs:
+            logger.error('cold start per')
+            logger.error( kwargs['id'])
+            # passato un id studente da request restituisco tutti i job il loro punteggio
+            all_jobs_vett = Lavoro.objects.all()
+            std_vett = vettore_studente(kwargs['id'])
+            for j in all_jobs_vett:
+                jobs_vett[j.id]= vettore_lavoro(j.id)
+                jobs_score[j.id] = cold_start_score(std_vett, jobs_vett[j.id])
+
+        return render(request, "cold_start.html", {"punteggi": jobs_score, "jobs": jobs_vett, "studente": std_vett})
+
+    @method_decorator(login_required(login_url='log_in'))
+    def post(self, request, *args, **kwargs):
+        '''
+        Gestisce le richieste di POST sulla pagina delle correlazioni tra studenti
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        '''
+        logger.debug('cold start')
+        if request.user.is_superuser != 1:
+            raise Http404("Solo un admin puo effettuare questa richiesta")
+
+        return render(request, 'cold_start.html')

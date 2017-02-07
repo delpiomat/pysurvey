@@ -1,0 +1,31 @@
+{% extends "base_generic.html" %}
+{% load staticfiles %}
+
+{% block title %}Raccomadnazione{% endblock %}
+
+
+
+{% block topcontent %}
+
+<h2>Raccomadnazione da Cold Start</h2>
+        <form id="forminvio" data-toggle="validator" method="POST" role="form">{% csrf_token %}
+            <label class="alert-info">Raccomandazione per :</label>
+
+            <h3>Score</h3>
+                {% for v in jobs_score %}
+                   <p>{{ v }}<p>
+                {% endfor %}
+            <h3>Studente</h3>
+                {% for v in std_vett %}
+                   <p>{{ v }}<p>
+                {% endfor %}
+
+
+            <h3>Lavori</h3>
+                {% for v in jobs_vett %}
+                   <p>{{ v }}<p>
+                {% endfor %}
+
+    </form>
+
+{% endblock %}

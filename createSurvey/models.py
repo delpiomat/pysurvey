@@ -118,7 +118,7 @@ class Mansione(models.Model):
     '''
     Rappresenta la tabella con tutte le possibili mansioni
     '''
-valore = models.CharField(max_length=64)
+    valore = models.CharField(max_length=64)
 
 
 class LivelloCariera(models.Model):

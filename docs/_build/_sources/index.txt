@@ -18,6 +18,26 @@ Contents:
 
    views/createsurvey
 
+.. toctree::
+   :maxdepth: 2
+
+   modules/jobsurvey
+
+.. toctree::
+   :maxdepth: 2
+
+   views/jobsurvey
+
+.. toctree::
+   :maxdepth: 2
+
+   utils/createsurvey
+
+.. toctree::
+   :maxdepth: 2
+
+   utils/jobsurvey
+
 
 Indices and tables
 ==================
