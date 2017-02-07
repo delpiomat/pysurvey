@@ -12,18 +12,25 @@
             <label class="alert-info">Raccomandazione per :</label>
 
             <h3>Score</h3>
-                {% for v in jobs_score %}
-                   <p>{{ v }}<p>
+                {% for v,k in punteggi.items %}
+                   <ul>
+                        <li>{{ v }} voto: {{ k }}</li>
+                   </ul>
                 {% endfor %}
             <h3>Studente</h3>
-                {% for v in std_vett %}
-                   <p>{{ v }}<p>
+         <ul>
+                {% for k in studente %}
+                    <li>{{ k }}</li></ul>
                 {% endfor %}
-
-
+</ul>
             <h3>Lavori</h3>
-                {% for v in jobs_vett %}
-                   <p>{{ v }}<p>
+                {% for v,k in jobs.items %}
+                    <ul>
+                        <li>id: {{ v }}</li>
+                    {% for valore in k %}
+                        <li>{{ valore }}</li>
+                    {% endfor %}
+                    </ul>
                 {% endfor %}
 
     </form>

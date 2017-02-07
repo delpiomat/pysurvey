@@ -3297,13 +3297,16 @@ class ColdStartStudente(View):
         std_vett = []
         logger.error('cold start')
         if 'id' in kwargs:
-            logger.error('cold start per')
-            logger.error( kwargs['id'])
-            # passato un id studente da request restituisco tutti i job il loro punteggio
+
+            #tutti i jobs del db
             all_jobs_vett = Lavoro.objects.all()
+
+            #vettore con tutti i valori di uno studente
             std_vett = vettore_studente(kwargs['id'])
+
+            #per ogni lavoro calcolo il vettore dei valori degli attributi
             for j in all_jobs_vett:
-                jobs_vett[j.id]= vettore_lavoro(j.id)
+                jobs_vett[j.id] = vettore_lavoro(j.id)
                 jobs_score[j.id] = cold_start_score(std_vett, jobs_vett[j.id])
 
         return render(request, "cold_start.html", {"punteggi": jobs_score, "jobs": jobs_vett, "studente": std_vett})

@@ -1,5 +1,6 @@
 from createSurvey.models import *
 
+import logging
 
 def stud_prodotto_scalare(st1_id, st2_id):
     '''
@@ -416,7 +417,7 @@ def vettore_studente(st_id):
     s_att = MansionePregresso.objects.filter(persona=s).select_related()
     for m in s_att:
         if m.mansione_id:
-            vett_valori.append(Mansione.objects.get(pk=m.mansione_id))
+            vett_valori.append(m.mansione.valore)
 
     s_att = MansioneAttuale.objects.filter(persona=s).select_related()
     for m in s_att:
@@ -529,6 +530,9 @@ def vettore_studente(st_id):
             vett_valori.append(m.lingua.valore)
 
     return vett_valori
+
+
+logger = logging.getLogger(__name__)
 
 def vettore_lavoro(job_id):
     '''
