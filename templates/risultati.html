@@ -182,7 +182,7 @@ function deleteLavoro(id){
                         <td>
                             <a type="submit" id="delete_lavoro" value="{{value.id}}" onclick="deleteLavoro({{ value.id }});" class="btn btn-primary">Elimina</a>
                             <a type="submit" id="copy_lavoro" value="{{value.id}}" href="{% url 'lavori_modifica' value.id %}" class="btn btn-primary">Copia</a>
-
+                            <a type="submit" id="simile_persona" value="{{value.id}}" href="{% url 'cold_start_std_lavoro' value.id %}" class="btn btn-primary">Raccomanda Studente</a>
                         </td>
                         <td>{{ value.id }}</td>
                         <td>{{ value.id_azienda }}</td>

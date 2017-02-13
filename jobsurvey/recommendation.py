@@ -541,6 +541,8 @@ def vettore_lavoro(job_id):
     :param job_id: id lavoro
     :return: vettore contenente tutti i valori di una offerta di lavoro anche con stopWORDS
     '''
+    logger.error('id da vettore_lavoro')
+    logger.error(job_id)
     j = Lavoro.objects.get(pk=job_id)
     vett_valori = []
 
@@ -581,6 +583,41 @@ def vettore_lavoro(job_id):
             vett_valori.append(m.livello_cariera.valore)
 
     return vett_valori
+
+def stem_stopword_clean( vett_strings ):
+    '''
+    Prende un vettore di studenti o lavori ongli elemento delle lista unico e stemmato.
+    Divide elementi composti da piu parole, rimuove le STOPwords
+    :param vett_value: vettore di stringhe
+    :return: vettore di parole stem senza stopwords
+    '''
+
+    # importo libreria per stem
+    from nltk.stem.snowball import SnowballStemmer
+    from nltk.corpus import stopwords
+
+    stemmer = SnowballStemmer("italian")
+
+    stop = set(stopwords.words('italian'))
+
+    logger.error(stemmer.stem("italian"))
+    logger.error(stemmer.stem("a"))
+    logger.error(stemmer.stem("andate tutti a correre"))
+
+    documents=[]
+
+    logger.error(stop)
+
+    stem_parola=''
+
+    for frasi in vett_strings:
+        for parola in frasi.split(" "):
+            stem_parola=stemmer.stem(parola)
+            if(stem_parola not in stop and stem_parola not in documents):
+                documents.append(stem_parola)
+
+
+    return documents
 
 
 def cold_start_score(stu_vett, job_vett):

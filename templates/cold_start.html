@@ -1,37 +1,74 @@
 {% extends "base_generic.html" %}
 {% load staticfiles %}
 
-{% block title %}Raccomadnazione{% endblock %}
+{% block title %}Raccomandazione{% endblock %}
 
 
 
 {% block topcontent %}
 
-<h2>Raccomadnazione da Cold Start</h2>
-        <form id="forminvio" data-toggle="validator" method="POST" role="form">{% csrf_token %}
-            <label class="alert-info">Raccomandazione per :</label>
 
-            <h3>Score</h3>
-                {% for v,k in punteggi.items %}
+
+<h2>Raccomadnazione da Cold Start</h2>
+
+
+
+
+        <form id="forminvio" data-toggle="validator" method="POST" role="form">{% csrf_token %}
+
+
+            <label class="alert-info">Raccomandazione per :</label>
+           <h3>Parole chiave utilizzate</h3>
+
+            <div class="table-responsive">
+                <table class="table table-bordered"><tr>
+                    {% for k in target %}
+                        <td>{{ k }}</td>
+                    {% endfor %}
+                </tr></table>
+            </div>
+
+            <h3>Top 5 Lavori Consigilaiti</h3>
+            <div class="row">
+            {% for k,v in top5_info.items %}
+                <div class="col-sm-4 col-md-4">
+                        <div class="caption">
+
+                           <ul>
+                                <li>Offerta Numero: {{ v.id }}</li>
+                                <li>Azienda: {{ v.id_azienda }}</li>
+                                <li>Citta: {{ v.citta_lavoro }}</li>
+                                <li>Lingua: {{ v.lingua }}</li>
+                                <li>Campo Studi: {{ v.campo_studi }}</li>
+                                <li>Esami: {{ v.esami }}</li>
+                                <li>Area operativa: {{ v.area_operativa }}</li>
+                                <li>Tipo contratto: {{ v.tipo_contratto }}</li>
+                                <li>Distanza Massima: {{ v.distanza }}</li>
+                            </ul>
+
+                       </div>
+                </div>
+            {% endfor %}
+            </div>
+
+
+            <h2>Informazioni sulle offerte di lavoro consigliate</h2>
+            <h4>Punteggio e parole utilizzate per la Cold Start Raccomandazione</h4>
+                {% for k,v in top5.items %}
                    <ul>
-                        <li>{{ v }} voto: {{ k }}</li>
+                        <li>{{ k }} voto: {{ v }}</li>
+                        {% for jk,jv in ristultati.items %}
+                            {% if jk == k %}
+                                <ul>
+                                {% for valore in jv%}
+                                    <li>{{ valore }}</li>
+                                {% endfor %}
+                                </ul>
+                            {% endif %}
+                        {% endfor %}
                    </ul>
                 {% endfor %}
-            <h3>Studente</h3>
-         <ul>
-                {% for k in studente %}
-                    <li>{{ k }}</li></ul>
-                {% endfor %}
-</ul>
-            <h3>Lavori</h3>
-                {% for v,k in jobs.items %}
-                    <ul>
-                        <li>id: {{ v }}</li>
-                    {% for valore in k %}
-                        <li>{{ valore }}</li>
-                    {% endfor %}
-                    </ul>
-                {% endfor %}
+
 
     </form>
 

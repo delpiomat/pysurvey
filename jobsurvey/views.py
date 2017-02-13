@@ -33,6 +33,9 @@ from createSurvey.utils import *
 # for ajax json
 from django.http import QueryDict
 
+#per operazioni ordinamento su dizionari
+import operator
+
 # for random
 import random
 import string
@@ -3281,7 +3284,7 @@ class SearchJob(View):
     # Parte di Cold Start
 class ColdStartStudente(View):
     '''
-    Gestisce la correlazione tra due studenti.
+    Gestisce  il cold star.
     '''
     @method_decorator(login_required(login_url='log_in'))
     def get(self, request, *args, **kwargs):
@@ -3296,25 +3299,102 @@ class ColdStartStudente(View):
         jobs_vett = {}
         std_vett = []
         logger.error('cold start')
+        top5_jobs_info ={}
         if 'id' in kwargs:
 
             #tutti i jobs del db
             all_jobs_vett = Lavoro.objects.all()
 
             #vettore con tutti i valori di uno studente
-            std_vett = vettore_studente(kwargs['id'])
+            std_vett = stem_stopword_clean(vettore_studente(kwargs['id']))
+
 
             #per ogni lavoro calcolo il vettore dei valori degli attributi
             for j in all_jobs_vett:
-                jobs_vett[j.id] = vettore_lavoro(j.id)
+                # per tutti i lavori le parole utilizzate per lo score
+                # eseguo lo STEMMING e cancello stopwords
+                jobs_vett[j.id] = stem_stopword_clean(vettore_lavoro(j.id))
+                # per tutti i lavori lo score
                 jobs_score[j.id] = cold_start_score(std_vett, jobs_vett[j.id])
 
-        return render(request, "cold_start.html", {"punteggi": jobs_score, "jobs": jobs_vett, "studente": std_vett})
+
+            # permette di ottenere i primi 5 risultati piu alti
+            top5_jobs_score = dict(sorted(jobs_score.items(), key=operator.itemgetter(1), reverse=True)[:5])
+
+            # per i migliori 5 lavori restituisce le info pricnipali
+
+            for job  in top5_jobs_score:
+                top5_jobs_info[job] = infojob(job)
+
+        return render(request, "cold_start.html", {"punteggi": jobs_score, "ristultati": jobs_vett, "target": std_vett, "top5":top5_jobs_score, "top5_info": top5_jobs_info})
 
     @method_decorator(login_required(login_url='log_in'))
     def post(self, request, *args, **kwargs):
         '''
-        Gestisce le richieste di POST sulla pagina delle correlazioni tra studenti
+        Gestisce le richieste di POST sulla pagina cold start studenti
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        '''
+        logger.debug('cold start')
+        if request.user.is_superuser != 1:
+            raise Http404("Solo un admin puo effettuare questa richiesta")
+
+        return render(request, 'cold_start.html')
+
+
+    # Parte di Cold Start Aziedne lavori
+class ColdStartLavoro(View):
+    '''
+    Gestisce il cold start per aziende.
+    '''
+    @method_decorator(login_required(login_url='log_in'))
+    def get(self, request, *args, **kwargs):
+        '''
+        Gestisce le richieste di GET sulla pagina di cold start
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        '''
+        students_score = {}
+        students_vett = {}
+        lavoro_vett = []
+        logger.error('cold start Lavoro')
+        top5_stud_info ={}
+        if 'id' in kwargs:
+            #tutti studenti del db
+            all_stu_vett = Persona.objects.all()
+
+            #vettore con tutti i valori di uno lavoro
+            logger.error('id da view')
+            logger.error(kwargs['id'])
+            lavoro_vett = stem_stopword_clean(vettore_lavoro(kwargs['id']))
+
+
+            #per ogni STUDENTE calcolo il vettore dei valori degli attributi
+            for j in all_stu_vett:
+                # per tutti studenti le parole utilizzate per lo score
+                # eseguo lo stem e cancello stopwords
+                students_vett[j.id] = stem_stopword_clean(vettore_studente(j.id))
+                # per tutti gli studenti lo score
+                students_score[j.id] = cold_start_score(lavoro_vett, students_vett[j.id])
+
+
+            # permette di ottenere i primi 5 Studenti risultati piu alti
+            top5_stud_score = dict(sorted(students_score.items(), key=operator.itemgetter(1), reverse=True)[:5])
+
+            # per i migliori 5 studenti restituisce le info pricnipali
+            for stud  in top5_stud_score:
+                top5_stud_info[stud] = infostd(stud)
+
+        return render(request, "cold_start.html", {"punteggi": students_score, "ristultati": students_vett, "target": vettore_lavoro, "top5":top5_stud_score, "top5_info": top5_stud_info})
+
+    @method_decorator(login_required(login_url='log_in'))
+    def post(self, request, *args, **kwargs):
+        '''
+        Gestisce le richieste di POST sulla pagina di cold start per lavori
         :param request:
         :param args:
         :param kwargs:
