@@ -219,7 +219,7 @@ def create_modify_student_persona_survey_by_post(request, user, is_new_user, is_
             mat = MatricePunteggio(persona=nuova_persona, lavoro=vet_jobs[2])
             mat.save()
         elif is_admin:
-            logger.error("admin modifica persona studente")
+            #.error("admin modifica persona studente")
             # un admin che fa modifiche
             # ATTENZIONE SE SI CAMBIA con una post l'id del vecchio sondaggio esplode tutto
             # non conosciamo l'identita dell'utene quindi dobbiamo leggerlo dalla POST
@@ -737,7 +737,7 @@ class ModifyStudente(View):
         copy['possibilita_trasferirsi'] = False  # si no
         copy['stipendio_futuro'] = ""
 
-        logger.error("modifica studente ")
+        #logger.error("modifica studente ")
         # controllo se autenticato
         if request.user.is_authenticated:
             logger.error("Sono autenticato studente")
@@ -1109,7 +1109,7 @@ class ModifyAzienda(View):
         copy['note'] = ""
         copy['nome_referente'] = ""
 
-        logger.error("modifca Azienda ")
+        # logger.error("modifca Azienda ")
 
         # controllo se autenticato
         if request.user.is_authenticated:
@@ -1120,7 +1120,7 @@ class ModifyAzienda(View):
                 if (request.user.is_superuser == 1) or (
                                 request.user.account.type == 1 and int(request.user.account.azienda.id) == int(
                             kwargs['id'])):
-                    logger.error("Posso modificare Azineda questionario")
+                    # logger.error("Posso modificare Azineda questionario")
                     copy['id'] = kwargs['id']
                     azienda_copia = Azienda.objects.select_related().get(pk=kwargs['id'])
                     if azienda_copia.email != None:
@@ -1158,10 +1158,10 @@ class ModifyAzienda(View):
         '''
         # si tratta di un utente corretto
         if request.user.is_superuser == 1:
-            logger.error("Super user vuole modificare azienda accede al metodo")
+            # logger.error("Super user vuole modificare azienda accede al metodo")
             create_modify_azienda_sondaggio_azienda_by_post(request, request.user, is_new_user=False, is_admin=True)
         elif request.user.account.type == 1:
-            logger.error("Azienda vuole modifcare azienda accede al metodo")
+            # logger.error("Azienda vuole modifcare azienda accede al metodo")
             create_modify_azienda_sondaggio_azienda_by_post(request, request.user.account, is_new_user=False,
                                                             is_admin=False)
         else:
@@ -1230,7 +1230,7 @@ class Aziende(View):
         nuovo_user.save()
 
         # invio mail
-        logger.error('invio mail azienda nuova')
+        # logger.error('invio mail azienda nuova')
         send_verification_email(request, nuovo_user, True, password)  # una Azienda Va true per messaggio diverso Mail
 
         # inserisco dati sondiaggio AZIENDA in questo caso lo creo nuovo Stesso metodo per fare modificare vecchio sondaggio
@@ -1427,12 +1427,12 @@ def create_modify_lavoro_sondaggio_by_post(request, account, is_new_survey, is_a
                     #  nuovo_valore_gia_esistente.save()
 
         if request.POST['cerca_tipo_contratto'] == "":
-            logger.error('cerca_tipo_contratto inserisci nullo')
+            # logger.error('cerca_tipo_contratto inserisci nullo')
             nuovo_valore_nullo = CercaTipoContratto(lavoro=nuovo_lavoro)
             nuovo_valore_nullo.tipo_contratto = None
             nuovo_valore_nullo.save()
         else:
-            logger.error('cerca_tipo_contratto inserisci valore')
+            # logger.error('cerca_tipo_contratto inserisci valore')
             nuovo_valore_gia_esistente = CercaTipoContratto(lavoro=nuovo_lavoro)
             nuovo_valore_gia_esistente.tipo_contratto = \
                 TipoContratto.objects.filter(valore=request.POST['cerca_tipo_contratto'].capitalize())[0]
@@ -1499,15 +1499,15 @@ class ModifyLavoro(View):
                 # copy['livello_cariera'] = CercaLivelloCariera.objects.select_related().filter(lavoro_id=copy['id']).exclude(livello_cariera=None)
                 copy['area_operativa'] = CercaAreaOperativa.objects.select_related().filter(
                     lavoro_id=copy['id']).exclude(area_operativa=None)
-                logger.error('inizio di tipo contratto')
+                # logger.error('inizio di tipo contratto')
                 copy['tipo_contratto'] = CercaTipoContratto.objects.select_related().filter(
                     lavoro_id=copy['id']).exclude(tipo_contratto=None)
-                logger.error(copy['tipo_contratto'])
+                # logger.error(copy['tipo_contratto'])
 
             result["copy"] = copy
 
         else:
-            logger.error("id offerta lavoro non valido")
+            # logger.error("id offerta lavoro non valido")
             result = {}
             result['error'] = "offerta di lavoro non valida"
 
@@ -1520,7 +1520,7 @@ class ModifyLavoro(View):
             if (request.user.is_superuser == 1) or (
                             request.user.account.type == 1 and int(request.user.account.azienda.id) == int(
                         copy['codice_azienda'])):
-                logger.error("Posso modificare offerta lavoro questionario")
+                # logger.error("Posso modificare offerta lavoro questionario")
                 result["copy"] = copy
 
             else:
@@ -2381,8 +2381,7 @@ class AziendaOffertaLavoro(View):
             codice_id_azienda = request.user.account.azienda_id
             list_lavori = Lavoro.objects.filter(azienda=codice_id_azienda).select_related()
 
-            logger.error("Vettore offerte lavoro lungo:" + str(len(list_lavori)) + " con id azienda" + str(
-                request.user.account.azienda_id))
+             # logger.error("Vettore offerte lavoro lungo:" + str(len(list_lavori)) + " con id azienda" + str(request.user.account.azienda_id))
         else:
             logger.error("errore id utente")
             # controllo errori per registrazione
@@ -3361,15 +3360,15 @@ class ColdStartLavoro(View):
         students_score = {}
         students_vett = {}
         lavoro_vett = []
-        logger.error('cold start Lavoro')
+        #logger.error('cold start Lavoro')
         top5_stud_info ={}
         if 'id' in kwargs:
             #tutti studenti del db
             all_stu_vett = Persona.objects.all()
 
             #vettore con tutti i valori di uno lavoro
-            logger.error('id da view')
-            logger.error(kwargs['id'])
+            #logger.error('id da view')
+            #logger.error(kwargs['id'])
             lavoro_vett = stem_stopword_clean(vettore_lavoro(kwargs['id']))
 
 
@@ -3400,7 +3399,7 @@ class ColdStartLavoro(View):
         :param kwargs:
         :return:
         '''
-        logger.debug('cold start')
+        #logger.debug('cold start')
         if request.user.is_superuser != 1:
             raise Http404("Solo un admin puo effettuare questa richiesta")
 
