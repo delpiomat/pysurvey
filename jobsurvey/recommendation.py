@@ -600,13 +600,13 @@ def stem_stopword_clean( vett_strings ):
 
     stop = set(stopwords.words('italian'))
 
-    logger.error(stemmer.stem("italian"))
-    logger.error(stemmer.stem("a"))
-    logger.error(stemmer.stem("andate tutti a correre"))
+    # logger.error(stemmer.stem("italian"))
+    # logger.error(stemmer.stem("a"))
+    # logger.error(stemmer.stem("andate tutti a correre"))
 
     documents=[]
 
-    logger.error(stop)
+    # logger.error(stop)
 
     stem_parola=''
 
